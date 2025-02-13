@@ -1,13 +1,9 @@
-<h1 align="center">Token</h1>
-<h2 align="center">Minimal Astro + Tailwind CSS Starter</h2>
+<h1 align="center">Boondit</h1>
+<h2 align="center">MYYYYYY BLOGGGGGG</h2>
 
 <p align="center">
     <img alt="hero" width="450" src="public/image.png" />
 </p>
-
-> [!NOTE]
->
-> `token-template` is a modern and minimalistic Astro + Tailwind CSS starter designed for developers and creators. With a sleek black-and-white terminal-inspired design, it features support for Markdown (MD), MDX, RSS feeds, sitemaps, and fully static content, making it perfect for personal portfolios and blogs.
 
 ## 🌟 Features
 
@@ -21,13 +17,13 @@
 ## 💻 Installation
 
 > [!TIP]
-> Remember to update [`src/consts.ts`](https://github.com/ArnavK-09/token-template/blob/main/src/consts.ts)
+> Remember to update [`src/consts.ts`](https://github.com/AidanTheBandit/boondit-site/blob/main/src/consts.ts)
 
 ###### terminal
 
 ```bash
 # Clone the repository
-git clone https://github.com/ArnavK-09/token-template.git my-portfolio
+git clone https://github.com/AidanTheBandit/boondit-site.git my-portfolio
 cd my-portfolio
 
 # Install dependencies
@@ -45,9 +41,6 @@ npm run dev
 | ----------------------------------------- |
 | ![Demo](/public/screenshot.png) |
 
-| [Lighthouse Results](https://pagespeed.web.dev/analysis/https-token-template-deno-dev/o4lgrcn8pd?form_factor=desktop)                              |
-| ----------------------------------------- |
-| ![results](/public/lighthouse.png) |
 
 ---
 
@@ -89,31 +82,3 @@ npm run dev
 
 7. **Collaborate and Merge**  
    The maintainers will review your PR, request changes if needed, and merge it once approved.
-
-## 🙋‍♂️ Issues
-
-Found a bug or need help? Please create an issue on the [GitHub repository](https://github.com/ArnavK-09/token-template/issues) with a detailed description.
-
-## 👤 Author
-
-<table>
-  <tbody>
-    <tr>
-        <td align="center" valign="top" width="14.28%"><a href="https://github.com/ArnavK-09"><img src="https://github.com/ArnavK-09.png?s=100" width="130px;" alt="Arnav K"/></a><br /><a href="https://github.com/ArnavK-09"<h4><b>Arnav K</b></h3></a></td>
-    </tr>
-  </tbody>
-</table>
-
----
-
-<h2 align="center">📄 License</h2>
-
-<p align="center">
-<strong>token-template</strong> is licensed under the <code>ISC</code> License. See the <a href="https://github.com/ArnavK-09/token-template/blob/main/LICENSE">LICENSE</a> file for more details.
-</p>
-
----
-
-<p align="center">
-    <strong>🌟 If you find this project helpful, please give it a star on GitHub! 🌟</strong>
-</p>
