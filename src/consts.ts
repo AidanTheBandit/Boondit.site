@@ -7,7 +7,7 @@ export const KNOWN_TECH =
     ",",
   );
 export const ABOUT_ME =
-  `I code`.trim();
+  `Hello! Im Boondit (aka Aidan). I am a backend software developer. Welcome to my blog/portfolio of what im working on. I hope you enjoy your stay`.trim();
 export const GITHUB_USERNAME = "AidanTheBandit";
 export const QUOTE = "I make-a the code";
 export const NAV_LINKS: Array<{ title: string; href?: string }> = [
@@ -21,9 +21,5 @@ export const NAV_LINKS: Array<{ title: string; href?: string }> = [
   {
     title: "Github",
     href: "//github.com/" + GITHUB_USERNAME,
-  },
-  {
-    title: "Source",
-    href: "//github.com/ArnavK-09/token-template",
   },
 ];

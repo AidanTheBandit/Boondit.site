@@ -13,7 +13,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const {
   title = SITE_TITLE,
   description = ABOUT_ME,
-  image = "/image.jpg",
+  image = "/covers/boondit.png",
 } = Astro.props;
 import HeroImage from "@/hero.png";
 import { ABOUT_ME, SITE_TITLE } from "@/consts";
@@ -22,14 +22,14 @@ import { ABOUT_ME, SITE_TITLE } from "@/consts";
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="https://emoji-route.deno.dev/svg/👩‍💻" />
+<!-- <link rel="icon" type="image/svg+xml" href="https://emoji-route.deno.dev/svg/👩‍💻" /> EDIT SOON -->
 <meta name="generator" content={Astro.generator} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 
 <!-- Font preloads -->
 <link
   rel="preload"
-  href="/fonts/VCRosdNEUE.ttf"
+  href="/fonts/Inter-VariableFont.ttf"
   as="font"
   type="font/ttf"
   crossorigin

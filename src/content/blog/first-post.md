@@ -2,6 +2,7 @@
 title: "First post!"
 description: "Hello everyone. Im Boondit..."
 pubDate: "Feb 12 2025"
+heroImage: "/covers/fp.png"
 ---
 
 # Hello everyone im Boondit...
