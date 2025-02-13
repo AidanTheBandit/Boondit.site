@@ -1,16 +1,31 @@
 ---
-title: "First post"
-description: "Lorem ipsum dolor sit amet"
-pubDate: "Jul 08 2022"
-heroImage: "/image.jpg"
+title: "First post!"
+description: "Hello everyone. Im Boondit..."
+pubDate: "Feb 12 2025"
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+# Hello everyone im Boondit...
+Also known as Aidan.
 
-Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc. Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra massa massa ultricies mi.
+I am a software developer. I mainly work in backend development using TypeScript and Java. I am also becoming more fluent in frotend developemt, as I learn how to better style websites using CSS and how to navigate the React framework.
 
-Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+I made this blog to serve as formal (goofy) place to share my different works, projects, and more with you all! I hope you enjoy my content. I will try my best to ensure posts are semi often and entertaining. 
 
-Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id cursus metus aliquam eleifend mi.
+## \<What im known for /\>
+I am likely best known for my work on Barkle, a place for all to bark it out. 
 
-Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+Barkle is a social media platform that focuses on community building using Barks and Channels. Barks are what we call posts and channels are like dedicated communities for people to share topics and interests in. You dont have to post in a channel though because Barkle also a main timeline where people can share (almost) anything!
+
+I am also known for Avunite, the company that owns Barkle, aswell as devlops Ai technologies. Avunite is "The Social Company". We devlop social experiances that conntect people together. We also work on Ai technologies, and are working to build more user orented Ai that's more helpful in day to day life aswell as have much more personality.
+
+## \<What else do I do /\>
+Aside from developing software and working on my business, I spend a lot of time with my lovely girlfriend, Nary. I am also learning new skills like how to build things in the real life. I am constantly trying to learn and devlop new skills since I find them interesting, and they make me more useful. Some things specifacly that im learning are how to build and develop hardware devices. I have been building small robots using Arduino. This has been very valuable as it teaches me electrical engineering and how to code in lower level langueges like C++. I am also learning how to construct sets as part of a theatre build team. This has taught me how to use tools like impact drills, miter saws, nail guns, and more.
+
+## \<Closing remarks /\>
+I hope you enjoyed my first blog post. There will be way more to come soon. This is all I have to say for now.
+
+Thank you for reading,
+Boondit (Aidan)
+
+
+Barkle: https://barkle.chat/@Aidan
