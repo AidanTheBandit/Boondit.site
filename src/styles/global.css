@@ -1,42 +1,15 @@
+@import './colors.css';
+
 @font-face {
   font-family: 'Retro';
   src: url('/fonts/Inter-VariableFont.ttf') format('truetype');
   font-display: swap;
 }
 
-:root {
-  --ctp-mocha-rosewater: #f5e0dc;
-  --ctp-mocha-flamingo: #f2cdcd;
-  --ctp-mocha-pink: #f5c2e7;
-  --ctp-mocha-mauve: #cba6f7;
-  --ctp-mocha-red: #f38ba8;
-  --ctp-mocha-maroon: #eba0ac;
-  --ctp-mocha-peach: #fab387;
-  --ctp-mocha-yellow: #f9e2af;
-  --ctp-mocha-green: #a6e3a1;
-  --ctp-mocha-teal: #94e2d5;
-  --ctp-mocha-sky: #89dceb;
-  --ctp-mocha-sapphire: #74c7ec;
-  --ctp-mocha-blue: #89b4fa;
-  --ctp-mocha-lavender: #b4befe;
-  --ctp-mocha-text: #cdd6f4;
-  --ctp-mocha-subtext1: #bac2de;
-  --ctp-mocha-subtext0: #a6adc8;
-  --ctp-mocha-overlay2: #9399b2;
-  --ctp-mocha-overlay1: #7f849c;
-  --ctp-mocha-overlay0: #6c7086;
-  --ctp-mocha-surface2: #585b70;
-  --ctp-mocha-surface1: #45475a;
-  --ctp-mocha-surface0: #313244;
-  --ctp-mocha-base: #1e1e2e;
-  --ctp-mocha-mantle: #181825;
-  --ctp-mocha-crust: #11111b;
-}
-
 body {
   font-family: 'Retro', 'Courier New', Courier, monospace !important;
-  color: var(--ctp-mocha-text);
-  background-color: var(--ctp-mocha-base);
+  color: var(--foreground);
+  background-color: var(--background);
   line-height: 1.6;
   margin: 0;
   padding: 20px;
@@ -44,22 +17,22 @@ body {
 
 pre, code {
   font-family: 'Retro', 'Courier New', Courier, monospace !important;
-  background-color: var(--ctp-mocha-surface0);
-  color: var(--ctp-mocha-green);
+  background-color: var(--card);
+  color: var(--accent);
   padding: 12px;
   border-radius: 6px;
-  border: 1px solid var(--ctp-mocha-surface1);
+  border: 1px solid var(--border);
   overflow-x: auto;
 }
 
 ::selection {
-  background: var(--ctp-mocha-lavender);
-  color: var(--ctp-mocha-base);
+  background: var(--accent);
+  color: var(--accent-foreground);
 }
 
 ::-moz-selection {
-  background: var(--ctp-mocha-lavender);
-  color: var(--ctp-mocha-base);
+  background: var(--accent);
+  color: var(--accent-foreground);
 }
 
 ::-webkit-scrollbar {
@@ -68,23 +41,23 @@ pre, code {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--ctp-mocha-mantle);
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--ctp-mocha-surface1);
+  background: var(--border);
   border-radius: 6px;
-  border: 2px solid var(--ctp-mocha-mantle);
+  border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--ctp-mocha-lavender);
+  background: var(--accent);
 }
 
 /* For Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--ctp-mocha-surface1) var(--ctp-mocha-mantle);
+  scrollbar-color: var(--border) var(--background);
 }
 
 img, .no-selection {
@@ -99,7 +72,7 @@ img, .no-selection {
   top: 0;
   left: 0;
   z-index: -1;
-  color: var(--ctp-mocha-surface1);
+  color: var(--border);
   opacity: 0.05;
   font-size: 2.5rem;
   pointer-events: none;
