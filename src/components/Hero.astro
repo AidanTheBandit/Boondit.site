@@ -18,11 +18,15 @@ import { QUOTE, SITE_TITLE } from "@/consts";
     </div>
   </div>
   <div>
-    <Image
-      alt="Hero"
-      src={HeroImg}
-      class="brightness-200 w-full scale-90 invert"
-    />
+    <div class="hero-image-container" id="hero-image-container">
+      <Image
+        alt="Hero"
+        src={HeroImg}
+        class="hero-mask-image w-full scale-90"
+        id="hero-image"
+      />
+      <div class="hero-gradient-overlay"></div>
+    </div>
     <div class="text-center mt-2">
       <a href="https://www.instagram.com/howtoeatart">Profile picture by @howtoeatart</a>
     </div>
@@ -31,6 +35,23 @@ import { QUOTE, SITE_TITLE } from "@/consts";
 
 <script is:inline>
   const hero_bg = document.querySelector(".hero-bg-animate");
+  const heroImage = document.getElementById("hero-image");
+  const heroContainer = document.getElementById("hero-image-container");
+
+  // Set up the image as a CSS mask
+  if (heroImage && heroContainer) {
+    heroImage.onload = function() {
+      // Use the image source as the mask
+      const imageSrc = heroImage.src;
+      heroContainer.style.setProperty('--hero-mask', `url(${imageSrc})`);
+    };
+    
+    // If image is already loaded
+    if (heroImage.complete) {
+      const imageSrc = heroImage.src;
+      heroContainer.style.setProperty('--hero-mask', `url(${imageSrc})`);
+    }
+  }
 
   setInterval(() => {
     let binaryText = "";

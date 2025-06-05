@@ -78,3 +78,140 @@ img, .no-selection {
   pointer-events: none;
   padding: 20px;
 }
+
+/* Hero image mask and gradient animation */
+.hero-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-mask-image {
+  filter: brightness(1.5) contrast(1.2);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Hero Image Clipping Mask Styles */
+.hero-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-mask-image {
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.hero-mask-image:hover {
+  transform: scale(0.95);
+}
+
+.hero-gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    hsla(var(--accent) / 0.6),
+    hsla(var(--secondary) / 0.4),
+    hsla(var(--accent) / 0.8),
+    hsla(var(--primary) / 0.5)
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 4s ease-in-out infinite;
+  z-index: 3;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  
+  /* Use the image itself as the clipping mask */
+  -webkit-mask-image: var(--hero-mask);
+  mask-image: var(--hero-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Pulsing border effect */
+.hero-image-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    var(--accent),
+    var(--ring),
+    var(--accent),
+    var(--secondary)
+  );
+  background-size: 300% 300%;
+  animation: borderPulse 3s ease-in-out infinite;
+  z-index: 1;
+  
+  /* Use the same image mask for the border */
+  -webkit-mask-image: var(--hero-mask);
+  mask-image: var(--hero-mask);
+  -webkit-mask-size: calc(100% + 4px) calc(100% + 4px);
+  mask-size: calc(100% + 4px) calc(100% + 4px);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+@keyframes borderPulse {
+  0%, 100% {
+    background-position: 0% 50%;
+    opacity: 0.6;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 1;
+  }
+}
+
+/* Enhanced animation for color theme transitions */
+.hero-gradient-overlay.theme-shift {
+  animation: gradientShift 2s ease-in-out infinite, colorPulse 6s ease-in-out infinite;
+}
+
+@keyframes colorPulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
