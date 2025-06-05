@@ -15,7 +15,7 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 
   <body class="bg-background text-foreground tracking-wide !overflow-x-hidden">
     <header class="fixed top-0 w-screen z-[9999]"><Navbar /></header>
-    <main class="pt-28 md:pt-20"><slot /></main>
+    <main class="pt-20 md:pt-24 lg:pt-20"><slot /></main>
     <footer class="w-screen bottom-0 overflow-x-hidden"><Footer /></footer>
   </body>
 </html>

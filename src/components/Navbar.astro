@@ -2,19 +2,17 @@
 import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
 ---
 
-<nav class="w-full !z-[9999] py-5 px-4 bg-background/90 backdrop-blur-sm">
-  <div
-    class="w-full grid gap-4 md:px-5 place-items-center grid-cols-1 md:flex md:justify-between md:px-4"
-  >
-    <a href="/">
+<nav class="w-full !z-[9999] py-3 md:py-5 px-3 md:px-4 bg-background/90 backdrop-blur-sm">
+  <div class="w-full flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+    <a href="/" class="flex-shrink-0">
       <div
         id="logo"
-        class="pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-4 transition-all ease-in-out"
+        class="pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base"
       >
         {SITE_TITLE}
       </div>
     </a>
-    <div class="flex flex-wrap gap-4 md:pr-5">
+    <div class="flex flex-wrap gap-2 md:gap-4 justify-center items-center">
       <div class="hidden md:block">/</div>
       {
         links.map((link) => {
@@ -31,7 +29,7 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
             <>
               <a
                 class:list={[{ "bg-accent text-accent-foreground": isActive }]}
-                class="hover:bg-accent hover:text-accent-foreground transition-all ease-in-out px-2 max-w-fit"
+                class="hover:bg-accent hover:text-accent-foreground transition-all ease-in-out px-2 py-1 max-w-fit text-sm md:text-base flex items-center justify-center"
                 href={`/${href}`}
               >
                 <div>{link.title}</div>
@@ -51,10 +49,10 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
     if (!logo) return;
     if (window.scrollY > 100) {
       logo.className =
-        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-foreground bg-background scale-100 hover:text-background text-foreground px-4 transition-all ease-in-out";
+        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-foreground bg-background scale-100 hover:text-background text-foreground px-3 md:px-4 transition-all ease-in-out text-sm md:text-base";
     } else {
       logo.className =
-        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-4 transition-all ease-in-out";
+        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base";
     }
   });
 </script>

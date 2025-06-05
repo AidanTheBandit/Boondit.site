@@ -12,21 +12,21 @@ const { title, slug, excerpt, date } = Astro.props;
 <div
   class="w-full mx-auto bg-gradient-to-br relative pb-5 from-card/20 to-card/40 border-2 border-border rounded-lg overflow-hidden"
 >
-  <div class="flex items-center justify-start px-4 py-2 bg-primary">
+  <div class="flex items-center justify-start px-3 md:px-4 py-2 bg-primary">
     <div class="flex space-x-2">
-      <div class="w-3 h-3 rounded-full bg-destructive"></div>
-      <div class="w-3 h-3 rounded-full bg-accent"></div>
-      <div class="w-3 h-3 rounded-full bg-secondary"></div>
+      <div class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-destructive"></div>
+      <div class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent"></div>
+      <div class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-secondary"></div>
     </div>
   </div>
 
-  <div class="p-6 tracking-wider">
+  <div class="p-4 md:p-6 tracking-wider">
     <a href={`/blog/${slug}`} class="block group">
-      <h2 class="text-xl font-medium text-foreground mb-2">
+      <h2 class="text-lg md:text-xl font-medium text-foreground mb-2">
         <span class="ba text-accent mr-2">❯</span>
         {title}
       </h2>
-      <p class="text-muted-foreground font-medium tracking-widest text-sm mb-4">
+      <p class="text-muted-foreground font-medium tracking-widest text-xs md:text-sm mb-3 md:mb-4">
         [{
           date.toLocaleDateString("en-us", {
             year: "numeric",
@@ -35,13 +35,13 @@ const { title, slug, excerpt, date } = Astro.props;
           })
         }]
       </p>
-      <p class="text-foreground/80 text-sm font-thin mb-4 line-clamp-1">{excerpt}</p>
+      <p class="text-foreground/80 text-sm font-thin mb-3 md:mb-4 line-clamp-2 md:line-clamp-1">{excerpt}</p>
       <p
-        class="text-accent absolute bottom-4 font-medium inline-flex items-center group-hover:underline-offset-4 underline-offset-8 underline transition-all ease-in-out"
+        class="text-accent absolute bottom-3 md:bottom-4 font-medium inline-flex items-center group-hover:underline-offset-4 underline-offset-8 underline transition-all ease-in-out text-sm"
       >
         Read more
         <svg
-          class="w-4 h-4 ml-2 transform group-hover:-translate-x-1 transition-transform"
+          class="w-3 h-3 md:w-4 md:h-4 ml-2 transform group-hover:-translate-x-1 transition-transform"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

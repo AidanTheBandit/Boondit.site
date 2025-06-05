@@ -4,60 +4,127 @@ import HeroImg from "@/hero.png";
 import { QUOTE, SITE_TITLE } from "@/consts";
 ---
 
-<div class="hero-bg hidden md:block h-screen hero-bg-animate absolute top-0"></div>
 <section
-  class="h-screen !z-[20] relative w-full grid grid-cols-1 grid-rows-1 sm:grid-cols-2 md:grid-cols-2 gap-4 items-center"
+  class="min-h-screen !z-[20] relative w-full px-4 py-8 md:py-0"
   id="hero"
 >
-  <div class="grid place-items-center">
-    <div class="text-center -mt-10">
-      <h1 class="font-bold text-7xl">{`<${SITE_TITLE} />`}</h1>
-      <h2 class="text-2xl opacity-95">
+  <!-- Mobile Layout: Vertical -->
+  <div class="flex flex-col justify-center items-center h-full md:hidden">
+    <div class="text-center mb-8">
+      <h1 class="font-bold text-4xl sm:text-5xl">{`<${SITE_TITLE} />`}</h1>
+      <h2 class="text-lg sm:text-xl opacity-95 mt-2">
         {QUOTE}
       </h2>
     </div>
-  </div>
-  <div>
-    <div class="hero-image-container" id="hero-image-container">
-      <Image
-        alt="Hero"
-        src={HeroImg}
-        class="hero-mask-image w-full scale-90"
-        id="hero-image"
-      />
-      <div class="hero-gradient-overlay"></div>
+    
+    <div class="w-full max-w-sm sm:max-w-md">
+      <div class="hero-image-container mx-auto" id="hero-image-container">
+        <Image
+          alt="Hero"
+          src={HeroImg}
+          class="hero-mask-image w-full scale-90"
+          id="hero-image"
+        />
+        <div class="hero-gradient-overlay"></div>
+      </div>
+      <div class="text-center mt-2 text-sm">
+        <a href="https://www.instagram.com/howtoeatart" class="hover:text-accent transition-colors">
+          Profile picture by @howtoeatart
+        </a>
+      </div>
     </div>
-    <div class="text-center mt-2">
-      <a href="https://www.instagram.com/howtoeatart">Profile picture by @howtoeatart</a>
+  </div>
+
+  <!-- Desktop Layout: Side by Side -->
+  <div class="hidden md:grid md:grid-cols-2 md:gap-4 md:items-center md:h-full">
+    <div class="grid place-items-center">
+      <div class="text-center">
+        <h1 class="font-bold text-6xl lg:text-7xl">{`<${SITE_TITLE} />`}</h1>
+        <h2 class="text-2xl opacity-95 mt-2">
+          {QUOTE}
+        </h2>
+      </div>
+    </div>
+    
+    <div>
+      <div class="hero-image-container max-w-md lg:max-w-lg mx-auto" id="hero-image-container-desktop">
+        <Image
+          alt="Hero"
+          src={HeroImg}
+          class="hero-mask-image w-full scale-90"
+          id="hero-image-desktop"
+        />
+        <div class="hero-gradient-overlay"></div>
+      </div>
+      <div class="text-center mt-2 text-sm">
+        <a href="https://www.instagram.com/howtoeatart" class="hover:text-accent transition-colors">
+          Profile picture by @howtoeatart
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
 <script is:inline>
-  const hero_bg = document.querySelector(".hero-bg-animate");
-  const heroImage = document.getElementById("hero-image");
-  const heroContainer = document.getElementById("hero-image-container");
+  function initializeHeroMask() {
+    const heroImage = document.getElementById("hero-image");
+    const heroContainer = document.getElementById("hero-image-container");
+    const gradientOverlay = document.querySelector(".hero-gradient-overlay");
 
-  // Set up the image as a CSS mask
-  if (heroImage && heroContainer) {
-    heroImage.onload = function() {
-      // Use the image source as the mask
-      const imageSrc = heroImage.src;
-      heroContainer.style.setProperty('--hero-mask', `url(${imageSrc})`);
-    };
-    
-    // If image is already loaded
-    if (heroImage.complete) {
-      const imageSrc = heroImage.src;
-      heroContainer.style.setProperty('--hero-mask', `url(${imageSrc})`);
+    console.log('Initializing hero mask...', { heroImage, heroContainer, gradientOverlay });
+
+    if (!heroImage || !heroContainer || !gradientOverlay) {
+      console.log('Missing elements, retrying in 100ms...');
+      setTimeout(initializeHeroMask, 100);
+      return;
     }
+
+    function applyMask() {
+      // Wait for image to be fully loaded
+      if (heroImage.complete && heroImage.naturalHeight !== 0) {
+        const imageSrc = heroImage.src;
+        console.log('Applying mask with image:', imageSrc);
+        
+        // Set the CSS custom property
+        document.documentElement.style.setProperty('--hero-mask', `url(${imageSrc})`);
+        
+        // Apply the mask-applied class to show the gradient
+        gradientOverlay.classList.add('mask-applied');
+        
+        console.log('Mask applied successfully');
+      } else {
+        console.log('Image not ready, waiting...');
+        heroImage.onload = applyMask;
+        // Fallback timeout
+        setTimeout(applyMask, 500);
+      }
+    }
+
+    // Try to apply mask immediately
+    applyMask();
+    
+    // Also set up onload handler in case image isn't ready
+    heroImage.onload = applyMask;
   }
 
-  setInterval(() => {
-    let binaryText = "";
-    for (let i = 0; i < 1000; i++) {
-      binaryText += Math.floor(Math.random() * 2).toString();
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeHeroMask);
+  } else {
+    initializeHeroMask();
+  }
+
+  // Handle Astro navigation
+  document.addEventListener('astro:page-load', () => {
+    console.log('Astro page load detected');
+    setTimeout(initializeHeroMask, 100);
+  });
+
+  // Handle visibility changes
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      console.log('Page became visible');
+      setTimeout(initializeHeroMask, 100);
     }
-    hero_bg.textContent = binaryText;
-  }, 300);
+  });
 </script>
