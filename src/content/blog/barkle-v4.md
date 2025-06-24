@@ -1,7 +1,7 @@
 ---
 title: "Barkle V4"
 description: "Hello everyone! I havn't posted in a while..."
-pubDate: "May 5 2025"
+pubDate: "June 5 2025"
 heroImage: "/covers/bv4.png"
 ---
 
