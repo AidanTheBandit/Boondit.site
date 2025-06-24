@@ -146,7 +146,7 @@ Schools can get away with these policy changes only because they receive no push
 
 For questions or concerns about this blog post, please feel free to reach me at **aidan@boondit.site**. I'd be happy to hear your feedback. 
 
-If you found this blog post helpful and want to support my work, you can send a tip at **cash.app/$AidanTheBandit**.
+If you found this blog post helpful and want to support my work, you can send a tip at **[cash.app/$AidanTheBandit](https://cash.app/$AidanTheBandit)**.
 
 That's all for this blog post. I hope you found this interesting. Take care. Bye!
 
