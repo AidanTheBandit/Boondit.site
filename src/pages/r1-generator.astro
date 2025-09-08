@@ -45,7 +45,7 @@ import Section from "@/components/Section.astro";
             </div>
 
             <div>
-              <label for="iconUrl" class="block text-sm font-medium mb-1 text-white">Icon URL</label>
+              <label for="iconUrl" class="block text-sm font-medium mb-1 text-white">Icon URL (optional)</label>
               <input 
                 type="url" 
                 id="iconUrl" 
@@ -126,61 +126,60 @@ import Section from "@/components/Section.astro";
 <script is:inline>
   // Wait for DOM to be ready
   document.addEventListener('DOMContentLoaded', function() {
-    // Import QRCode library from CDN
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-    script.onload = initQRGenerator;
-    document.head.appendChild(script);
-
     let generatedQRCode = null;
 
-    function initQRGenerator() {
-      // DOM elements
-      const urlInput = document.getElementById('url');
-      const titleInput = document.getElementById('title');
-      const descriptionInput = document.getElementById('description');
-      const iconUrlInput = document.getElementById('iconUrl');
-      const themeColorInput = document.getElementById('themeColor');
-      const themeColorTextInput = document.getElementById('themeColorText');
-      const fetchMetadataBtn = document.getElementById('fetchMetadata');
-      const generateQRBtn = document.getElementById('generateQR');
-      const downloadQRBtn = document.getElementById('downloadQR');
-      const qrCodeWrapper = document.getElementById('qrCodeWrapper');
-      const jsonPreview = document.getElementById('jsonPreview');
+    // DOM elements
+    const urlInput = document.getElementById('url');
+    const titleInput = document.getElementById('title');
+    const descriptionInput = document.getElementById('description');
+    const iconUrlInput = document.getElementById('iconUrl');
+    const themeColorInput = document.getElementById('themeColor');
+    const themeColorTextInput = document.getElementById('themeColorText');
+    const fetchMetadataBtn = document.getElementById('fetchMetadata');
+    const generateQRBtn = document.getElementById('generateQR');
+    const downloadQRBtn = document.getElementById('downloadQR');
+    const qrCodeWrapper = document.getElementById('qrCodeWrapper');
+    const jsonPreview = document.getElementById('jsonPreview');
 
-      // Sync color inputs
-      if (themeColorInput && themeColorTextInput) {
-        themeColorInput.addEventListener('change', function() {
-          themeColorTextInput.value = themeColorInput.value;
-          updateJsonPreview();
-        });
-
-        themeColorTextInput.addEventListener('change', function() {
-          themeColorInput.value = themeColorTextInput.value;
-          updateJsonPreview();
-        });
-      }
-
-      // Update JSON preview when inputs change
-      [urlInput, titleInput, descriptionInput, iconUrlInput].forEach(function(input) {
-        if (input) {
-          input.addEventListener('input', updateJsonPreview);
-        }
+    // Sync color inputs
+    if (themeColorInput && themeColorTextInput) {
+      themeColorInput.addEventListener('change', function() {
+        themeColorTextInput.value = themeColorInput.value;
+        updateJsonPreview();
       });
 
-      function updateJsonPreview() {
-        const data = {
-          title: titleInput ? titleInput.value : '',
-          url: urlInput ? urlInput.value : '',
-          description: descriptionInput ? descriptionInput.value : '',
-          iconUrl: iconUrlInput ? iconUrlInput.value : '',
-          themeColor: themeColorInput ? themeColorInput.value : '#FE5000'
-        };
-        
-        if (jsonPreview) {
-          jsonPreview.textContent = JSON.stringify(data, null, 2);
-        }
+      themeColorTextInput.addEventListener('change', function() {
+        themeColorInput.value = themeColorTextInput.value;
+        updateJsonPreview();
+      });
+    }
+
+    // Update JSON preview when inputs change (live preview)
+    function updateJsonPreview() {
+      const data = {
+        title: titleInput ? titleInput.value : '',
+        url: urlInput ? urlInput.value : '',
+        description: descriptionInput ? descriptionInput.value : '',
+        iconUrl: iconUrlInput ? iconUrlInput.value : '',
+        themeColor: themeColorInput ? themeColorInput.value : '#FE5000'
+      };
+      
+      if (jsonPreview) {
+        jsonPreview.textContent = JSON.stringify(data, null, 2);
       }
+    }
+
+    // Add live preview event listeners
+    [urlInput, titleInput, descriptionInput, iconUrlInput, themeColorInput].forEach(function(input) {
+      if (input) {
+        input.addEventListener('input', updateJsonPreview);
+        input.addEventListener('change', updateJsonPreview);
+      }
+    });
+
+    // Load QRCode library and initialize functionality
+    function initQRGenerator() {
+      console.log('QRCode library loaded, initializing...');
 
       // Fetch metadata from URL
       if (fetchMetadataBtn) {
@@ -247,13 +246,17 @@ import Section from "@/components/Section.astro";
       // Generate QR code
       if (generateQRBtn) {
         generateQRBtn.addEventListener('click', async function() {
+          console.log('Generate button clicked');
+          
           const data = {
             title: titleInput ? titleInput.value : '',
             url: urlInput ? urlInput.value : '',
             description: descriptionInput ? descriptionInput.value : '',
-            iconUrl: iconUrlInput ? iconUrlInput.value : '',
+            iconUrl: iconUrlInput ? iconUrlInput.value : '', // Optional
             themeColor: themeColorInput ? themeColorInput.value : '#FE5000'
           };
+
+          console.log('Data to encode:', data);
 
           if (!data.url) {
             alert('Please enter a URL');
@@ -266,16 +269,29 @@ import Section from "@/components/Section.astro";
           try {
             // Create QR code with the JSON data
             const qrDataString = JSON.stringify(data);
+            console.log('QR data string:', qrDataString);
             
-            // Generate QR code as data URL using the global QRCode object
-            const qrDataURL = await window.QRCode.toDataURL(qrDataString, {
-              width: 256,
-              margin: 2,
-              color: {
-                dark: '#000000',
-                light: '#FFFFFF'
-              }
-            });
+            let qrDataURL;
+            
+            // Try using the QRCode library if available
+            if (window.QRCode) {
+              console.log('Using QRCode library');
+              qrDataURL = await window.QRCode.toDataURL(qrDataString, {
+                width: 256,
+                margin: 2,
+                color: {
+                  dark: '#000000',
+                  light: '#FFFFFF'
+                }
+              });
+            } else {
+              // Fallback: Use QR Server API
+              console.log('Using QR Server API fallback');
+              const encodedData = encodeURIComponent(qrDataString);
+              qrDataURL = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodedData}`;
+            }
+
+            console.log('QR code generated successfully');
 
             // Store the QR code for downloading
             generatedQRCode = qrDataURL;
@@ -285,6 +301,7 @@ import Section from "@/components/Section.astro";
             img.src = qrDataURL;
             img.alt = 'Generated QR Code';
             img.className = 'max-w-full h-auto rounded-lg';
+            img.crossOrigin = 'anonymous'; // For CORS when downloading
             
             if (qrCodeWrapper) {
               qrCodeWrapper.innerHTML = '';
@@ -303,6 +320,8 @@ import Section from "@/components/Section.astro";
             generateQRBtn.textContent = 'Generate QR Code';
           }
         });
+        
+        console.log('Generate button event listener added');
       }
 
       // Download QR code
@@ -313,18 +332,100 @@ import Section from "@/components/Section.astro";
             return;
           }
 
-          const link = document.createElement('a');
-          link.download = 'boondit-qr-code.png';
-          link.href = generatedQRCode;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          // Handle both data URLs and external URLs
+          if (generatedQRCode.startsWith('data:')) {
+            // Direct data URL download
+            const link = document.createElement('a');
+            link.download = 'boondit-qr-code.png';
+            link.href = generatedQRCode;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            // External URL - try to convert to blob first
+            fetch(generatedQRCode)
+              .then(response => response.blob())
+              .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = 'boondit-qr-code.png';
+                link.href = url;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+              })
+              .catch(error => {
+                console.error('Download failed:', error);
+                // Fallback: open in new tab
+                window.open(generatedQRCode, '_blank');
+              });
+          }
         });
       }
 
       // Initialize JSON preview
       updateJsonPreview();
     }
+
+    // Load QRCode library from CDN with fallback
+    function loadQRCodeLibrary() {
+      return new Promise((resolve, reject) => {
+        if (window.QRCode) {
+          resolve();
+          return;
+        }
+
+        console.log('Loading QRCode library...');
+        const script = document.createElement('script');
+        
+        // Try the first CDN
+        script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
+        script.onload = function() {
+          console.log('QRCode library loaded successfully from unpkg');
+          resolve();
+        };
+        script.onerror = function() {
+          console.log('First CDN failed, trying jsdelivr...');
+          // Try second CDN
+          const script2 = document.createElement('script');
+          script2.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+          script2.onload = function() {
+            console.log('QRCode library loaded successfully from jsdelivr');
+            resolve();
+          };
+          script2.onerror = function() {
+            console.log('Second CDN failed, trying cdnjs...');
+            // Try third CDN
+            const script3 = document.createElement('script');
+            script3.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js';
+            script3.onload = function() {
+              console.log('QRCode library loaded successfully from cdnjs');
+              resolve();
+            };
+            script3.onerror = function() {
+              console.error('Failed to load QRCode library from all CDNs');
+              reject(new Error('Failed to load QR code library'));
+            };
+            document.head.appendChild(script3);
+          };
+          document.head.appendChild(script2);
+        };
+        document.head.appendChild(script);
+      });
+    }
+
+    // Initialize everything
+    loadQRCodeLibrary()
+      .then(() => {
+        initQRGenerator();
+      })
+      .catch((error) => {
+        console.error('QRCode library loading failed:', error);
+        alert('Failed to load QR code library. The QR generation feature will not work.');
+        // Still initialize other features
+        initQRGenerator();
+      });
   });
 </script>
 
