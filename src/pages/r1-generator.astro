@@ -1,0 +1,346 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Section from "@/components/Section.astro";
+---
+
+<Layout title="R1 Creation Gen - Boondit">
+  <Section title="R1 QR Code Generator" className="min-h-screen">
+    <div class="max-w-4xl mx-auto p-6 space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Form Section -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold mb-4 text-white">Customize Your QR Code</h3>
+          
+          <div class="space-y-4">
+            <div>
+              <label for="url" class="block text-sm font-medium mb-1 text-white">URL</label>
+              <input 
+                type="url" 
+                id="url" 
+                class="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
+                placeholder="https://example.com"
+                value="https://barkle.chat"
+              />
+            </div>
+
+            <div>
+              <label for="title" class="block text-sm font-medium mb-1 text-white">Title</label>
+              <input 
+                type="text" 
+                id="title" 
+                class="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
+                placeholder="Enter title"
+                value="Barkle"
+              />
+            </div>
+
+            <div>
+              <label for="description" class="block text-sm font-medium mb-1 text-white">Description</label>
+              <textarea 
+                id="description" 
+                rows="3"
+                class="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
+                placeholder="Enter description"
+              >Social platform</textarea>
+            </div>
+
+            <div>
+              <label for="iconUrl" class="block text-sm font-medium mb-1 text-white">Icon URL</label>
+              <input 
+                type="url" 
+                id="iconUrl" 
+                class="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
+                placeholder="https://example.com/icon.png"
+              />
+            </div>
+
+            <div>
+              <label for="themeColor" class="block text-sm font-medium mb-1 text-white">Theme Color</label>
+              <input 
+                type="color" 
+                id="themeColor" 
+                class="w-20 h-10 border border-gray-600 rounded-md cursor-pointer"
+                value="#FE5000"
+              />
+              <input 
+                type="text" 
+                id="themeColorText"
+                class="ml-2 px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white w-24"
+                value="#FE5000"
+              />
+            </div>
+
+            <button 
+              id="fetchMetadata" 
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            >
+              Fetch Metadata from URL
+            </button>
+
+            <button 
+              id="generateQR" 
+              class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            >
+              Generate QR Code
+            </button>
+          </div>
+        </div>
+
+        <!-- QR Code Preview Section -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold mb-4 text-white">QR Code Preview</h3>
+          
+          <div id="qrContainer" class="flex flex-col items-center space-y-4">
+            <div id="qrCodeWrapper" class="border-2 border-dashed border-gray-500 rounded-lg p-8 w-full max-w-sm h-64 flex items-center justify-center bg-gray-800">
+              <p class="text-gray-400 text-center">Generate a QR code to see preview</p>
+            </div>
+            
+            <button 
+              id="downloadQR" 
+              class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              Download QR Code
+            </button>
+          </div>
+
+          <!-- JSON Preview -->
+          <div class="mt-6">
+            <h4 class="text-lg font-medium mb-2 text-white">JSON Data Preview</h4>
+            <pre id="jsonPreview" class="bg-gray-800 border border-gray-600 p-4 rounded-md text-sm overflow-x-auto text-green-400">
+{`{
+  "title": "Barkle",
+  "url": "https://barkle.chat",
+  "description": "Social platform",
+  "iconUrl": "",
+  "themeColor": "#FE5000"
+}`}
+            </pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Section>
+</Layout>
+
+<script is:inline>
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', function() {
+    // Import QRCode library from CDN
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+    script.onload = initQRGenerator;
+    document.head.appendChild(script);
+
+    let generatedQRCode = null;
+
+    function initQRGenerator() {
+      // DOM elements
+      const urlInput = document.getElementById('url');
+      const titleInput = document.getElementById('title');
+      const descriptionInput = document.getElementById('description');
+      const iconUrlInput = document.getElementById('iconUrl');
+      const themeColorInput = document.getElementById('themeColor');
+      const themeColorTextInput = document.getElementById('themeColorText');
+      const fetchMetadataBtn = document.getElementById('fetchMetadata');
+      const generateQRBtn = document.getElementById('generateQR');
+      const downloadQRBtn = document.getElementById('downloadQR');
+      const qrCodeWrapper = document.getElementById('qrCodeWrapper');
+      const jsonPreview = document.getElementById('jsonPreview');
+
+      // Sync color inputs
+      if (themeColorInput && themeColorTextInput) {
+        themeColorInput.addEventListener('change', function() {
+          themeColorTextInput.value = themeColorInput.value;
+          updateJsonPreview();
+        });
+
+        themeColorTextInput.addEventListener('change', function() {
+          themeColorInput.value = themeColorTextInput.value;
+          updateJsonPreview();
+        });
+      }
+
+      // Update JSON preview when inputs change
+      [urlInput, titleInput, descriptionInput, iconUrlInput].forEach(function(input) {
+        if (input) {
+          input.addEventListener('input', updateJsonPreview);
+        }
+      });
+
+      function updateJsonPreview() {
+        const data = {
+          title: titleInput ? titleInput.value : '',
+          url: urlInput ? urlInput.value : '',
+          description: descriptionInput ? descriptionInput.value : '',
+          iconUrl: iconUrlInput ? iconUrlInput.value : '',
+          themeColor: themeColorInput ? themeColorInput.value : '#FE5000'
+        };
+        
+        if (jsonPreview) {
+          jsonPreview.textContent = JSON.stringify(data, null, 2);
+        }
+      }
+
+      // Fetch metadata from URL
+      if (fetchMetadataBtn) {
+        fetchMetadataBtn.addEventListener('click', async function() {
+          const url = urlInput ? urlInput.value : '';
+          if (!url) {
+            alert('Please enter a URL first');
+            return;
+          }
+
+          fetchMetadataBtn.disabled = true;
+          fetchMetadataBtn.textContent = 'Fetching...';
+
+          try {
+            const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(url));
+            const data = await response.json();
+            const html = data.contents;
+            
+            // Parse HTML to extract meta tags
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Extract meta tags
+            const titleMeta = doc.querySelector('meta[property="og:title"]');
+            const title = titleMeta ? titleMeta.getAttribute('content') : '';
+            const titleElement = doc.querySelector('title');
+            const finalTitle = title || (titleElement ? titleElement.textContent : '');
+            
+            const descMeta = doc.querySelector('meta[property="og:description"]');
+            const desc1 = descMeta ? descMeta.getAttribute('content') : '';
+            const desc2Meta = doc.querySelector('meta[name="description"]');
+            const desc2 = desc2Meta ? desc2Meta.getAttribute('content') : '';
+            const finalDesc = desc1 || desc2 || '';
+            
+            const iconMeta = doc.querySelector('meta[property="og:image"]');
+            const icon1 = iconMeta ? iconMeta.getAttribute('content') : '';
+            const iconLink = doc.querySelector('link[rel="icon"]');
+            const icon2 = iconLink ? iconLink.getAttribute('href') : '';
+            const finalIcon = icon1 || icon2 || '';
+            
+            const themeMeta = doc.querySelector('meta[name="theme-color"]');
+            const themeColor = themeMeta ? themeMeta.getAttribute('content') : '#FE5000';
+
+            // Update inputs
+            if (titleInput && finalTitle) titleInput.value = finalTitle;
+            if (descriptionInput && finalDesc) descriptionInput.value = finalDesc;
+            if (iconUrlInput && finalIcon) iconUrlInput.value = finalIcon;
+            if (themeColorInput && themeColor) {
+              themeColorInput.value = themeColor;
+              if (themeColorTextInput) themeColorTextInput.value = themeColor;
+            }
+
+            updateJsonPreview();
+          } catch (error) {
+            console.error('Failed to fetch metadata:', error);
+            alert('Failed to fetch metadata. Please fill in the fields manually.');
+          } finally {
+            fetchMetadataBtn.disabled = false;
+            fetchMetadataBtn.textContent = 'Fetch Metadata from URL';
+          }
+        });
+      }
+
+      // Generate QR code
+      if (generateQRBtn) {
+        generateQRBtn.addEventListener('click', async function() {
+          const data = {
+            title: titleInput ? titleInput.value : '',
+            url: urlInput ? urlInput.value : '',
+            description: descriptionInput ? descriptionInput.value : '',
+            iconUrl: iconUrlInput ? iconUrlInput.value : '',
+            themeColor: themeColorInput ? themeColorInput.value : '#FE5000'
+          };
+
+          if (!data.url) {
+            alert('Please enter a URL');
+            return;
+          }
+
+          generateQRBtn.disabled = true;
+          generateQRBtn.textContent = 'Generating...';
+
+          try {
+            // Create QR code with the JSON data
+            const qrDataString = JSON.stringify(data);
+            
+            // Generate QR code as data URL using the global QRCode object
+            const qrDataURL = await window.QRCode.toDataURL(qrDataString, {
+              width: 256,
+              margin: 2,
+              color: {
+                dark: '#000000',
+                light: '#FFFFFF'
+              }
+            });
+
+            // Store the QR code for downloading
+            generatedQRCode = qrDataURL;
+            
+            // Display QR code
+            const img = document.createElement('img');
+            img.src = qrDataURL;
+            img.alt = 'Generated QR Code';
+            img.className = 'max-w-full h-auto rounded-lg';
+            
+            if (qrCodeWrapper) {
+              qrCodeWrapper.innerHTML = '';
+              qrCodeWrapper.appendChild(img);
+            }
+            
+            if (downloadQRBtn) {
+              downloadQRBtn.disabled = false;
+            }
+
+          } catch (error) {
+            console.error('Failed to generate QR code:', error);
+            alert('Failed to generate QR code: ' + error.message);
+          } finally {
+            generateQRBtn.disabled = false;
+            generateQRBtn.textContent = 'Generate QR Code';
+          }
+        });
+      }
+
+      // Download QR code
+      if (downloadQRBtn) {
+        downloadQRBtn.addEventListener('click', function() {
+          if (!generatedQRCode) {
+            alert('Please generate a QR code first');
+            return;
+          }
+
+          const link = document.createElement('a');
+          link.download = 'boondit-qr-code.png';
+          link.href = generatedQRCode;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      }
+
+      // Initialize JSON preview
+      updateJsonPreview();
+    }
+  });
+</script>
+
+<style>
+  /* Custom styles for better appearance */
+  .border-dashed {
+    border-style: dashed;
+  }
+  
+  input:focus, textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+</style>
