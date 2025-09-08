@@ -15,6 +15,10 @@ export const NAV_LINKS: Array<{ title: string; href?: string }> = [
     title: "Blog",
   },
   {
+    title: "R1 creation gen",
+    href: "r1-generator"
+  },
+  {
     title: "Barkle",
     href: "//barkle.chat/@Aidan"
   },
