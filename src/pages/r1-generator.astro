@@ -300,7 +300,7 @@ import Section from "@/components/Section.astro";
             const img = document.createElement('img');
             img.src = qrDataURL;
             img.alt = 'Generated QR Code';
-            img.className = 'max-w-full h-auto rounded-lg';
+            img.className = 'max-w-full h-auto rounded-lg border-8 border-white bg-white';
             img.crossOrigin = 'anonymous'; // For CORS when downloading
             
             if (qrCodeWrapper) {
@@ -422,8 +422,8 @@ import Section from "@/components/Section.astro";
       })
       .catch((error) => {
         console.error('QRCode library loading failed:', error);
-        alert('Failed to load QR code library. The QR generation feature will not work.');
-        // Still initialize other features
+        console.log('Using API fallback for QR generation');
+        // Still initialize other features - no error alert
         initQRGenerator();
       });
   });
