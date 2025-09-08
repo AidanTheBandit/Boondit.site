@@ -190,52 +190,99 @@ import Section from "@/components/Section.astro";
             return;
           }
 
+          console.log('Fetching metadata for:', url);
           fetchMetadataBtn.disabled = true;
           fetchMetadataBtn.textContent = 'Fetching...';
 
           try {
-            const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(url));
+            // Use allorigins.win which is more reliable
+            const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+            
+            if (!response.ok) {
+              throw new Error('Proxy request failed');
+            }
+            
             const data = await response.json();
+            
+            if (!data.contents) {
+              throw new Error('No content received');
+            }
+            
             const html = data.contents;
+            console.log('HTML content received, parsing...');
             
             // Parse HTML to extract meta tags
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             
-            // Extract meta tags
-            const titleMeta = doc.querySelector('meta[property="og:title"]');
-            const title = titleMeta ? titleMeta.getAttribute('content') : '';
-            const titleElement = doc.querySelector('title');
-            const finalTitle = title || (titleElement ? titleElement.textContent : '');
-            
-            const descMeta = doc.querySelector('meta[property="og:description"]');
-            const desc1 = descMeta ? descMeta.getAttribute('content') : '';
-            const desc2Meta = doc.querySelector('meta[name="description"]');
-            const desc2 = desc2Meta ? desc2Meta.getAttribute('content') : '';
-            const finalDesc = desc1 || desc2 || '';
-            
-            const iconMeta = doc.querySelector('meta[property="og:image"]');
-            const icon1 = iconMeta ? iconMeta.getAttribute('content') : '';
-            const iconLink = doc.querySelector('link[rel="icon"]');
-            const icon2 = iconLink ? iconLink.getAttribute('href') : '';
-            const finalIcon = icon1 || icon2 || '';
-            
-            const themeMeta = doc.querySelector('meta[name="theme-color"]');
-            const themeColor = themeMeta ? themeMeta.getAttribute('content') : '#FE5000';
+            let title = '';
+            let description = '';
+            let iconUrl = '';
+            let themeColor = '#FE5000';
 
-            // Update inputs
-            if (titleInput && finalTitle) titleInput.value = finalTitle;
-            if (descriptionInput && finalDesc) descriptionInput.value = finalDesc;
-            if (iconUrlInput && finalIcon) iconUrlInput.value = finalIcon;
+            // Get title
+            const ogTitle = doc.querySelector('meta[property="og:title"]');
+            const titleTag = doc.querySelector('title');
+            if (ogTitle && ogTitle.getAttribute('content')) {
+              title = ogTitle.getAttribute('content').trim();
+            } else if (titleTag && titleTag.textContent) {
+              title = titleTag.textContent.trim();
+            }
+
+            // Get description
+            const ogDesc = doc.querySelector('meta[property="og:description"]');
+            const metaDesc = doc.querySelector('meta[name="description"]');
+            if (ogDesc && ogDesc.getAttribute('content')) {
+              description = ogDesc.getAttribute('content').trim();
+            } else if (metaDesc && metaDesc.getAttribute('content')) {
+              description = metaDesc.getAttribute('content').trim();
+            }
+
+            // Get icon
+            const ogImage = doc.querySelector('meta[property="og:image"]');
+            if (ogImage && ogImage.getAttribute('content')) {
+              iconUrl = ogImage.getAttribute('content');
+              // Convert relative URLs to absolute
+              if (iconUrl && !iconUrl.startsWith('http')) {
+                try {
+                  iconUrl = new URL(iconUrl, url).href;
+                } catch (e) {
+                  console.warn('Could not resolve relative URL');
+                }
+              }
+            }
+
+            // Get theme color
+            const themeColorMeta = doc.querySelector('meta[name="theme-color"]');
+            if (themeColorMeta && themeColorMeta.getAttribute('content')) {
+              themeColor = themeColorMeta.getAttribute('content');
+            }
+
+            console.log('Parsed metadata:', { title, description, iconUrl, themeColor });
+
+            // Update inputs if we found data
+            if (titleInput && title) {
+              titleInput.value = title;
+            }
+            if (descriptionInput && description) {
+              descriptionInput.value = description;
+            }
+            if (iconUrlInput && iconUrl) {
+              iconUrlInput.value = iconUrl;
+            }
             if (themeColorInput && themeColor) {
               themeColorInput.value = themeColor;
-              if (themeColorTextInput) themeColorTextInput.value = themeColor;
+              if (themeColorTextInput) {
+                themeColorTextInput.value = themeColor;
+              }
             }
 
             updateJsonPreview();
+            console.log('Metadata updated successfully');
+            
           } catch (error) {
             console.error('Failed to fetch metadata:', error);
-            alert('Failed to fetch metadata. Please fill in the fields manually.');
+            alert('Failed to fetch metadata. The website might be blocking requests or the URL might not be accessible.');
           } finally {
             fetchMetadataBtn.disabled = false;
             fetchMetadataBtn.textContent = 'Fetch Metadata from URL';
@@ -293,15 +340,14 @@ import Section from "@/components/Section.astro";
 
             console.log('QR code generated successfully');
 
-            // Store the QR code for downloading
+            // Store the QR code for downloading (we'll add watermark only on download)
             generatedQRCode = qrDataURL;
             
-            // Display QR code
+            // Display QR code without watermark
             const img = document.createElement('img');
             img.src = qrDataURL;
             img.alt = 'Generated QR Code';
             img.className = 'max-w-full h-auto rounded-lg border-8 border-white bg-white';
-            img.crossOrigin = 'anonymous'; // For CORS when downloading
             
             if (qrCodeWrapper) {
               qrCodeWrapper.innerHTML = '';
@@ -324,7 +370,7 @@ import Section from "@/components/Section.astro";
         console.log('Generate button event listener added');
       }
 
-      // Download QR code
+      // Download QR code with watermark
       if (downloadQRBtn) {
         downloadQRBtn.addEventListener('click', function() {
           if (!generatedQRCode) {
@@ -332,35 +378,79 @@ import Section from "@/components/Section.astro";
             return;
           }
 
-          // Handle both data URLs and external URLs
-          if (generatedQRCode.startsWith('data:')) {
-            // Direct data URL download
-            const link = document.createElement('a');
-            link.download = 'boondit-qr-code.png';
-            link.href = generatedQRCode;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          } else {
-            // External URL - try to convert to blob first
-            fetch(generatedQRCode)
-              .then(response => response.blob())
-              .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.download = 'boondit-qr-code.png';
-                link.href = url;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
-              })
-              .catch(error => {
-                console.error('Download failed:', error);
-                // Fallback: open in new tab
-                window.open(generatedQRCode, '_blank');
-              });
+          console.log('Creating watermarked QR code for download...');
+
+          // Create canvas for watermarked version
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = 300;
+          canvas.height = 340; // QR code + padding + text
+
+          // Fill white background
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, 300, 340);
+
+          const qrImage = new Image();
+          qrImage.crossOrigin = 'anonymous';
+          
+          qrImage.onload = function() {
+            try {
+              // Draw QR code centered with some padding
+              const qrSize = 256;
+              const x = (300 - qrSize) / 2; // Center horizontally
+              const y = 20; // Some padding from top
+              
+              ctx.drawImage(qrImage, x, y, qrSize, qrSize);
+              
+              // Add watermark text in bottom right corner
+              ctx.fillStyle = '#666666';
+              ctx.font = '14px Arial';
+              ctx.textAlign = 'right';
+              ctx.fillText('boondit.site', 280, 320);
+              
+              // Convert to blob and download
+              canvas.toBlob(function(blob) {
+                if (blob) {
+                  const url = window.URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.download = 'boondit-qr-code.png';
+                  link.href = url;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  window.URL.revokeObjectURL(url);
+                } else {
+                  console.error('Failed to create blob');
+                  fallbackDownload();
+                }
+              }, 'image/png');
+              
+            } catch (error) {
+              console.error('Canvas error:', error);
+              fallbackDownload();
+            }
+          };
+
+          qrImage.onerror = function() {
+            console.error('Failed to load QR image for watermarking');
+            fallbackDownload();
+          };
+
+          // Function to fallback to direct download without watermark
+          function fallbackDownload() {
+            if (generatedQRCode.startsWith('data:')) {
+              const link = document.createElement('a');
+              link.download = 'boondit-qr-code.png';
+              link.href = generatedQRCode;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            } else {
+              window.open(generatedQRCode, '_blank');
+            }
           }
+
+          qrImage.src = generatedQRCode;
         });
       }
 
