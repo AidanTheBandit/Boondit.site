@@ -380,6 +380,10 @@ import Section from "@/components/Section.astro";
 
           console.log('Creating watermarked QR code for download...');
 
+          // Get the creation name (title)
+          const creationName = titleInput ? titleInput.value : '';
+          const watermarkText = creationName ? `${creationName} | boondit.site` : 'boondit.site';
+
           // Create canvas for watermarked version
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
@@ -392,22 +396,22 @@ import Section from "@/components/Section.astro";
 
           const qrImage = new Image();
           qrImage.crossOrigin = 'anonymous';
-          
+
           qrImage.onload = function() {
             try {
               // Draw QR code centered with some padding
               const qrSize = 256;
               const x = (300 - qrSize) / 2; // Center horizontally
               const y = 20; // Some padding from top
-              
+
               ctx.drawImage(qrImage, x, y, qrSize, qrSize);
-              
+
               // Add watermark text in bottom right corner
               ctx.fillStyle = '#666666';
               ctx.font = '14px Arial';
               ctx.textAlign = 'right';
-              ctx.fillText('boondit.site', 280, 320);
-              
+              ctx.fillText(watermarkText, 280, 320);
+
               // Convert to blob and download
               canvas.toBlob(function(blob) {
                 if (blob) {
@@ -424,7 +428,7 @@ import Section from "@/components/Section.astro";
                   fallbackDownload();
                 }
               }, 'image/png');
-              
+
             } catch (error) {
               console.error('Canvas error:', error);
               fallbackDownload();
