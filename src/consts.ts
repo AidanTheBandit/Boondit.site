@@ -15,6 +15,9 @@ export const NAV_LINKS: Array<{ title: string; href?: string }> = [
     title: "Blog",
   },
   {
+    title: "Projects",
+  },
+  {
     title: "R1 creation gen",
     href: "r1-generator"
   },

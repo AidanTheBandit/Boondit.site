@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "@/components/ProjectCard.astro";
+import Section from "@/components/Section.astro";
+import Layout from "@/layouts/Layout.astro";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => (a.data.sortOrder || 0) - (b.data.sortOrder || 0),
+);
+---
+
+<Layout title="My Projects">
+  <Section title="My Projects">
+    <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+      {
+        projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            period={project.data.period}
+            link={project.data.link}
+            description={project.data.description}
+          />
+        ))
+      }
+    </div>
+  </Section>
+</Layout>

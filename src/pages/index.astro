@@ -4,11 +4,19 @@ import Hero from "@/components/Hero.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Section from "@/components/Section.astro";
 import BlogPostCard from "@/components/BlogPostCard.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
 import Layout from "@/layouts/Layout.astro";
 import { KNOWN_TECH, ABOUT_ME } from "@/consts";
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const allProjects = (await getCollection("projects")).sort(
+  (a, b) => (a.data.sortOrder || 0) - (b.data.sortOrder || 0),
+);
+
+// Show latest 4 projects on home
+const projects = allProjects.slice(0, 4);
 ---
 
 <Layout title="Boondit">
@@ -28,6 +36,26 @@ const posts = (await getCollection("blog")).sort(
           />
         ))
       }
+    </div>
+  </Section>
+  <Section
+    title="Projects"
+    className={"bg-gradient-to-b from-background/70 from-[5%] to-background via-background"}
+  >
+    <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+      {
+        projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            period={project.data.period}
+            link={project.data.link}
+            description={project.data.description}
+          />
+        ))
+      }
+    </div>
+    <div class="w-full text-center mt-6">
+      <a href="/projects" class="text-accent hover:underline">View all projects →</a>
     </div>
   </Section>
   <Section title="Technologies I Know" full_screen={false}>
