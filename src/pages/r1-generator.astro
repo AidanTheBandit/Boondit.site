@@ -182,9 +182,6 @@ import Section from "@/components/Section.astro";
             <button id="fetchMetadata" class="btn-primary flex-1">
               Fetch Metadata
             </button>
-            <button id="generateQR" class="btn-success flex-1">
-              Generate QR Code
-            </button>
           </div>
         </div>
 
@@ -255,7 +252,6 @@ import Section from "@/components/Section.astro";
     qrCornerDotStyle: document.getElementById('qrCornerDotStyle'),
     fetchMetadataBtn: document.getElementById('fetchMetadata'),
     takeScreenshotBtn: document.getElementById('takeScreenshot'),
-    generateQRBtn: document.getElementById('generateQR'),
     downloadQRBtn: document.getElementById('downloadQR'),
     qrCodeWrapper: document.getElementById('qrCodeWrapper'),
     screenshotWrapper: document.getElementById('screenshotWrapper'),
@@ -366,93 +362,65 @@ import Section from "@/components/Section.astro";
       alert('Failed to fetch metadata. The website might be blocking requests.');
     } finally {
       btn.disabled = false;
-      btn.textContent = '🔍 Fetch Metadata';
+      btn.textContent = 'Fetch Metadata';
     }
   };
 
-  // QR Generator
-  const generateQR = async (elements) => {
+  // Real-time QR Generator (no validation, no UI updates)
+  const generateQRRealtime = async (elements) => {
     const data = getFormData(elements);
-    if (!data.url) {
-      alert('Please enter a URL');
-      return;
-    }
+    if (!data.url) return; // Skip if no URL
 
-    const btn = elements.generateQRBtn;
-    btn.disabled = true;
-    btn.textContent = 'Generating...';
+    const qrDataString = JSON.stringify(data);
+    const options = {
+      dotsType: elements.qrDotsStyle?.value || 'rounded',
+      cornerSquareType: elements.qrCornerSquareStyle?.value || 'dot',
+      cornerDotType: elements.qrCornerDotStyle?.value || 'dot',
+      bgColor: elements.qrBgColor?.value || '#FFFFFF',
+      fgColor: elements.themeColor?.value || '#FE5000',
+      logoUrl: elements.iconUrl?.value || ''
+    };
 
-    try {
-      const qrDataString = JSON.stringify(data);
-      const options = {
-        dotsType: elements.qrDotsStyle?.value || 'rounded',
-        cornerSquareType: elements.qrCornerSquareStyle?.value || 'dot',
-        cornerDotType: elements.qrCornerDotStyle?.value || 'dot',
-        bgColor: elements.qrBgColor?.value || '#FFFFFF',
-        fgColor: elements.themeColor?.value || '#FE5000',
-        logoUrl: elements.iconUrl?.value || ''
-      };
-
-      if (window.QRCodeStyling) {
-        const qrCode = new window.QRCodeStyling({
-          width: 300,
-          height: 300,
-          type: "canvas",
-          data: qrDataString,
-          margin: 10,
-          qrOptions: { errorCorrectionLevel: "H" },
-          imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 5 },
-          dotsOptions: { color: options.fgColor, type: options.dotsType },
-          backgroundOptions: { color: options.bgColor },
-          cornersSquareOptions: { color: options.fgColor, type: options.cornerSquareType },
-          cornersDotOptions: { color: options.fgColor, type: options.cornerDotType },
-          ...(options.logoUrl && { image: options.logoUrl })
-        });
-
-        elements.qrCodeWrapper.innerHTML = '';
-        qrCode.append(elements.qrCodeWrapper);
-
-        generatedQRCode = await new Promise((resolve) => {
-          qrCode.getRawData('png').then((blob) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(blob);
-          });
-        });
-      } else {
-        // Fallback to API
-        const qrDataURL = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrDataString)}`;
-        generatedQRCode = qrDataURL;
-        
-        elements.qrCodeWrapper.innerHTML = `<img src="${qrDataURL}" alt="QR Code" class="max-w-full rounded-lg" />`;
-      }
-
-      elements.downloadQRBtn.disabled = false;
-    } catch (error) {
-      console.error('QR generation failed:', error);
-      alert('Failed to generate QR code: ' + error.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '⚡ Generate QR Code';
-    }
-  };
-
-  // Download QR
-  const downloadQR = (elements) => {
-    if (!generatedQRCode) {
-      alert('Please generate a QR code first');
-      return;
-    }
-
+    // Create canvas for watermarked QR code
     const canvas = document.createElement('canvas');
     canvas.width = 340;
     canvas.height = 380;
 
     const ctx = canvas.getContext('2d');
-    const bgColor = elements.qrBgColor?.value || '#FFFFFF';
-    ctx.fillStyle = bgColor;
+    ctx.fillStyle = options.bgColor;
     ctx.fillRect(0, 0, 340, 380);
 
+    // Generate QR code data URL
+    let qrImageSrc;
+    if (window.QRCodeStyling) {
+      const qrCode = new window.QRCodeStyling({
+        width: 300,
+        height: 300,
+        type: "canvas",
+        data: qrDataString,
+        margin: 10,
+        qrOptions: { errorCorrectionLevel: "H" },
+        imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 5 },
+        dotsOptions: { color: options.fgColor, type: options.dotsType },
+        backgroundOptions: { color: options.bgColor },
+        cornersSquareOptions: { color: options.fgColor, type: options.cornerSquareType },
+        cornersDotOptions: { color: options.fgColor, type: options.cornerDotType },
+        ...(options.logoUrl && { image: options.logoUrl })
+      });
+
+      qrImageSrc = await new Promise((resolve) => {
+        qrCode.getRawData('png').then((blob) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      });
+    } else {
+      // Fallback to API
+      qrImageSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrDataString)}`;
+    }
+
+    // Draw QR code on canvas
     const qrImage = new Image();
     qrImage.crossOrigin = 'anonymous';
     qrImage.onload = function() {
@@ -468,35 +436,31 @@ import Section from "@/components/Section.astro";
       const watermarkText = creationName ? `${creationName} | boondit.site` : 'boondit.site';
       ctx.fillText(watermarkText, 170, 355);
 
-      canvas.toBlob(function(blob) {
-        if (blob) {
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.download = 'boondit-qr-code.png';
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        }
-      }, 'image/png');
+      // Update preview
+      elements.qrCodeWrapper.innerHTML = '';
+      elements.qrCodeWrapper.appendChild(canvas);
+
+      // Store for download
+      generatedQRCode = canvas.toDataURL('image/png');
+      elements.downloadQRBtn.disabled = false;
     };
 
-    qrImage.onerror = function() {
-      // fallback: simple image download
-      if (generatedQRCode.startsWith('data:')) {
-        const link = document.createElement('a');
-        link.download = 'boondit-qr-code.png';
-        link.href = generatedQRCode;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        window.open(generatedQRCode, '_blank');
-      }
-    };
+    qrImage.src = qrImageSrc;
+  };
 
-    qrImage.src = generatedQRCode;
+  // Download QR
+  const downloadQR = (elements) => {
+    if (!generatedQRCode) {
+      alert('Please wait for QR code generation to complete');
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.download = 'boondit-qr-code.png';
+    link.href = generatedQRCode;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Take Screenshot
@@ -527,7 +491,7 @@ import Section from "@/components/Section.astro";
       alert('Failed to generate screenshot URL. Please try again.');
     } finally {
       btn.disabled = false;
-      btn.textContent = '📸 Generate Screenshot URL';
+      btn.textContent = 'Generate Screenshot URL';
     }
   };
 
@@ -536,11 +500,32 @@ import Section from "@/components/Section.astro";
     isInitialized = true;
     const elements = getElements();
 
-    // Live JSON and screenshot previews
+    // Debounce function for real-time updates
+    let qrDebounceTimer;
+    const debounceQRGeneration = (elements) => {
+      clearTimeout(qrDebounceTimer);
+      qrDebounceTimer = setTimeout(() => generateQRRealtime(elements), 300);
+    };
+
+    // Live JSON and screenshot previews + QR generation
     [elements.url, elements.title, elements.description, elements.iconUrl, elements.author, elements.screenshotUrl, elements.themeColor].forEach(el => {
       if (el) {
-        el.addEventListener('input', () => updateJsonPreview(elements));
-        el.addEventListener('change', () => updateJsonPreview(elements));
+        el.addEventListener('input', () => {
+          updateJsonPreview(elements);
+          debounceQRGeneration(elements);
+        });
+        el.addEventListener('change', () => {
+          updateJsonPreview(elements);
+          debounceQRGeneration(elements);
+        });
+      }
+    });
+
+    // QR styling fields
+    [elements.qrBgColor, elements.qrDotsStyle, elements.qrCornerSquareStyle, elements.qrCornerDotStyle].forEach(el => {
+      if (el) {
+        el.addEventListener('input', () => debounceQRGeneration(elements));
+        el.addEventListener('change', () => debounceQRGeneration(elements));
       }
     });
 
@@ -550,8 +535,11 @@ import Section from "@/components/Section.astro";
     }
 
     // Color sync
-    syncColorInputs(elements.themeColor, elements.themeColorText, () => updateJsonPreview(elements));
-    syncColorInputs(elements.qrBgColor, elements.qrBgColorText);
+    syncColorInputs(elements.themeColor, elements.themeColorText, () => {
+      updateJsonPreview(elements);
+      debounceQRGeneration(elements);
+    });
+    syncColorInputs(elements.qrBgColor, elements.qrBgColorText, () => debounceQRGeneration(elements));
 
     // Buttons
     if (elements.fetchMetadataBtn) {
@@ -560,15 +548,17 @@ import Section from "@/components/Section.astro";
     if (elements.takeScreenshotBtn) {
       elements.takeScreenshotBtn.addEventListener('click', () => takeScreenshot(elements));
     }
-    if (elements.generateQRBtn) {
-      elements.generateQRBtn.addEventListener('click', () => generateQR(elements));
-    }
     if (elements.downloadQRBtn) {
       elements.downloadQRBtn.addEventListener('click', () => downloadQR(elements));
     }
 
     updateJsonPreview(elements);
     updateScreenshotPreview(elements);
+    
+    // Generate initial QR code if URL exists
+    if (elements.url?.value) {
+      generateQRRealtime(elements);
+    }
   }
 
   if (document.readyState === 'loading') {
