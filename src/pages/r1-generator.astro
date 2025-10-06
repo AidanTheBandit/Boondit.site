@@ -70,6 +70,67 @@ import Section from "@/components/Section.astro";
               />
             </div>
 
+            <!-- QR Code Customization Options -->
+            <div class="border-t border-gray-600 pt-4">
+              <h4 class="text-md font-medium mb-3 text-white">QR Code Styling</h4>
+              
+              <div class="space-y-3">
+                <div>
+                  <label for="qrBgColor" class="block text-sm font-medium mb-1 text-white">Background Color</label>
+                  <input 
+                    type="color" 
+                    id="qrBgColor" 
+                    class="w-20 h-10 border border-gray-600 rounded-md cursor-pointer"
+                    value="#FFFFFF"
+                  />
+                  <input 
+                    type="text" 
+                    id="qrBgColorText"
+                    class="ml-2 px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white w-24"
+                    value="#FFFFFF"
+                  />
+                </div>
+
+                <div>
+                  <label for="qrDotsStyle" class="block text-sm font-medium mb-1 text-white">Dots Style</label>
+                  <select 
+                    id="qrDotsStyle"
+                    class="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
+                  >
+                    <option value="rounded">Rounded</option>
+                    <option value="dots">Dots</option>
+                    <option value="classy">Classy</option>
+                    <option value="classy-rounded">Classy Rounded</option>
+                    <option value="square">Square</option>
+                    <option value="extra-rounded">Extra Rounded</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="qrCornerSquareStyle" class="block text-sm font-medium mb-1 text-white">Corner Square Style</label>
+                  <select 
+                    id="qrCornerSquareStyle"
+                    class="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
+                  >
+                    <option value="dot">Dot</option>
+                    <option value="square">Square</option>
+                    <option value="extra-rounded">Extra Rounded</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="qrCornerDotStyle" class="block text-sm font-medium mb-1 text-white">Corner Dot Style</label>
+                  <select 
+                    id="qrCornerDotStyle"
+                    class="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
+                  >
+                    <option value="dot">Dot</option>
+                    <option value="square">Square</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <button 
               id="fetchMetadata" 
               class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
@@ -142,6 +203,11 @@ import Section from "@/components/Section.astro";
     const iconUrlInput = document.getElementById('iconUrl');
     const themeColorInput = document.getElementById('themeColor');
     const themeColorTextInput = document.getElementById('themeColorText');
+    const qrBgColorInput = document.getElementById('qrBgColor');
+    const qrBgColorTextInput = document.getElementById('qrBgColorText');
+    const qrDotsStyleInput = document.getElementById('qrDotsStyle');
+    const qrCornerSquareStyleInput = document.getElementById('qrCornerSquareStyle');
+    const qrCornerDotStyleInput = document.getElementById('qrCornerDotStyle');
     const fetchMetadataBtn = document.getElementById('fetchMetadata');
     const generateQRBtn = document.getElementById('generateQR');
     const downloadQRBtn = document.getElementById('downloadQR');
@@ -168,6 +234,17 @@ import Section from "@/components/Section.astro";
       themeColorTextInput.addEventListener('change', function() {
         themeColorInput.value = themeColorTextInput.value;
         updateJsonPreview();
+      });
+    }
+
+    // Sync QR background color inputs
+    if (qrBgColorInput && qrBgColorTextInput) {
+      qrBgColorInput.addEventListener('change', function() {
+        qrBgColorTextInput.value = qrBgColorInput.value;
+      });
+
+      qrBgColorTextInput.addEventListener('change', function() {
+        qrBgColorInput.value = qrBgColorTextInput.value;
       });
     }
 
@@ -335,41 +412,95 @@ import Section from "@/components/Section.astro";
             const qrDataString = JSON.stringify(data);
             console.log('QR data string:', qrDataString);
             
-            let qrDataURL;
+            // Get styling options
+            const dotsType = qrDotsStyleInput ? qrDotsStyleInput.value : 'rounded';
+            const cornerSquareType = qrCornerSquareStyleInput ? qrCornerSquareStyleInput.value : 'dot';
+            const cornerDotType = qrCornerDotStyleInput ? qrCornerDotStyleInput.value : 'dot';
+            const bgColor = qrBgColorInput ? qrBgColorInput.value : '#FFFFFF';
+            const fgColor = themeColorInput ? themeColorInput.value : '#FE5000';
+            const logoUrl = iconUrlInput ? iconUrlInput.value : '';
             
-            // Try using the QRCode library if available
-            if (window.QRCode) {
-              console.log('Using QRCode library');
-              qrDataURL = await window.QRCode.toDataURL(qrDataString, {
-                width: 256,
-                margin: 2,
-                color: {
-                  dark: '#000000',
-                  light: '#FFFFFF'
+            // Try using the QRCodeStyling library if available
+            if (window.QRCodeStyling) {
+              console.log('Using QRCodeStyling library');
+              
+              // Configure QR code styling
+              const qrOptions = {
+                width: 300,
+                height: 300,
+                type: "canvas",
+                data: qrDataString,
+                margin: 10,
+                qrOptions: {
+                  typeNumber: 0,
+                  mode: "Byte",
+                  errorCorrectionLevel: "H"
+                },
+                imageOptions: {
+                  hideBackgroundDots: true,
+                  imageSize: 0.4,
+                  margin: 5,
+                  crossOrigin: "anonymous"
+                },
+                dotsOptions: {
+                  color: fgColor,
+                  type: dotsType
+                },
+                backgroundOptions: {
+                  color: bgColor
+                },
+                cornersSquareOptions: {
+                  color: fgColor,
+                  type: cornerSquareType
+                },
+                cornersDotOptions: {
+                  color: fgColor,
+                  type: cornerDotType
                 }
+              };
+
+              // Add logo/icon if provided
+              if (logoUrl) {
+                qrOptions.image = logoUrl;
+              }
+
+              const qrCode = new window.QRCodeStyling(qrOptions);
+              
+              // Clear the wrapper and append QR code
+              if (qrCodeWrapper) {
+                qrCodeWrapper.innerHTML = '';
+                qrCode.append(qrCodeWrapper);
+              }
+
+              // Get the data URL for download
+              generatedQRCode = await new Promise((resolve) => {
+                qrCode.getRawData('png').then((blob) => {
+                  const reader = new FileReader();
+                  reader.onloadend = () => resolve(reader.result);
+                  reader.readAsDataURL(blob);
+                });
               });
+
             } else {
               // Fallback: Use QR Server API
               console.log('Using QR Server API fallback');
               const encodedData = encodeURIComponent(qrDataString);
-              qrDataURL = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodedData}`;
+              const qrDataURL = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodedData}`;
+              
+              generatedQRCode = qrDataURL;
+              
+              const img = document.createElement('img');
+              img.src = qrDataURL;
+              img.alt = 'Generated QR Code';
+              img.className = 'max-w-full h-auto rounded-lg';
+              
+              if (qrCodeWrapper) {
+                qrCodeWrapper.innerHTML = '';
+                qrCodeWrapper.appendChild(img);
+              }
             }
 
             console.log('QR code generated successfully');
-
-            // Store the QR code for downloading (we'll add watermark only on download)
-            generatedQRCode = qrDataURL;
-            
-            // Display QR code without watermark
-            const img = document.createElement('img');
-            img.src = qrDataURL;
-            img.alt = 'Generated QR Code';
-            img.className = 'max-w-full h-auto rounded-lg border-8 border-white bg-white';
-            
-            if (qrCodeWrapper) {
-              qrCodeWrapper.innerHTML = '';
-              qrCodeWrapper.appendChild(img);
-            }
             
             if (downloadQRBtn) {
               downloadQRBtn.disabled = false;
@@ -404,12 +535,13 @@ import Section from "@/components/Section.astro";
           // Create canvas for watermarked version
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          canvas.width = 300;
-          canvas.height = 340; // QR code + padding + text
+          canvas.width = 340;
+          canvas.height = 380; // QR code + padding + text
 
-          // Fill white background
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillRect(0, 0, 300, 340);
+          // Get background color from input
+          const bgColor = qrBgColorInput ? qrBgColorInput.value : '#FFFFFF';
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(0, 0, 340, 380);
 
           const qrImage = new Image();
           qrImage.crossOrigin = 'anonymous';
@@ -417,17 +549,17 @@ import Section from "@/components/Section.astro";
           qrImage.onload = function() {
             try {
               // Draw QR code centered with some padding
-              const qrSize = 256;
-              const x = (300 - qrSize) / 2; // Center horizontally
+              const qrSize = 300;
+              const x = (340 - qrSize) / 2; // Center horizontally
               const y = 20; // Some padding from top
 
               ctx.drawImage(qrImage, x, y, qrSize, qrSize);
 
-              // Add watermark text in bottom right corner
+              // Add watermark text in bottom center
               ctx.fillStyle = '#666666';
-              ctx.font = '14px Arial';
-              ctx.textAlign = 'right';
-              ctx.fillText(watermarkText, 280, 320);
+              ctx.font = 'bold 14px Arial';
+              ctx.textAlign = 'center';
+              ctx.fillText(watermarkText, 170, 355);
 
               // Convert to blob and download
               canvas.toBlob(function(blob) {
@@ -479,58 +611,46 @@ import Section from "@/components/Section.astro";
       updateJsonPreview();
     }
 
-    // Load QRCode library from CDN with fallback and timeout
+    // Load QRCodeStyling library from CDN with fallback and timeout
     function loadQRCodeLibrary() {
       return new Promise((resolve, reject) => {
-        if (window.QRCode) {
-          console.log('QRCode library already loaded');
+        if (window.QRCodeStyling) {
+          console.log('QRCodeStyling library already loaded');
           resolve();
           return;
         }
 
-        console.log('Loading QRCode library...');
+        console.log('Loading QRCodeStyling library...');
         
         // Add a timeout to prevent hanging
         const timeout = setTimeout(() => {
-          console.warn('QRCode library loading timed out after 10 seconds');
+          console.warn('QRCodeStyling library loading timed out after 10 seconds');
           reject(new Error('Library loading timed out'));
         }, 10000);
         
         const script = document.createElement('script');
         
         // Try the first CDN
-        script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
+        script.src = 'https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js';
         script.onload = function() {
           clearTimeout(timeout);
-          console.log('QRCode library loaded successfully from unpkg');
+          console.log('QRCodeStyling library loaded successfully from unpkg');
           resolve();
         };
         script.onerror = function() {
           console.log('First CDN failed, trying jsdelivr...');
           // Try second CDN
           const script2 = document.createElement('script');
-          script2.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+          script2.src = 'https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js';
           script2.onload = function() {
             clearTimeout(timeout);
-            console.log('QRCode library loaded successfully from jsdelivr');
+            console.log('QRCodeStyling library loaded successfully from jsdelivr');
             resolve();
           };
           script2.onerror = function() {
-            console.log('Second CDN failed, trying cdnjs...');
-            // Try third CDN
-            const script3 = document.createElement('script');
-            script3.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js';
-            script3.onload = function() {
-              clearTimeout(timeout);
-              console.log('QRCode library loaded successfully from cdnjs');
-              resolve();
-            };
-            script3.onerror = function() {
-              clearTimeout(timeout);
-              console.error('Failed to load QRCode library from all CDNs');
-              reject(new Error('Failed to load QR code library'));
-            };
-            document.head.appendChild(script3);
+            clearTimeout(timeout);
+            console.error('Failed to load QRCodeStyling library from all CDNs');
+            reject(new Error('Failed to load QR code styling library'));
           };
           document.head.appendChild(script2);
         };
