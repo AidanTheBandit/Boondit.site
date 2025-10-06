@@ -124,11 +124,18 @@ import Section from "@/components/Section.astro";
 </Layout>
 
 <script is:inline>
-  // Wait for DOM to be ready
-  document.addEventListener('DOMContentLoaded', function() {
-    let generatedQRCode = null;
+  // Global state to prevent duplicate initialization
+  let isInitialized = false;
+  let generatedQRCode = null;
 
-    // DOM elements
+  function initializeQRPage() {
+    // Prevent duplicate initialization
+    if (isInitialized) {
+      console.log('QR page already initialized, skipping...');
+      return;
+    }
+
+    // Check if required DOM elements exist
     const urlInput = document.getElementById('url');
     const titleInput = document.getElementById('title');
     const descriptionInput = document.getElementById('description');
@@ -140,6 +147,16 @@ import Section from "@/components/Section.astro";
     const downloadQRBtn = document.getElementById('downloadQR');
     const qrCodeWrapper = document.getElementById('qrCodeWrapper');
     const jsonPreview = document.getElementById('jsonPreview');
+
+    // If elements aren't ready, retry after a short delay
+    if (!urlInput || !titleInput || !descriptionInput || !generateQRBtn || !qrCodeWrapper) {
+      console.log('DOM elements not ready, retrying in 100ms...');
+      setTimeout(initializeQRPage, 100);
+      return;
+    }
+
+    console.log('Initializing QR page...');
+    isInitialized = true;
 
     // Sync color inputs
     if (themeColorInput && themeColorTextInput) {
@@ -462,20 +479,29 @@ import Section from "@/components/Section.astro";
       updateJsonPreview();
     }
 
-    // Load QRCode library from CDN with fallback
+    // Load QRCode library from CDN with fallback and timeout
     function loadQRCodeLibrary() {
       return new Promise((resolve, reject) => {
         if (window.QRCode) {
+          console.log('QRCode library already loaded');
           resolve();
           return;
         }
 
         console.log('Loading QRCode library...');
+        
+        // Add a timeout to prevent hanging
+        const timeout = setTimeout(() => {
+          console.warn('QRCode library loading timed out after 10 seconds');
+          reject(new Error('Library loading timed out'));
+        }, 10000);
+        
         const script = document.createElement('script');
         
         // Try the first CDN
         script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
         script.onload = function() {
+          clearTimeout(timeout);
           console.log('QRCode library loaded successfully from unpkg');
           resolve();
         };
@@ -485,6 +511,7 @@ import Section from "@/components/Section.astro";
           const script2 = document.createElement('script');
           script2.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
           script2.onload = function() {
+            clearTimeout(timeout);
             console.log('QRCode library loaded successfully from jsdelivr');
             resolve();
           };
@@ -494,10 +521,12 @@ import Section from "@/components/Section.astro";
             const script3 = document.createElement('script');
             script3.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js';
             script3.onload = function() {
+              clearTimeout(timeout);
               console.log('QRCode library loaded successfully from cdnjs');
               resolve();
             };
             script3.onerror = function() {
+              clearTimeout(timeout);
               console.error('Failed to load QRCode library from all CDNs');
               reject(new Error('Failed to load QR code library'));
             };
@@ -520,6 +549,19 @@ import Section from "@/components/Section.astro";
         // Still initialize other features - no error alert
         initQRGenerator();
       });
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeQRPage);
+  } else {
+    initializeQRPage();
+  }
+
+  // Handle Astro navigation (for client-side routing)
+  document.addEventListener('astro:page-load', () => {
+    console.log('Astro page load detected');
+    setTimeout(initializeQRPage, 100);
   });
 </script>
 
