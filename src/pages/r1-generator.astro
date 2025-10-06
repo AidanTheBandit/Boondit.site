@@ -95,9 +95,8 @@ import Section from "@/components/Section.astro";
                 <button 
                   id="takeScreenshot" 
                   class="btn-secondary mt-3 w-full"
-                  disabled
                 >
-                  📸 Take Screenshot (240x282)
+                  📸 Generate Screenshot URL
                 </button>
               </div>
 
@@ -502,6 +501,38 @@ import Section from "@/components/Section.astro";
     qrImage.src = generatedQRCode;
   };
 
+  // Take Screenshot
+  const takeScreenshot = async (elements) => {
+    const url = elements.url?.value;
+    if (!url) {
+      alert('Please enter a URL first');
+      return;
+    }
+
+    const btn = elements.takeScreenshotBtn;
+    btn.disabled = true;
+    btn.textContent = '📸 Generating...';
+
+    try {
+      // Use Thum.io for client-side screenshot generation
+      const screenshotUrl = `https://image.thum.io/get/width/240/height/282/${url}`;
+      
+      // Update the screenshot URL input
+      elements.screenshotUrl.value = screenshotUrl;
+      
+      // Update previews
+      updateScreenshotPreview(elements);
+      updateJsonPreview(elements);
+      
+    } catch (error) {
+      console.error('Screenshot failed:', error);
+      alert('Failed to generate screenshot URL. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '📸 Generate Screenshot URL';
+    }
+  };
+
   function initializeQRPage() {
     if (isInitialized) return;
     isInitialized = true;
@@ -527,6 +558,9 @@ import Section from "@/components/Section.astro";
     // Buttons
     if (elements.fetchMetadataBtn) {
       elements.fetchMetadataBtn.addEventListener('click', () => fetchMetadata(elements));
+    }
+    if (elements.takeScreenshotBtn) {
+      elements.takeScreenshotBtn.addEventListener('click', () => takeScreenshot(elements));
     }
     if (elements.generateQRBtn) {
       elements.generateQRBtn.addEventListener('click', () => generateQR(elements));
