@@ -73,10 +73,7 @@ export const generateQRRealtime = async (elements) => {
 
   // Generate QR code data URL
   let qrImageSrc;
-  console.log('QRCodeStyling available:', !!window.QRCodeStyling);
-  console.log('Theme color:', themeColor);
   if (window.QRCodeStyling) {
-    console.log('Using QRCodeStyling library');
     const qrCode = new window.QRCodeStyling({
       width: 300,
       height: 300,
@@ -100,7 +97,6 @@ export const generateQRRealtime = async (elements) => {
       });
     });
   } else {
-    console.log('Falling back to API');
     // Fallback to API with theme color
     const fgColorHex = themeColor.replace('#', '');
     qrImageSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrDataString)}&color=${fgColorHex}`;

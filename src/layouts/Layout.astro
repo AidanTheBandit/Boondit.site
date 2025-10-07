@@ -17,5 +17,8 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
     <header class="fixed top-0 w-screen z-[9999]"><Navbar /></header>
     <main class="pt-20 md:pt-24 lg:pt-20"><slot /></main>
     <footer class="w-screen bottom-0 overflow-x-hidden"><Footer /></footer>
+    
+    <!-- QR Code Styling Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js"></script>
   </body>
 </html>
