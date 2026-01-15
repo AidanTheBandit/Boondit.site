@@ -29,4 +29,8 @@ export const NAV_LINKS: Array<{ title: string; href?: string }> = [
     title: "Github",
     href: "//github.com/" + GITHUB_USERNAME,
   },
+  {
+    title: "Buy Me a Coffee",
+    href: "//buymeacoffee.com/boondit"
+  },
 ];
