@@ -7,25 +7,22 @@ import Section from "@/components/Section.astro";
   <Section title="R1 QR Code Generator" className="min-h-screen">
     <div class="max-w-7xl mx-auto p-6">
       <!-- Header -->
-      <header class="text-center mb-8">
+      <header class="text-center mb-6">
         <h1 class="text-4xl font-bold text-white mb-3">
           R1 Creation Generator
         </h1>
         <p class="text-gray-400 text-lg">Generate metadata for creations</p>
 
         <!-- Creation Store Banner -->
-        <div class="mt-6 mb-4 mx-auto max-w-3xl">
+        <div class="mt-4 mb-3 mx-auto max-w-3xl">
           <div
             class="creation-store-banner"
             role="banner"
             aria-label="Announcement about Boondit Creation Store"
           >
-            <div class="banner-icon" aria-hidden="true">🎉</div>
             <div class="banner-content">
-              <h3 class="banner-title">
-                Publish to the Boondit Creation Store!
-              </h3>
               <p class="banner-text">
+                <span class="banner-prefix">❯</span>
                 You can now publish your creation to the
                 <a
                   href="https://creations.boondit.site/"
@@ -36,13 +33,15 @@ import Section from "@/components/Section.astro";
                 >
                   Boondit Creation Store
                 </a>
+                <span class="banner-disclaimer"
+                  >(not affiliated with Rabbit Inc)</span
+                >
               </p>
-              <p class="banner-disclaimer">(not affiliated with Rabbit Inc)</p>
             </div>
           </div>
         </div>
 
-        <div class="mt-4 flex justify-center">
+        <div class="mt-3 flex justify-center">
           <a
             href="https://buymeacoffee.com/boondit"
             target="_blank"
@@ -392,56 +391,45 @@ import Section from "@/components/Section.astro";
 <style>
   /* Creation Store Banner */
   .creation-store-banner {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-    border-radius: 1rem;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .banner-icon {
-    font-size: 2.5rem;
-    flex-shrink: 0;
+    background: hsl(240 15% 12%);
+    border: 2px solid hsl(240 15% 24%);
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
   }
 
   .banner-content {
-    flex: 1;
-    text-align: left;
+    text-align: center;
   }
 
-  .banner-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
+  .banner-prefix {
+    color: hsl(270 20% 55%);
+    font-weight: 600;
+    margin-right: 0.5rem;
   }
 
   .banner-text {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.95);
-    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+    color: hsl(0 0% 98%);
+    line-height: 1.6;
   }
 
   .banner-link {
-    color: #fde047;
-    font-weight: 700;
+    color: hsl(270 20% 55%);
+    font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
-    text-decoration-thickness: 2px;
     transition: color 0.2s;
   }
 
   .banner-link:hover {
-    color: #facc15;
+    color: hsl(270 30% 65%);
   }
 
   .banner-disclaimer {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: hsl(0 0% 63.9%);
+    font-size: 0.85rem;
     font-style: italic;
+    margin-left: 0.5rem;
   }
 
   /* Cards */
@@ -653,17 +641,17 @@ import Section from "@/components/Section.astro";
   /* Responsive Design */
   @media (max-width: 768px) {
     .creation-store-banner {
-      flex-direction: column;
-      text-align: center;
-      padding: 1.25rem;
+      padding: 0.875rem 1rem;
     }
 
-    .banner-content {
-      text-align: center;
+    .banner-text {
+      font-size: 0.875rem;
     }
 
-    .banner-icon {
-      font-size: 2rem;
+    .banner-disclaimer {
+      display: block;
+      margin-left: 0;
+      margin-top: 0.25rem;
     }
 
     .card {
