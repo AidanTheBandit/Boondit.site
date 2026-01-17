@@ -37,10 +37,9 @@ npm run dev
 
 > Here's a working and expected screenshot of **token-template**
 
-| Landing Page                              |
-| ----------------------------------------- |
+| Landing Page                    |
+| ------------------------------- |
 | ![Demo](/public/screenshot.png) |
-
 
 ---
 

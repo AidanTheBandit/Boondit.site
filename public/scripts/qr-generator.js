@@ -1,28 +1,28 @@
 // QR code generation functionality
-import { getFormData } from './form-handlers.js';
+import { getFormData } from "./form-handlers.js";
 
 let generatedQRCode = null;
 
 export const generateQR = async (elements) => {
   const data = getFormData(elements);
   if (!data.url) {
-    alert('Please enter a URL');
+    alert("Please enter a URL");
     return;
   }
 
   const btn = elements.generateQRBtn;
   btn.disabled = true;
-  btn.textContent = 'Generating...';
+  btn.textContent = "Generating...";
 
   try {
     await generateQRRealtime(elements);
     elements.downloadQRBtn.disabled = false;
   } catch (error) {
-    console.error('QR generation failed:', error);
-    alert('Failed to generate QR code: ' + error.message);
+    console.error("QR generation failed:", error);
+    alert("Failed to generate QR code: " + error.message);
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Generate QR Code';
+    btn.textContent = "Generate QR Code";
   }
 };
 
@@ -32,20 +32,20 @@ export const generateQRRealtime = async (elements) => {
   if (!data.url) return; // Skip if no URL
 
   const qrDataString = JSON.stringify(data);
-  const themeColor = elements.themeColor?.value || '#FE5000';
+  const themeColor = elements.themeColor?.value || "#FE5000";
   const options = {
-    dotsType: elements.qrDotsStyle?.value || 'rounded',
-    cornerSquareType: elements.qrCornerSquareStyle?.value || 'dot',
-    cornerDotType: elements.qrCornerDotStyle?.value || 'dot',
-    bgColor: elements.qrBgColor?.value || '#FFFFFF',
+    dotsType: elements.qrDotsStyle?.value || "rounded",
+    cornerSquareType: elements.qrCornerSquareStyle?.value || "dot",
+    cornerDotType: elements.qrCornerDotStyle?.value || "dot",
+    bgColor: elements.qrBgColor?.value || "#FFFFFF",
     fgColor: themeColor,
-    logoUrl: elements.iconUrl?.value || ''
+    logoUrl: elements.iconUrl?.value || "",
   };
 
   // Create themed background based on theme color
   const createThemedBackground = (themeColor) => {
     // Convert hex to RGB
-    const hex = themeColor.replace('#', '');
+    const hex = themeColor.replace("#", "");
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
@@ -60,14 +60,17 @@ export const generateQRRealtime = async (elements) => {
   };
 
   // Use themed background if no custom background is set
-  const qrBackgroundColor = options.bgColor === '#FFFFFF' ? createThemedBackground(themeColor) : options.bgColor;
+  const qrBackgroundColor =
+    options.bgColor === "#FFFFFF"
+      ? createThemedBackground(themeColor)
+      : options.bgColor;
 
   // Create canvas for watermarked QR code
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = 340;
   canvas.height = 380;
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   ctx.fillStyle = qrBackgroundColor;
   ctx.fillRect(0, 0, 340, 380);
 
@@ -84,13 +87,16 @@ export const generateQRRealtime = async (elements) => {
       imageOptions: { hideBackgroundDots: true, imageSize: 0.5, margin: 4 },
       dotsOptions: { color: themeColor, type: options.dotsType },
       backgroundOptions: { color: qrBackgroundColor },
-      cornersSquareOptions: { color: themeColor, type: options.cornerSquareType },
+      cornersSquareOptions: {
+        color: themeColor,
+        type: options.cornerSquareType,
+      },
       cornersDotOptions: { color: themeColor, type: options.cornerDotType },
-      ...(options.logoUrl && { image: options.logoUrl })
+      ...(options.logoUrl && { image: options.logoUrl }),
     });
 
     qrImageSrc = await new Promise((resolve) => {
-      qrCode.getRawData('png').then((blob) => {
+      qrCode.getRawData("png").then((blob) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result);
         reader.readAsDataURL(blob);
@@ -98,32 +104,34 @@ export const generateQRRealtime = async (elements) => {
     });
   } else {
     // Fallback to API with theme color
-    const fgColorHex = themeColor.replace('#', '');
+    const fgColorHex = themeColor.replace("#", "");
     qrImageSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrDataString)}&color=${fgColorHex}`;
   }
 
   // Draw QR code on canvas
   const qrImage = new Image();
-  qrImage.crossOrigin = 'anonymous';
-  qrImage.onload = function() {
+  qrImage.crossOrigin = "anonymous";
+  qrImage.onload = function () {
     // Center QR code
     ctx.drawImage(qrImage, 20, 20, 300, 300);
 
     // Watermark
-    ctx.fillStyle = '#666666';
-    ctx.font = 'bold 14px Arial';
-    ctx.textAlign = 'center';
+    ctx.fillStyle = "#666666";
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "center";
 
-    const creationName = elements.title?.value || '';
-    const watermarkText = creationName ? `${creationName} | boondit.site` : 'boondit.site';
+    const creationName = elements.title?.value || "";
+    const watermarkText = creationName
+      ? `${creationName} | boondit.site`
+      : "boondit.site";
     ctx.fillText(watermarkText, 170, 355);
 
     // Update preview
-    elements.qrCodeWrapper.innerHTML = '';
+    elements.qrCodeWrapper.innerHTML = "";
     elements.qrCodeWrapper.appendChild(canvas);
 
     // Store for download
-    generatedQRCode = canvas.toDataURL('image/png');
+    generatedQRCode = canvas.toDataURL("image/png");
     elements.downloadQRBtn.disabled = false;
   };
 
@@ -133,12 +141,12 @@ export const generateQRRealtime = async (elements) => {
 // Download QR
 export const downloadQR = (elements) => {
   if (!generatedQRCode) {
-    alert('Please wait for QR code generation to complete');
+    alert("Please wait for QR code generation to complete");
     return;
   }
 
-  const link = document.createElement('a');
-  link.download = 'boondit-qr-code.png';
+  const link = document.createElement("a");
+  link.download = "boondit-qr-code.png";
   link.href = generatedQRCode;
   document.body.appendChild(link);
   link.click();
@@ -149,13 +157,13 @@ export const downloadQR = (elements) => {
 export const takeScreenshot = async (elements) => {
   const url = elements.url?.value;
   if (!url) {
-    alert('Please enter a URL first');
+    alert("Please enter a URL first");
     return;
   }
 
   const btn = elements.takeScreenshotBtn;
   btn.disabled = true;
-  btn.textContent = 'Generating...';
+  btn.textContent = "Generating...";
 
   try {
     // Use Thum.io for client-side screenshot generation
@@ -167,12 +175,11 @@ export const takeScreenshot = async (elements) => {
     // Update previews
     updateScreenshotPreview(elements);
     updateJsonPreview(elements);
-
   } catch (error) {
-    console.error('Screenshot failed:', error);
-    alert('Failed to generate screenshot URL. Please try again.');
+    console.error("Screenshot failed:", error);
+    alert("Failed to generate screenshot URL. Please try again.");
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Generate Screenshot URL';
+    btn.textContent = "Generate Screenshot URL";
   }
 };
