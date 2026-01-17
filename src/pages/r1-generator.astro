@@ -6,20 +6,48 @@ import Section from "@/components/Section.astro";
 <Layout title="R1 Creation Gen - Boondit">
   <Section title="R1 QR Code Generator" className="min-h-screen">
     <div class="max-w-7xl mx-auto p-6">
-      
       <!-- Header -->
-      <header class="text-center mb-10">
-        <h1 class="text-4xl font-bold text-white mb-3">R1 Creation Generator</h1>
+      <header class="text-center mb-6">
+        <h1 class="text-4xl font-bold text-white mb-3">
+          R1 Creation Generator
+        </h1>
         <p class="text-gray-400 text-lg">Generate metadata for creations</p>
-        <div class="mt-4 flex justify-center">
-          <a 
-            href="https://buymeacoffee.com/boondit" 
+
+        <!-- Creation Store Banner -->
+        <div class="mt-4 mb-3 mx-auto max-w-3xl">
+          <div
+            class="creation-store-banner"
+            role="banner"
+            aria-label="Announcement about Boondit Creation Store"
+          >
+            <div class="banner-content">
+              <p class="banner-text">
+                <span class="banner-prefix">❯</span>
+                You can now publish your creation to the
+                <a
+                  href="https://creations.boondit.site/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="banner-link"
+                  aria-label="Visit Boondit Creation Store (opens in new tab)"
+                >
+                  Boondit Creation Store
+                </a>
+                <span class="banner-disclaimer">(not affiliated with Rabbit Inc)</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3 flex justify-center">
+          <a
+            href="https://buymeacoffee.com/boondit"
             target="_blank"
             rel="noopener noreferrer"
             class="inline-block"
           >
-            <img 
-              src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=boondit&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" 
+            <img
+              src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=boondit&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"
               alt="Buy Me A Coffee"
               style="height: 50px !important; width: 180px !important;"
             />
@@ -28,22 +56,18 @@ import Section from "@/components/Section.astro";
       </header>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
         <!-- Left Column: Forms -->
         <div class="lg:col-span-2 space-y-6">
-          
           <!-- Creation Details Card -->
           <article class="card">
-            <h2 class="card-title">
-              Creation Details
-            </h2>
-            
+            <h2 class="card-title">Creation Details</h2>
+
             <div class="space-y-5">
               <div class="form-group">
                 <label for="url" class="form-label">URL</label>
-                <input 
-                  type="url" 
-                  id="url" 
+                <input
+                  type="url"
+                  id="url"
                   class="form-input"
                   placeholder="https://example.com"
                   value="https://barkle.chat"
@@ -52,9 +76,9 @@ import Section from "@/components/Section.astro";
 
               <div class="form-group">
                 <label for="title" class="form-label">Title</label>
-                <input 
-                  type="text" 
-                  id="title" 
+                <input
+                  type="text"
+                  id="title"
                   class="form-input"
                   placeholder="Enter title"
                   value="Barkle"
@@ -63,21 +87,21 @@ import Section from "@/components/Section.astro";
 
               <div class="form-group">
                 <label for="description" class="form-label">Description</label>
-                <textarea 
-                  id="description" 
+                <textarea
+                  id="description"
                   rows="3"
                   class="form-input resize-none"
-                  placeholder="Enter description"
-                >Social platform</textarea>
+                  placeholder="Enter description">Social platform</textarea
+                >
               </div>
 
               <div class="form-group">
                 <label for="author" class="form-label">
                   Author <span class="text-gray-500 text-xs">(optional)</span>
                 </label>
-                <input 
-                  type="text" 
-                  id="author" 
+                <input
+                  type="text"
+                  id="author"
                   class="form-input"
                   placeholder="Enter author name"
                 />
@@ -87,9 +111,9 @@ import Section from "@/components/Section.astro";
                 <label for="iconUrl" class="form-label">
                   Icon URL <span class="text-gray-500 text-xs">(optional)</span>
                 </label>
-                <input 
-                  type="url" 
-                  id="iconUrl" 
+                <input
+                  type="url"
+                  id="iconUrl"
                   class="form-input"
                   placeholder="https://example.com/icon.png"
                 />
@@ -97,18 +121,17 @@ import Section from "@/components/Section.astro";
 
               <div class="form-group">
                 <label for="screenshotUrl" class="form-label">
-                  Screenshot URL <span class="text-gray-500 text-xs">(optional)</span>
+                  Screenshot URL <span class="text-gray-500 text-xs"
+                    >(optional)</span
+                  >
                 </label>
-                <input 
-                  type="url" 
-                  id="screenshotUrl" 
+                <input
+                  type="url"
+                  id="screenshotUrl"
                   class="form-input"
                   placeholder="https://example.com/screenshot.png"
                 />
-                <button 
-                  id="takeScreenshot" 
-                  class="btn-secondary mt-3 w-full"
-                >
+                <button id="takeScreenshot" class="btn-secondary mt-3 w-full">
                   Generate Screenshot URL
                 </button>
               </div>
@@ -116,14 +139,14 @@ import Section from "@/components/Section.astro";
               <div class="form-group">
                 <label for="themeColor" class="form-label">Theme Color</label>
                 <div class="flex gap-3">
-                  <input 
-                    type="color" 
-                    id="themeColor" 
+                  <input
+                    type="color"
+                    id="themeColor"
                     class="color-picker"
                     value="#FE5000"
                   />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     id="themeColorText"
                     class="form-input flex-1"
                     value="#FE5000"
@@ -135,22 +158,22 @@ import Section from "@/components/Section.astro";
 
           <!-- QR Styling Card -->
           <article class="card">
-            <h2 class="card-title">
-              QR Code Styling
-            </h2>
-            
+            <h2 class="card-title">QR Code Styling</h2>
+
             <div class="space-y-4">
               <div class="form-group">
-                <label for="qrBgColor" class="form-label">Background Color</label>
+                <label for="qrBgColor" class="form-label"
+                  >Background Color</label
+                >
                 <div class="flex gap-3 items-center">
-                  <input 
-                    type="color" 
-                    id="qrBgColor" 
+                  <input
+                    type="color"
+                    id="qrBgColor"
                     class="color-picker"
                     value="#FFFFFF"
                   />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     id="qrBgColorText"
                     class="form-input flex-1"
                     value="#FFFFFF"
@@ -172,7 +195,9 @@ import Section from "@/components/Section.astro";
                 </div>
 
                 <div class="form-group">
-                  <label for="qrCornerSquareStyle" class="form-label">Corner Squares</label>
+                  <label for="qrCornerSquareStyle" class="form-label"
+                    >Corner Squares</label
+                  >
                   <select id="qrCornerSquareStyle" class="form-select">
                     <option value="dot">Dot</option>
                     <option value="square">Square</option>
@@ -181,7 +206,9 @@ import Section from "@/components/Section.astro";
                 </div>
 
                 <div class="form-group">
-                  <label for="qrCornerDotStyle" class="form-label">Corner Dots</label>
+                  <label for="qrCornerDotStyle" class="form-label"
+                    >Corner Dots</label
+                  >
                   <select id="qrCornerDotStyle" class="form-select">
                     <option value="dot">Dot</option>
                     <option value="square">Square</option>
@@ -201,18 +228,15 @@ import Section from "@/components/Section.astro";
 
         <!-- Right Column: Previews -->
         <aside class="space-y-6">
-          
           <!-- QR Preview Card -->
           <article class="card">
             <h3 class="card-subtitle">QR Code Preview</h3>
             <div class="preview-box" id="qrCodeWrapper">
-              <p class="preview-placeholder">Generate a QR code to see preview</p>
+              <p class="preview-placeholder">
+                Generate a QR code to see preview
+              </p>
             </div>
-            <button 
-              id="downloadQR" 
-              class="btn-accent w-full mt-4"
-              disabled
-            >
+            <button id="downloadQR" class="btn-accent w-full mt-4" disabled>
               Download QR Code
             </button>
           </article>
@@ -221,14 +245,18 @@ import Section from "@/components/Section.astro";
           <article class="card">
             <h3 class="card-subtitle">Screenshot Preview</h3>
             <div class="preview-box-sm" id="screenshotWrapper">
-              <p class="preview-placeholder">Enter a screenshot URL to see preview</p>
+              <p class="preview-placeholder">
+                Enter a screenshot URL to see preview
+              </p>
             </div>
           </article>
 
           <!-- JSON Preview Card -->
           <article class="card">
             <h3 class="card-subtitle">JSON Data</h3>
-            <pre id="jsonPreview" class="json-preview">{`{
+            <pre
+              id="jsonPreview"
+              class="json-preview">{`{
   "title": "Barkle",
   "url": "https://barkle.chat",
   "description": "Social platform",
@@ -239,16 +267,24 @@ import Section from "@/components/Section.astro";
 }`}</pre>
           </article>
         </aside>
-
       </div>
     </div>
   </Section>
 </Layout>
 
 <script type="module">
-  import { getElements, updateJsonPreview, updateScreenshotPreview, syncColorInputs } from '/scripts/form-handlers.js';
-  import { fetchMetadata } from '/scripts/metadata-fetcher.js';
-  import { generateQRRealtime, downloadQR, takeScreenshot } from '/scripts/qr-generator.js';
+  import {
+    getElements,
+    updateJsonPreview,
+    updateScreenshotPreview,
+    syncColorInputs,
+  } from "/scripts/form-handlers.js";
+  import { fetchMetadata } from "/scripts/metadata-fetcher.js";
+  import {
+    generateQRRealtime,
+    downloadQR,
+    takeScreenshot,
+  } from "/scripts/qr-generator.js";
 
   let isInitialized = false;
 
@@ -265,13 +301,21 @@ import Section from "@/components/Section.astro";
     };
 
     // Live JSON and screenshot previews + QR generation
-    [elements.url, elements.title, elements.description, elements.iconUrl, elements.author, elements.screenshotUrl, elements.themeColor].forEach(el => {
+    [
+      elements.url,
+      elements.title,
+      elements.description,
+      elements.iconUrl,
+      elements.author,
+      elements.screenshotUrl,
+      elements.themeColor,
+    ].forEach((el) => {
       if (el) {
-        el.addEventListener('input', () => {
+        el.addEventListener("input", () => {
           updateJsonPreview(elements);
           debounceQRGeneration(elements);
         });
-        el.addEventListener('change', () => {
+        el.addEventListener("change", () => {
           updateJsonPreview(elements);
           debounceQRGeneration(elements);
         });
@@ -279,16 +323,25 @@ import Section from "@/components/Section.astro";
     });
 
     // QR styling fields
-    [elements.qrBgColor, elements.qrDotsStyle, elements.qrCornerSquareStyle, elements.qrCornerDotStyle].forEach(el => {
+    [
+      elements.qrBgColor,
+      elements.qrDotsStyle,
+      elements.qrCornerSquareStyle,
+      elements.qrCornerDotStyle,
+    ].forEach((el) => {
       if (el) {
-        el.addEventListener('input', () => debounceQRGeneration(elements));
-        el.addEventListener('change', () => debounceQRGeneration(elements));
+        el.addEventListener("input", () => debounceQRGeneration(elements));
+        el.addEventListener("change", () => debounceQRGeneration(elements));
       }
     });
 
     if (elements.screenshotUrl) {
-      elements.screenshotUrl.addEventListener('input', () => updateScreenshotPreview(elements));
-      elements.screenshotUrl.addEventListener('change', () => updateScreenshotPreview(elements));
+      elements.screenshotUrl.addEventListener("input", () =>
+        updateScreenshotPreview(elements),
+      );
+      elements.screenshotUrl.addEventListener("change", () =>
+        updateScreenshotPreview(elements),
+      );
     }
 
     // Color sync
@@ -296,108 +349,251 @@ import Section from "@/components/Section.astro";
       updateJsonPreview(elements);
       debounceQRGeneration(elements);
     });
-    syncColorInputs(elements.qrBgColor, elements.qrBgColorText, () => debounceQRGeneration(elements));
+    syncColorInputs(elements.qrBgColor, elements.qrBgColorText, () =>
+      debounceQRGeneration(elements),
+    );
 
     // Buttons
     if (elements.fetchMetadataBtn) {
-      elements.fetchMetadataBtn.addEventListener('click', () => fetchMetadata(elements));
+      elements.fetchMetadataBtn.addEventListener("click", () =>
+        fetchMetadata(elements),
+      );
     }
     if (elements.takeScreenshotBtn) {
-      elements.takeScreenshotBtn.addEventListener('click', () => takeScreenshot(elements));
+      elements.takeScreenshotBtn.addEventListener("click", () =>
+        takeScreenshot(elements),
+      );
     }
     if (elements.downloadQRBtn) {
-      elements.downloadQRBtn.addEventListener('click', () => downloadQR(elements));
+      elements.downloadQRBtn.addEventListener("click", () =>
+        downloadQR(elements),
+      );
     }
 
     updateJsonPreview(elements);
     updateScreenshotPreview(elements);
-    
+
     // Generate initial QR code if URL exists
     if (elements.url?.value) {
       generateQRRealtime(elements);
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeQRPage);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeQRPage);
   } else {
     initializeQRPage();
   }
 </script>
 
 <style>
-  .card {
-    background: rgba(31,41,55,0.5);
-    backdrop-filter: blur(6px);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    border: 1px solid #374151;
+  /* Creation Store Banner */
+  .creation-store-banner {
+    background: hsl(240 15% 12%);
+    border: 2px solid hsl(240 15% 24%);
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
   }
-  .card-title {
-    font-size: 1.25rem;
+
+  .banner-content {
+    text-align: center;
+  }
+
+  .banner-prefix {
+    color: hsl(270 20% 55%);
     font-weight: 600;
+    margin-right: 0.5rem;
+  }
+
+  .banner-text {
+    font-size: 0.95rem;
+    color: hsl(0 0% 98%);
+    line-height: 1.6;
+  }
+
+  .banner-link {
+    color: hsl(270 20% 55%);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s;
+  }
+
+  .banner-link:hover {
+    color: hsl(270 30% 65%);
+  }
+
+  .banner-disclaimer {
+    color: hsl(0 0% 63.9%);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-left: 0.5rem;
+  }
+
+  /* Cards */
+  .card {
+    background: rgba(31, 41, 55, 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-title {
+    font-size: 1.375rem;
+    font-weight: 700;
     color: #fff;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
   }
+
   .card-subtitle {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: #fff;
     margin-bottom: 1rem;
   }
+
+  /* Form Elements */
   .form-group {
-    margin-bottom: 1.1rem;
+    margin-bottom: 1.5rem;
   }
+
   .form-label {
     display: block;
-    font-size: 0.96rem;
-    font-weight: 500;
-    color: #cbd5e1;
-    margin-bottom: 0.45rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
   }
-  .form-input, .form-select, .color-picker {
+
+  .form-input,
+  .form-select {
     display: block;
     width: 100%;
-    background: #1f2937;
+    background: rgba(31, 41, 55, 0.8);
     color: #fff;
-    border-radius: 0.6rem;
-    border: 1px solid #374151;
-    padding: 0.75rem 0.9rem;
-    font-size: 1rem;
-    transition: all .2s;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(75, 85, 99, 0.6);
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
   }
-  .form-select { padding-right: 2rem; }
-  .color-picker { width: 3rem; height: 3rem; }
 
-  .btn-primary, .btn-success, .btn-secondary, .btn-accent {
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  .form-input:hover,
+  .form-select:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+
+  .form-select {
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+
+  .color-picker {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(75, 85, 99, 0.6);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .color-picker:hover {
+    transform: scale(1.05);
+  }
+
+  /* Buttons */
+  .btn-primary,
+  .btn-success,
+  .btn-secondary,
+  .btn-accent {
     font-weight: 600;
-    border-radius: 0.7rem;
-    padding: 0.9rem 1.1rem;
-    font-size: 1.06rem;
-    transition: background .18s;
+    border-radius: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.2s;
     border: none;
-  }
-  .btn-primary { background: #2563eb; color: #fff; }
-  .btn-success { background: #22c55e; color: #fff; }
-  .btn-secondary { background: #ea580c; color: #fff; }
-  .btn-accent { background: #a21caf; color: #fff; }
-
-  .btn-primary:hover { background: #1d4ed8; }
-  .btn-success:hover { background: #16a34a; }
-  .btn-secondary:hover { background: #c2410c; }
-  .btn-accent:hover { background: #86198f; }
-
-  .btn-primary:disabled, .btn-success:disabled, .btn-secondary:disabled, .btn-accent:disabled {
-    opacity: 0.6; cursor: not-allowed;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .preview-box, .preview-box-sm {
-    border: 2px dashed #6b7280;
-    border-radius: 0.7rem;
-    background: #1f2937;
+  .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: #fff;
+  }
+  .btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+  }
+  .btn-secondary {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: #fff;
+  }
+  .btn-accent {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  .btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  .btn-accent:hover {
+    background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-primary:disabled,
+  .btn-success:disabled,
+  .btn-secondary:disabled,
+  .btn-accent:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Preview Boxes */
+  .preview-box,
+  .preview-box-sm {
+    border: 2px dashed rgba(107, 114, 128, 0.5);
+    border-radius: 0.75rem;
+    background: rgba(31, 41, 55, 0.5);
     padding: 2rem;
     min-height: 14rem;
     display: flex;
@@ -405,24 +601,59 @@ import Section from "@/components/Section.astro";
     justify-content: center;
     width: 100%;
     max-width: 22rem;
+    transition: border-color 0.2s;
   }
-  .preview-box-sm { padding: 1.1rem; min-height: 6.5rem; }
+
+  .preview-box:hover,
+  .preview-box-sm:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+
+  .preview-box-sm {
+    padding: 1.25rem;
+    min-height: 7rem;
+  }
 
   .preview-placeholder {
     color: #94a3b8;
     text-align: center;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
   }
 
+  /* JSON Preview */
   .json-preview {
-    background: #1e293b;
-    border: 1px solid #374151;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(75, 85, 99, 0.5);
     color: #22d3ee;
-    border-radius: 0.6rem;
-    padding: 1rem;
-    font-size: 0.95rem;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    font-size: 0.875rem;
     overflow-x: auto;
+    font-family: "Courier New", monospace;
+    line-height: 1.6;
     scrollbar-width: thin;
     scrollbar-color: #4b5563 #1f2937;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .creation-store-banner {
+      padding: 0.875rem 1rem;
+    }
+
+    .banner-text {
+      font-size: 0.875rem;
+    }
+
+    .banner-disclaimer {
+      display: block;
+      margin-left: 0;
+      margin-top: 0.25rem;
+    }
+
+    .card {
+      padding: 1.5rem;
+    }
   }
 </style>

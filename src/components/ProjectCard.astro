@@ -21,47 +21,56 @@ const { title, period, link, description } = Astro.props;
   </div>
 
   <div class="p-4 md:p-6 tracking-wider">
-    {link ? (
-      <a href={link} target="_blank" rel="noopener noreferrer" class="block group">
-        <h2 class="text-lg md:text-xl font-medium text-foreground mb-2">
-          <span class="ba text-accent mr-2">❯</span>
-          {title}
-        </h2>
-        <p class="text-muted-foreground font-medium tracking-widest text-xs md:text-sm mb-3 md:mb-4">
-          [{period}]
-        </p>
-        <p class="text-foreground/80 text-sm font-thin mb-3 md:mb-4 line-clamp-2 md:line-clamp-1">{description}</p>
-        <p
-          class="text-accent absolute bottom-3 md:bottom-4 font-medium inline-flex items-center group-hover:underline-offset-4 underline-offset-8 underline transition-all ease-in-out text-sm"
+    {
+      link ? (
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block group"
         >
-          Visit
-          <svg
-            class="w-3 h-3 md:w-4 md:h-4 ml-2 transform group-hover:-translate-x-1 transition-transform"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width={2}
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </p>
-      </a>
-    ) : (
-      <>
-        <h2 class="text-lg md:text-xl font-medium text-foreground mb-2">
-          <span class="ba text-accent mr-2">❯</span>
-          {title}
-        </h2>
-        <p class="text-muted-foreground font-medium tracking-widest text-xs md:text-sm mb-3 md:mb-4">
-          [{period}]
-        </p>
-        <p class="text-foreground/80 text-sm font-thin mb-3 md:mb-4 line-clamp-2 md:line-clamp-1">{description}</p>
-      </>
-    )}
+          <h2 class="text-lg md:text-xl font-medium text-foreground mb-2">
+            <span class="ba text-accent mr-2">❯</span>
+            {title}
+          </h2>
+          <p class="text-muted-foreground font-medium tracking-widest text-xs md:text-sm mb-3 md:mb-4">
+            [{period}]
+          </p>
+          <p class="text-foreground/80 text-sm font-thin mb-3 md:mb-4 line-clamp-2 md:line-clamp-1">
+            {description}
+          </p>
+          <p class="text-accent absolute bottom-3 md:bottom-4 font-medium inline-flex items-center group-hover:underline-offset-4 underline-offset-8 underline transition-all ease-in-out text-sm">
+            Visit
+            <svg
+              class="w-3 h-3 md:w-4 md:h-4 ml-2 transform group-hover:-translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </p>
+        </a>
+      ) : (
+        <>
+          <h2 class="text-lg md:text-xl font-medium text-foreground mb-2">
+            <span class="ba text-accent mr-2">❯</span>
+            {title}
+          </h2>
+          <p class="text-muted-foreground font-medium tracking-widest text-xs md:text-sm mb-3 md:mb-4">
+            [{period}]
+          </p>
+          <p class="text-foreground/80 text-sm font-thin mb-3 md:mb-4 line-clamp-2 md:line-clamp-1">
+            {description}
+          </p>
+        </>
+      )
+    }
   </div>
 </div>

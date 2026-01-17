@@ -1,13 +1,13 @@
-@import './colors.css';
+@import "./colors.css";
 
 @font-face {
-  font-family: 'Retro';
-  src: url('/fonts/Inter-VariableFont.ttf') format('truetype');
+  font-family: "Retro";
+  src: url("/fonts/Inter-VariableFont.ttf") format("truetype");
   font-display: swap;
 }
 
 body {
-  font-family: 'Retro', 'Courier New', Courier, monospace !important;
+  font-family: "Retro", "Courier New", Courier, monospace !important;
   color: var(--foreground);
   background-color: var(--background);
   line-height: 1.6;
@@ -15,8 +15,9 @@ body {
   padding: 0;
 }
 
-pre, code {
-  font-family: 'Retro', 'Courier New', Courier, monospace !important;
+pre,
+code {
+  font-family: "Retro", "Courier New", Courier, monospace !important;
   background-color: var(--card);
   color: var(--accent);
   padding: 8px;
@@ -28,7 +29,8 @@ pre, code {
 }
 
 @media (min-width: 768px) {
-  pre, code {
+  pre,
+  code {
     padding: 12px;
     font-size: 1rem;
   }
@@ -69,7 +71,8 @@ pre, code {
   scrollbar-color: var(--border) var(--background);
 }
 
-img, .no-selection {
+img,
+.no-selection {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   user-select: none;
@@ -135,7 +138,7 @@ img, .no-selection {
 
 /* Pulsing border effect */
 .hero-image-container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -2px;
   left: -2px;
@@ -152,7 +155,7 @@ img, .no-selection {
   animation: borderPulse 3s ease-in-out infinite;
   z-index: 1;
   opacity: 0; /* Start hidden until mask is applied */
-  
+
   /* Use the same image mask for the border */
   -webkit-mask-image: var(--hero-mask);
   mask-image: var(--hero-mask);
@@ -165,7 +168,8 @@ img, .no-selection {
 }
 
 @keyframes borderPulse {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
     opacity: 0.6;
   }
@@ -177,7 +181,9 @@ img, .no-selection {
 
 /* Enhanced animation for color theme transitions */
 .hero-gradient-overlay.theme-shift {
-  animation: gradientShift 2s ease-in-out infinite, colorPulse 6s ease-in-out infinite;
+  animation:
+    gradientShift 2s ease-in-out infinite,
+    colorPulse 6s ease-in-out infinite;
 }
 
 /* Classes for when mask is applied */
@@ -200,7 +206,8 @@ img, .no-selection {
 }
 
 @keyframes colorPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.8;
   }
   50% {
@@ -211,7 +218,8 @@ img, .no-selection {
 /* Mobile-specific improvements */
 @media (max-width: 768px) {
   /* Improve touch targets */
-  a, button {
+  a,
+  button {
     min-height: 44px;
     min-width: 44px;
     display: inline-flex;

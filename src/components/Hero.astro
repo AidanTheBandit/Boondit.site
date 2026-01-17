@@ -16,7 +16,7 @@ import { QUOTE, SITE_TITLE } from "@/consts";
         {QUOTE}
       </h2>
     </div>
-    
+
     <div class="w-full max-w-md sm:max-w-lg">
       <div class="hero-image-container mx-auto" id="hero-image-container">
         <Image
@@ -28,7 +28,10 @@ import { QUOTE, SITE_TITLE } from "@/consts";
         <div class="hero-gradient-overlay"></div>
       </div>
       <div class="text-center mt-2 text-sm">
-        <a href="https://www.instagram.com/howtoeatart" class="hover:text-accent transition-colors">
+        <a
+          href="https://www.instagram.com/howtoeatart"
+          class="hover:text-accent transition-colors"
+        >
           Profile picture by @howtoeatart
         </a>
       </div>
@@ -45,9 +48,12 @@ import { QUOTE, SITE_TITLE } from "@/consts";
         </h2>
       </div>
     </div>
-    
+
     <div>
-      <div class="hero-image-container max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto" id="hero-image-container-desktop">
+      <div
+        class="hero-image-container max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto"
+        id="hero-image-container-desktop"
+      >
         <Image
           alt="Hero"
           src={HeroImg}
@@ -57,7 +63,10 @@ import { QUOTE, SITE_TITLE } from "@/consts";
         <div class="hero-gradient-overlay"></div>
       </div>
       <div class="text-center mt-2 text-sm">
-        <a href="https://www.instagram.com/howtoeatart" class="hover:text-accent transition-colors">
+        <a
+          href="https://www.instagram.com/howtoeatart"
+          class="hover:text-accent transition-colors"
+        >
           Profile picture by @howtoeatart
         </a>
       </div>
@@ -71,10 +80,14 @@ import { QUOTE, SITE_TITLE } from "@/consts";
     const heroContainer = document.getElementById("hero-image-container");
     const gradientOverlay = document.querySelector(".hero-gradient-overlay");
 
-    console.log('Initializing hero mask...', { heroImage, heroContainer, gradientOverlay });
+    console.log("Initializing hero mask...", {
+      heroImage,
+      heroContainer,
+      gradientOverlay,
+    });
 
     if (!heroImage || !heroContainer || !gradientOverlay) {
-      console.log('Missing elements, retrying in 100ms...');
+      console.log("Missing elements, retrying in 100ms...");
       setTimeout(initializeHeroMask, 100);
       return;
     }
@@ -83,17 +96,20 @@ import { QUOTE, SITE_TITLE } from "@/consts";
       // Wait for image to be fully loaded
       if (heroImage.complete && heroImage.naturalHeight !== 0) {
         const imageSrc = heroImage.src;
-        console.log('Applying mask with image:', imageSrc);
-        
+        console.log("Applying mask with image:", imageSrc);
+
         // Set the CSS custom property
-        document.documentElement.style.setProperty('--hero-mask', `url(${imageSrc})`);
-        
+        document.documentElement.style.setProperty(
+          "--hero-mask",
+          `url(${imageSrc})`,
+        );
+
         // Apply the mask-applied class to show the gradient
-        gradientOverlay.classList.add('mask-applied');
-        
-        console.log('Mask applied successfully');
+        gradientOverlay.classList.add("mask-applied");
+
+        console.log("Mask applied successfully");
       } else {
-        console.log('Image not ready, waiting...');
+        console.log("Image not ready, waiting...");
         heroImage.onload = applyMask;
         // Fallback timeout
         setTimeout(applyMask, 500);
@@ -102,28 +118,28 @@ import { QUOTE, SITE_TITLE } from "@/consts";
 
     // Try to apply mask immediately
     applyMask();
-    
+
     // Also set up onload handler in case image isn't ready
     heroImage.onload = applyMask;
   }
 
   // Initialize on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeHeroMask);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeHeroMask);
   } else {
     initializeHeroMask();
   }
 
   // Handle Astro navigation
-  document.addEventListener('astro:page-load', () => {
-    console.log('Astro page load detected');
+  document.addEventListener("astro:page-load", () => {
+    console.log("Astro page load detected");
     setTimeout(initializeHeroMask, 100);
   });
 
   // Handle visibility changes
-  document.addEventListener('visibilitychange', () => {
+  document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
-      console.log('Page became visible');
+      console.log("Page became visible");
       setTimeout(initializeHeroMask, 100);
     }
   });

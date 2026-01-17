@@ -7,9 +7,9 @@ heroImage: "/covers/phone-ban.png"
 
 # \<Introduction /\>
 
-Hello everyone! Welcome to the blog. Today, I am discussing a phone ban at a local school, inspired by new laws in the state, and its implications for schools across the nation. Since **[SCHOOL_NAME]** is a private school, it has the option to not abide by these laws. 
+Hello everyone! Welcome to the blog. Today, I am discussing a phone ban at a local school, inspired by new laws in the state, and its implications for schools across the nation. Since **[SCHOOL_NAME]** is a private school, it has the option to not abide by these laws.
 
-These new rules are a serious safety and ethical risk to students and parents. These bans reflect a dangerous trend in school administrations that want to hide what the school does behind closed doors while claiming it is to prevent distractions. Phone bans pose serious safety risks as they prevent calling for help in the case of an emergency. 
+These new rules are a serious safety and ethical risk to students and parents. These bans reflect a dangerous trend in school administrations that want to hide what the school does behind closed doors while claiming it is to prevent distractions. Phone bans pose serious safety risks as they prevent calling for help in the case of an emergency.
 
 Don't believe me? Take this scenario that's not too uncommon but made much more dangerous now that a phone isn't available:
 
@@ -20,6 +20,7 @@ Waiting for a phone to boot is especially dangerous since the average iPhone and
 ## \<Communication Is Essential /\>
 
 A phone ban also restricts quality of life by making it difficult for:
+
 - A group of friends to find a place to meet up
 - A student to tell their family how their day is going
 - Clubs to find time to meet
@@ -38,6 +39,7 @@ At **[SCHOOL_NAME]**, students and parents of the high school are all learning a
 ## \<How The Policy Works /\>
 
 During school hours, phones must be:
+
 - **Shut down completely**
 - **Placed in a bag**
 - Smart watches must also be stored
@@ -50,9 +52,10 @@ The policy includes a new **3-strike system**:
 
 ## \<The Contradictions /\>
 
-This new policy is incredibly harsh and restrictive about when phones can be used. This poses a critical question: **Why are phones so bad during free periods like lunch?** 
+This new policy is incredibly harsh and restrictive about when phones can be used. This poses a critical question: **Why are phones so bad during free periods like lunch?**
 
 The irony is that so much of the school already relies on phones:
+
 - **NFC-enabled phones** are required to unlock doors
 - **QR codes** on posters around the school are used for joining clubs, signing up for events, gaining access to resources, and announcements
 
@@ -63,6 +66,7 @@ The new workflow they seem to expect students to adopt is to pull out their scho
 These new rules are an extreme escalation from previous policies. Previously, phone use was simply prohibited in classrooms—a rule that was broken by few students and was often never enforced by teachers.
 
 **The only plausible reasons I can see for this complete ban are:**
+
 1. The school does not want to be recorded and is trying to hide something
 2. The school wants to try to put an end to phone distraction in class (this method will not work)
 3. Administrators are annoyed by students using social media
@@ -88,6 +92,7 @@ A lack of phone access can be dangerous in the event of vital emergencies. This 
 ## \<Emergency Scenarios /\>
 
 **Critical safety issues include:**
+
 - Cannot call for a ride or help in the event of a natural disaster
 - Cannot access medical information stored on the phone when it's shut down
 - Cannot call for help in the event of a lockdown
@@ -103,6 +108,7 @@ Not all students in the high school have a car or even a license yet, meaning th
 # \<Personal Impact /\>
 
 I use my phone very rarely during the day. The only times I need to use my phone are when:
+
 - Responding to urgent, time-sensitive issues at work (Avunite)
 - Trying to communicate a location to meet up with my girlfriend and peers
 - Checking my schedule
@@ -116,10 +122,11 @@ Even though I don't use my phone much during the day, that doesn't mean the time
 # \<My Solution /\>
 
 I believe **reverting this policy back to last year's approach** (phones can only be used during free periods) and **enforcing that rule strongly** is likely the best solution. This ensures that:
+
 - Distractions during class are kept to a minimum
 - Students still have needed freedom to access phones during the day
 
-**Banning phones is not the way to go.** Phones are essential and a required part of modern life, especially for young teens. These bans are only going to cause students to resist and be angry towards their schools and institutions. 
+**Banning phones is not the way to go.** Phones are essential and a required part of modern life, especially for young teens. These bans are only going to cause students to resist and be angry towards their schools and institutions.
 
 Policies like this are overbearing and will only create more problems. I believe a revision to this rule and working with the students and parents will yield the best results. Schools always claim to listen to student voices, but the reality is they never do. The admins make rules as they see fit. **The phone rule needs to be changed.**
 
@@ -132,11 +139,12 @@ Want to push back on these changes? That's great! It is important to let your vo
 ## \<How You Can Help /\>
 
 **If you are a parent or a student, I'd heavily suggest:**
+
 - **Emailing the high school dean of students**
 - **Contacting state legislators**
 - **Calling meetings and suggesting a revision to the rule**
 
-**Your voice joined with others WILL make a difference.** 
+**Your voice joined with others WILL make a difference.**
 
 Schools can get away with these policy changes only because they receive no pushback. Now it's time to start pushing back. **A phone ban is dangerous to all.**
 
@@ -144,7 +152,7 @@ Schools can get away with these policy changes only because they receive no push
 
 ## \<Contact /\>
 
-For questions or concerns about this blog post, please feel free to reach me at **aidan@boondit.site**. I'd be happy to hear your feedback. 
+For questions or concerns about this blog post, please feel free to reach me at **aidan@boondit.site**. I'd be happy to hear your feedback.
 
 If you found this blog post helpful and want to support my work, you can send a tip at **[cash.app/$AidanTheBandit](https://cash.app/$AidanTheBandit)**.
 

@@ -26,7 +26,9 @@ const { title, slug, excerpt, date } = Astro.props;
         <span class="ba text-accent mr-2">❯</span>
         {title}
       </h2>
-      <p class="text-muted-foreground font-medium tracking-widest text-xs md:text-sm mb-3 md:mb-4">
+      <p
+        class="text-muted-foreground font-medium tracking-widest text-xs md:text-sm mb-3 md:mb-4"
+      >
         [{
           date.toLocaleDateString("en-us", {
             year: "numeric",
@@ -35,7 +37,11 @@ const { title, slug, excerpt, date } = Astro.props;
           })
         }]
       </p>
-      <p class="text-foreground/80 text-sm font-thin mb-3 md:mb-4 line-clamp-2 md:line-clamp-1">{excerpt}</p>
+      <p
+        class="text-foreground/80 text-sm font-thin mb-3 md:mb-4 line-clamp-2 md:line-clamp-1"
+      >
+        {excerpt}
+      </p>
       <p
         class="text-accent absolute bottom-3 md:bottom-4 font-medium inline-flex items-center group-hover:underline-offset-4 underline-offset-8 underline transition-all ease-in-out text-sm"
       >
