@@ -310,31 +310,17 @@ import Section from "@/components/Section.astro";
 
   let isInitialized = false;
 
-  // Fetch Buy Me a Coffee supporter data
-  async function fetchBMACData() {
-    try {
-      // Buy Me a Coffee widget endpoint (publicly accessible)
-      const response = await fetch('https://developers.buymeacoffee.com/api/v1/supporters?page=1', {
-        headers: {
-          'Authorization': 'Bearer ' // Note: This would need actual API key in production
-        }
-      });
-      
-      // For now, we'll simulate the progress with a default value
-      // In production, you would integrate with BMAC API properly
-      const simulatedMonthlyAmount = 15; // Example: $15 raised so far
-      const goalAmount = 30;
-      const percentage = Math.min((simulatedMonthlyAmount / goalAmount) * 100, 100);
-      
-      updateProgressBar(simulatedMonthlyAmount, goalAmount, percentage);
-    } catch (error) {
-      console.log('Using default funding display');
-      // Show a generic progress state
-      const simulatedMonthlyAmount = 0;
-      const goalAmount = 30;
-      const percentage = 0;
-      updateProgressBar(simulatedMonthlyAmount, goalAmount, percentage);
-    }
+  // Initialize Buy Me a Coffee funding display
+  // Note: To display actual funding data, integrate with Buy Me a Coffee API
+  // using proper authentication and environment variables for the API key
+  function fetchBMACData() {
+    // Default display showing funding goal
+    // Update these values based on actual API integration if needed
+    const currentMonthlyAmount = 0;
+    const goalAmount = 30;
+    const percentage = Math.min((currentMonthlyAmount / goalAmount) * 100, 100);
+    
+    updateProgressBar(currentMonthlyAmount, goalAmount, percentage);
   }
 
   function updateProgressBar(raised, goal, percentage) {
