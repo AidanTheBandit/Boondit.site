@@ -6,36 +6,46 @@ import Section from "@/components/Section.astro";
 <Layout title="R1 MoltBot QR Gen - Boondit">
   <Section title="R1 MoltBot QR Generator" className="min-h-screen">
     <div class="max-w-7xl mx-auto p-6">
-      <header class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-white mb-3">
+      <header class="text-center mb-10">
+        <h1 class="text-4xl font-bold text-white mb-4">
           R1 MoltBot QR Generator
         </h1>
-        <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 mt-4 max-w-2xl mx-auto">
-            <p class="text-yellow-200 font-bold flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+        
+        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 max-w-2xl mx-auto backdrop-blur-sm">
+            <p class="text-yellow-200 font-bold flex items-center justify-center gap-2 mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
                 SENSITIVE DATA
             </p>
-            <p class="text-yellow-100 text-sm mt-1">
+            <p class="text-yellow-100/80 text-sm">
                 The generated QR code contains personal information (your token) and should <strong>NOT</strong> be shared with others.
             </p>
         </div>
       </header>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Form -->
-        <article class="card">
+        <article class="card h-full">
             <h2 class="card-title">Configuration</h2>
-            <form id="moltbotForm" class="space-y-4">
+            <form id="moltbotForm" class="space-y-5">
                 <div class="form-group">
                     <label for="ips" class="form-label">
-                        IP Addresses <span class="text-gray-400 font-normal">(comma separated)</span>
+                        IP Addresses <span class="text-gray-400 font-normal normal-case ml-1">(comma separated)</span>
                     </label>
                     <input type="text" id="ips" class="form-input" placeholder="1.2.3.4, 5.6.7.8" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="port" class="form-label">Port</label>
-                    <input type="number" id="port" class="form-input" value="18789" required>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group mb-0">
+                        <label for="port" class="form-label">Port</label>
+                        <input type="number" id="port" class="form-input" value="18789" required>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label for="protocol" class="form-label">Protocol</label>
+                        <select id="protocol" class="form-select">
+                            <option value="wss" selected>wss</option>
+                            <option value="ws">ws</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -43,38 +53,99 @@ import Section from "@/components/Section.astro";
                     <input type="text" id="token" class="form-input" placeholder="secret-token" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="protocol" class="form-label">Protocol</label>
-                    <select id="protocol" class="form-select">
-                        <option value="wss" selected>wss</option>
-                        <option value="ws">ws</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-primary w-full mt-4">
+                <button type="submit" class="btn-primary w-full shadow-lg shadow-blue-500/20">
                     Generate QR Code
                 </button>
             </form>
         </article>
 
         <!-- Preview -->
-        <article class="card flex flex-col min-h-[500px]">
+        <article class="card h-full flex flex-col">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="card-title mb-0">QR Code</h2>
-                <button id="expandQrBtn" class="btn-secondary text-sm py-1 px-3 hidden">
-                    Expand QR
+                <h2 class="card-title mb-0 border-none pb-0">QR Code</h2>
+                <button id="expandQrBtn" class="btn-secondary text-xs py-1.5 px-3 hidden flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+                    Expand
                 </button>
             </div>
             
-            <div class="flex-1 flex flex-col items-center justify-center p-4 bg-black/20 rounded-lg border border-white/5 mb-4 relative" id="qrCodeContainer">
-                 <p class="text-gray-400 text-sm">Generate a QR code to see it here</p>
+            <div class="flex-1 min-h-[300px] flex flex-col items-center justify-center p-6 bg-black/20 rounded-xl border border-white/5 mb-4 relative overflow-hidden group" id="qrCodeContainer">
+                 <p class="text-gray-400 text-sm font-medium">Generate a QR code to see it here</p>
             </div>
             
             <div class="w-full">
-                <h3 class="text-sm font-semibold text-gray-400 mb-2">JSON Payload:</h3>
-                <pre id="jsonPreview" class="json-preview"></pre>
+                <h3 class="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">JSON Payload</h3>
+                <pre id="jsonPreview" class="json-preview !max-h-[120px]"></pre>
             </div>
         </article>
+      </div>
+
+      <!-- Instructions & FAQ -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- How to Use -->
+          <article class="card">
+            <h2 class="card-title">How to Use</h2>
+            <div class="space-y-6">
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold border border-blue-500/30">1</div>
+                    <div>
+                        <h3 class="font-semibold text-white mb-1">Scan QR Code</h3>
+                        <p class="text-gray-400 text-sm">Scan the generated QR code with your Rabbit R1 device's camera.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold border border-blue-500/30">2</div>
+                    <div>
+                        <h3 class="font-semibold text-white mb-2">Run Connection Script</h3>
+                        <p class="text-gray-400 text-sm mb-3">Accept the pairing request by running the script on your computer:</p>
+                        
+                        <div class="space-y-3">
+                            <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="text-xs text-blue-300 font-semibold uppercase tracking-wider">Mac / Linux</span>
+                                    <button class="text-xs text-gray-500 hover:text-white transition-colors copy-btn" data-clipboard-target="#script-mac">Copy</button>
+                                </div>
+                                <code id="script-mac" class="block text-xs font-mono text-gray-300 select-all break-all">curl -L http://rabbit.tech/r1-moltbot.sh | bash</code>
+                            </div>
+                            <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="text-xs text-blue-300 font-semibold uppercase tracking-wider">Windows</span>
+                                    <button class="text-xs text-gray-500 hover:text-white transition-colors copy-btn" data-clipboard-target="#script-win">Copy</button>
+                                </div>
+                                <code id="script-win" class="block text-xs font-mono text-gray-300 select-all break-all">iwr -useb https://rabbit.tech/r1-moltbot.ps1 | iex</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </article>
+
+          <!-- FAQ -->
+          <article class="card">
+              <h2 class="card-title">FAQ</h2>
+              <div class="space-y-4">
+                  <div class="bg-black/20 rounded-lg p-4 border border-white/5">
+                      <h3 class="font-semibold text-white mb-2 text-sm">Is Tailscale supported?</h3>
+                      <p class="text-gray-400 text-sm leading-relaxed">No. Please use a reverse proxy or another tunneling service like cloudflared for remote access.</p>
+                  </div>
+
+                  <div class="bg-black/20 rounded-lg p-4 border border-white/5">
+                      <h3 class="font-semibold text-white mb-2 text-sm">Can I use WS (WebSocket)?</h3>
+                      <p class="text-gray-400 text-sm leading-relaxed">Only on your local network (e.g., 192.168.x.x IPs). Use WSS for anything secure/remote.</p>
+                  </div>
+
+                  <div class="bg-black/20 rounded-lg p-4 border border-white/5">
+                      <h3 class="font-semibold text-white mb-2 text-sm">Can I share my Moltbot?</h3>
+                      <p class="text-red-400/90 text-sm leading-relaxed font-medium">NO. This is very unsafe.</p>
+                  </div>
+
+                   <div class="bg-black/20 rounded-lg p-4 border border-white/5">
+                      <h3 class="font-semibold text-white mb-2 text-sm">Is this the same as clawdbot?</h3>
+                      <p class="text-gray-400 text-sm leading-relaxed">Yes.</p>
+                  </div>
+              </div>
+          </article>
       </div>
     </div>
   </Section>
@@ -115,6 +186,25 @@ import Section from "@/components/Section.astro";
     let currentPayload: string | null = null;
     let qrCode: QRCodeStyling | null = null;
     let modalQrCode: QRCodeStyling | null = null;
+
+    // Clipboard Logic
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-clipboard-target');
+            if (targetId) {
+                const codeElement = document.querySelector(targetId);
+                if (codeElement && codeElement.textContent) {
+                    navigator.clipboard.writeText(codeElement.textContent).then(() => {
+                        const originalText = btn.textContent;
+                        btn.textContent = 'Copied!';
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                        }, 2000);
+                    });
+                }
+            }
+        });
+    });
 
     // Modal Logic
     const openModal = () => {
