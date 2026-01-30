@@ -20,41 +20,62 @@ import Section from "@/components/Section.astro";
       </header>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <!-- Form -->
-        <article class="card h-full">
-            <h2 class="card-title">Configuration</h2>
-            <form id="moltbotForm" class="space-y-5">
-                <div class="form-group">
-                    <label for="ips" class="form-label">
-                        IP Addresses <span class="text-gray-400 font-normal normal-case ml-1">(comma separated)</span>
-                    </label>
-                    <input type="text" id="ips" class="form-input" placeholder="1.2.3.4, 5.6.7.8" required>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="form-group mb-0">
-                        <label for="port" class="form-label">Port</label>
-                        <input type="number" id="port" class="form-input" value="18789" required>
+        <!-- Configuration & Test -->
+        <div class="space-y-8">
+            <article class="card">
+                <h2 class="card-title">Configuration</h2>
+                <form id="moltbotForm" class="space-y-5">
+                    <div class="form-group">
+                        <label for="ips" class="form-label">
+                            IP Addresses <span class="text-gray-400 font-normal normal-case ml-1">(comma separated)</span>
+                        </label>
+                        <input type="text" id="ips" class="form-input" placeholder="1.2.3.4, 5.6.7.8" required>
                     </div>
-                    <div class="form-group mb-0">
-                        <label for="protocol" class="form-label">Protocol</label>
-                        <select id="protocol" class="form-select">
-                            <option value="wss" selected>wss</option>
-                            <option value="ws">ws</option>
-                        </select>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group mb-0">
+                            <label for="port" class="form-label">Port</label>
+                            <input type="number" id="port" class="form-input" value="18789" required>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label for="protocol" class="form-label">Protocol</label>
+                            <select id="protocol" class="form-select">
+                                <option value="wss" selected>wss</option>
+                                <option value="ws">ws</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="token" class="form-label">Token</label>
-                    <input type="text" id="token" class="form-input" placeholder="secret-token" required>
-                </div>
+                    <div class="form-group">
+                        <label for="token" class="form-label">Token</label>
+                        <input type="text" id="token" class="form-input" placeholder="secret-token" required>
+                    </div>
 
-                <button type="submit" class="btn-primary w-full shadow-lg shadow-blue-500/20">
-                    Generate QR Code
-                </button>
-            </form>
-        </article>
+                    <button type="submit" class="btn-primary w-full shadow-lg shadow-blue-500/20">
+                        Generate QR Code
+                    </button>
+                </form>
+            </article>
+
+            <!-- Test Connection -->
+            <article class="card">
+                 <h2 class="card-title">Test Connection</h2>
+                 <div class="space-y-4">
+                    <p class="text-xs text-gray-400">
+                        Verify connectivity to your Moltbot instance.
+                    </p>
+                    
+                    <div id="testLog" class="bg-black/30 rounded-lg p-3 border border-gray-700/50 min-h-[100px] font-mono text-[11px] overflow-y-auto max-h-[150px] flex flex-col gap-1">
+                        <span class="text-gray-500 italic">Ready to test...</span>
+                    </div>
+
+                    <button id="testConnectionBtn" type="button" class="btn-secondary w-full text-sm py-2 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Test Connectivity
+                    </button>
+                 </div>
+            </article>
+        </div>
 
         <!-- Preview -->
         <article class="card h-full flex flex-col">
@@ -410,6 +431,185 @@ import Section from "@/components/Section.astro";
                qrContainer.innerHTML = '<p class="text-red-500">Error generating QR.</p>';
             }
         }
+    });
+
+    // Test Connection Logic
+    const testBtn = document.getElementById('testConnectionBtn');
+    const testLog = document.getElementById('testLog');
+
+    const log = (msg: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
+        if (!testLog) return;
+        const div = document.createElement('div');
+        div.className = `break-words ${
+            type === 'success' ? 'text-green-400' :
+            type === 'error' ? 'text-red-400' :
+            type === 'warning' ? 'text-yellow-400' :
+            'text-gray-300'
+        }`;
+        div.textContent = `> ${msg}`;
+        testLog.appendChild(div);
+        testLog.scrollTop = testLog.scrollHeight;
+    };
+
+    testBtn?.addEventListener('click', () => {
+        if (!testLog) return;
+        testLog.innerHTML = ''; 
+        log('Initializing test...');
+
+        const ipsInput = (document.getElementById('ips') as HTMLInputElement).value;
+        const portInput = (document.getElementById('port') as HTMLInputElement).value;
+        const tokenInput = (document.getElementById('token') as HTMLInputElement).value;
+        const protocolInput = (document.getElementById('protocol') as HTMLSelectElement).value;
+
+        if (!tokenInput) {
+            log('Error: Token is required.', 'error');
+            return;
+        }
+
+        // Process IPs
+        const ips = ipsInput.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0);
+        const host = ips.length > 0 ? ips[0] : 'localhost';
+        const port = portInput || '18789';
+        
+        const url = `${protocolInput}://${host}:${port}`;
+        log(`1. Connecting to ${url}...`);
+
+        let ws: WebSocket;
+        let isConnected = false;
+        let handshakeSent = false;
+
+        try {
+            ws = new WebSocket(url);
+        } catch (e: any) {
+            log(`Failed to create WebSocket: ${e.message}`, 'error');
+            if (window.location.protocol === 'https:' && protocolInput === 'ws') {
+                 log('Hint: Mixed Content (HTTPS -> WS) blocked. Use WSS.', 'warning');
+            }
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            if (!isConnected) {
+                log('Connection timeout (5s). Gateway unreachable.', 'error');
+                log('Hint: Check Firewall, Port Forwarding, or start Moltbot.', 'warning');
+                ws.close();
+            }
+        }, 5000);
+
+        ws.onopen = () => {
+            isConnected = true;
+            log('2. Network Connected! (Gateway Reachable)', 'success');
+            log('3. Verifying Token...', 'info');
+            
+            // Allow time for server to send challenge if it wants, otherwise send our connect
+            setTimeout(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    sendConnect();
+                }
+            }, 100);
+        };
+
+        const sendConnect = () => {
+            handshakeSent = true;
+            const connectReq = {
+                type: "req",
+                id: "test-" + Date.now(),
+                method: "connect",
+                params: {
+                    minProtocol: 3,
+                    maxProtocol: 3,
+                    client: {
+                        id: "web",
+                        version: "1.0.0",
+                        platform: "web",
+                        mode: "operator"
+                    },
+                    role: "operator",
+                    scopes: ["operator.read"], 
+                    caps: [],
+                    commands: [],
+                    permissions: {},
+                    auth: { token: tokenInput },
+                    locale: "en-US",
+                    userAgent: "boondit-web/1.0.0",
+                    device: {
+                         id: "boondit-tester-" + Math.random().toString(36).substring(7),
+                         publicKey: "dummy", 
+                         signature: "dummy",
+                         signedAt: Date.now(),
+                         nonce: "dummy"
+                    }
+                }
+            };
+            ws.send(JSON.stringify(connectReq));
+        }
+
+        ws.onmessage = (event) => {
+            clearTimeout(timeout);
+            try {
+                const data = JSON.parse(event.data);
+                
+                // If we get a challenge first, just send our connect frame
+                if (data.type === 'event' && data.event === 'connect.challenge') {
+                    // Server is alive and speaking protocol
+                    if (!handshakeSent) sendConnect();
+                    return;
+                }
+
+                if (data.type === 'res' && data.ok && data.payload?.type === 'hello-ok') {
+                    log('4. Token Accepted! (Authenticated)', 'success');
+                    ws.close();
+                } else if (data.type === 'res' && !data.ok) {
+                    // Check for schema validation errors which imply we reached the gateway
+                    if (data.error && data.error.message && data.error.message.includes('invalid connect params')) {
+                        log('Gateway Connected! (Reachable)', 'success');
+                        log('Note: Full verification skipped. The Gateway is enforcing strict device identity (Signatures), which this web tool cannot generate without your private keys. However, your URL/Port are correct.', 'warning');
+                    } else if (data.error && (data.error.includes?.('auth') || data.error.code === 401)) {
+                         log('Authentication Failed: Invalid Token.', 'error');
+                    } else {
+                         log(`Handshake Rejected: ${JSON.stringify(data.error)}`, 'error');
+                    }
+                    ws.close();
+                } else {
+                     // Any other valid protocol message implies token was at least processed
+                     log('Response received (likely valid config).', 'info');
+                     ws.close();
+                }
+
+            } catch (e) {
+                log('Invalid response format.', 'error');
+            }
+        };
+
+        ws.onerror = (error) => {
+            clearTimeout(timeout);
+            if (!isConnected) {
+                log('Connection Failed (Network Error).', 'error');
+                if (window.location.protocol === 'https:' && protocolInput === 'ws') {
+                    log('Hint: Mixed Content (HTTPS -> WS) blocked.', 'warning');
+                } else {
+                    log('Hint: Is the IP/Port correct? Is Moltbot running?', 'warning');
+                }
+            } else {
+                log('Socket error after connection.', 'error');
+            }
+        };
+
+        ws.onclose = (event) => {
+            clearTimeout(timeout);
+            if (isConnected && handshakeSent) {
+                // If we get specific protocol closure codes
+                if (event.code === 1008) {
+                    log('Gateway Connected! (Reachable)', 'success');
+                    log('Note: Connection closed by policy (Code 1008). This confirms you reached the Gateway, but it requires a signed device identity for full access.', 'warning');
+                } else if (event.code === 1006 || event.code === 1000) { 
+                     log('Connection closed by server.', 'warning');
+                     log('Hint: This usually means the Token is Invalid.', 'warning');
+                } else {
+                     log(`Closed (Code: ${event.code}).`, 'info');
+                }
+            }
+        };
     });
 
 </script>
