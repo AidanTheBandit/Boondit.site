@@ -2,25 +2,25 @@
 /* Change these CSS custom properties to update the entire site's color scheme */
 
 :root {
-  --background: hsl(240 15% 8%);
-  --card: hsl(240 15% 12%);
-  --popover: hsl(240 15% 12%);
-  --primary: hsl(240 15% 16%);
-  --secondary: hsl(240 15% 24%);
-  --muted: hsl(240 15% 24%);
-  --accent: hsl(270 20% 55%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --foreground: hsl(0 0% 98%);
-  --card-foreground: hsl(0 0% 98%);
-  --popover-foreground: hsl(0 0% 98%);
-  --primary-foreground: hsl(0 0% 98%);
-  --secondary-foreground: hsl(0 0% 98%);
-  --muted-foreground: hsl(0 0% 63.9%);
-  --accent-foreground: hsl(0 0% 98%);
+  --background: hsl(250 20% 7%);
+  --card: hsl(250 20% 11%);
+  --popover: hsl(250 20% 11%);
+  --primary: hsl(250 20% 15%);
+  --secondary: hsl(250 20% 20%);
+  --muted: hsl(250 20% 20%);
+  --accent: hsl(265 80% 65%);
+  --destructive: hsl(0 80% 55%);
+  --foreground: hsl(250 10% 98%);
+  --card-foreground: hsl(250 10% 98%);
+  --popover-foreground: hsl(250 10% 98%);
+  --primary-foreground: hsl(250 10% 98%);
+  --secondary-foreground: hsl(250 10% 98%);
+  --muted-foreground: hsl(250 10% 70%);
+  --accent-foreground: hsl(250 10% 98%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(240 15% 24%);
-  --input: hsl(240 15% 24%);
-  --ring: hsl(270 20% 55%);
+  --border: hsl(250 20% 20%);
+  --input: hsl(250 20% 20%);
+  --ring: hsl(265 80% 65%);
 }
 
 /* Alternative themes - uncomment one to switch themes */

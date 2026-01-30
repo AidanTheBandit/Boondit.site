@@ -21,11 +21,8 @@ const projects = allProjects.slice(0, 4);
 
 <Layout title="Boondit">
   <Hero />
-  <Section
-    title="My Posts"
-    className={"bg-gradient-to-b from-background/70 from-[5%] to-background via-background"}
-  >
-    <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+  <Section title="My Posts">
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
       {
         posts.map((post) => (
           <BlogPostCard
@@ -38,11 +35,9 @@ const projects = allProjects.slice(0, 4);
       }
     </div>
   </Section>
-  <Section
-    title="Projects"
-    className={"bg-gradient-to-b from-background/70 from-[5%] to-background via-background"}
-  >
-    <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+
+  <Section title="Projects">
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
       {
         projects.map((project) => (
           <ProjectCard
@@ -54,10 +49,13 @@ const projects = allProjects.slice(0, 4);
         ))
       }
     </div>
-    <div class="w-full text-center mt-6">
-      <a href="/projects" class="text-accent hover:underline"
-        >View all projects →</a
+    <div class="w-full text-center mt-10">
+      <a
+        href="/projects"
+        class="inline-flex items-center justify-center px-6 py-3 border border-accent/50 text-base font-medium rounded-full text-accent hover:bg-accent hover:text-white transition-all duration-300"
       >
+        View all projects →
+      </a>
     </div>
   </Section>
   <Section title="Technologies I Know" full_screen={false}>
