@@ -121,34 +121,77 @@ import Section from "@/components/Section.astro";
             </div>
           </article>
 
-          <!-- FAQ -->
+          <!-- FAQ / Troubleshooting -->
           <article class="card">
-              <h2 class="card-title">FAQ</h2>
-              <div class="space-y-4">
-                  <div class="bg-black/20 rounded-lg p-4 border border-white/5">
-                      <h3 class="font-semibold text-white mb-2 text-sm">Is Tailscale supported?</h3>
-                      <p class="text-gray-400 text-sm leading-relaxed">No. Please use a reverse proxy or another tunneling service like cloudflared for remote access.</p>
-                  </div>
+              <h2 class="card-title">FAQ / Troubleshooting</h2>
+              <div class="space-y-3">
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">Is Tailscale supported?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">No. Please use a reverse proxy or another tunneling service like cloudflared for remote access.</p>
+                      </div>
+                  </details>
 
-                  <div class="bg-black/20 rounded-lg p-4 border border-white/5">
-                      <h3 class="font-semibold text-white mb-2 text-sm">Can I use WS (WebSocket)?</h3>
-                      <p class="text-gray-400 text-sm leading-relaxed">Only on your local network (e.g., 192.168.x.x IPs). Use WSS for anything secure/remote.</p>
-                  </div>
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">Can I use WS (WebSocket)?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Only on your local network (e.g., 192.168.x.x IPs). Use WSS (Secure WebSocket) for anything remotely accessible or secured.</p>
+                      </div>
+                  </details>
 
-                  <div class="bg-black/20 rounded-lg p-4 border border-white/5">
-                      <h3 class="font-semibold text-white mb-2 text-sm">Can I share my Moltbot?</h3>
-                      <p class="text-red-400/90 text-sm leading-relaxed font-medium">NO. This is very unsafe.</p>
-                  </div>
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">Can I share my Moltbot?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-red-400/90 text-sm leading-relaxed font-medium border-t border-white/5 pt-3">NO. This is very unsafe. Your token grants access to your R1 device.</p>
+                      </div>
+                  </details>
 
-                   <div class="bg-black/20 rounded-lg p-4 border border-white/5">
-                      <h3 class="font-semibold text-white mb-2 text-sm">Is this the same as clawdbot?</h3>
-                      <p class="text-gray-400 text-sm leading-relaxed">Yes.</p>
-                  </div>
+                   <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">Is this the same as clawdbot?</h3>
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Yes, MoltBot is the evolution of clawdbot.</p>
+                      </div>
+                  </details>
 
-                  <div class="bg-black/20 rounded-lg p-4 border border-white/5">
-                      <h3 class="font-semibold text-white mb-2 text-sm">How do I remove/unlink my R1?</h3>
-                      <p class="text-gray-400 text-sm leading-relaxed">Web ui > nodes > rabbit r1 > revoke</p>
-                  </div>
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">How do I remove/unlink my R1?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Go to the Web UI &gt; Nodes &gt; Rabbit R1 &gt; Revoke.</p>
+                      </div>
+                  </details>
+                  
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">Device stuck on "Gateway error"?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                            Check the following:
+                            <ul class="list-disc ml-4 mt-2 space-y-1">
+                                <li>Ensure <strong>Settings &gt; Gateway &gt; Bind</strong> is set to <strong>LAN</strong> (not Loopback).</li>
+                                <li>Ensure your firewall is allowing traffic on the specified port.</li>
+                                <li>If using localhost/127.0.0.1, the R1 cannot see it. Use your computer's LAN IP (e.g. 192.168.x.x).</li>
+                                <li>Verify the token is exactly as copied.</li>
+                            </ul>
+                          </p>
+                      </div>
+                  </details>
               </div>
           </article>
       </div>
