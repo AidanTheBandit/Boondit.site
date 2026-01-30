@@ -14,7 +14,7 @@ import Section from "@/components/Section.astro";
                 SENSITIVE DATA
             </p>
             <p class="text-yellow-100/80 text-sm">
-                The generated QR code contains personal information (your token) and should <strong>NOT</strong> be shared with others.
+                The generated QR code contains personal information (your token) and should <strong>NOT</strong> be shared with others. Boondit.site will upload any of this data your enter here. QR code generation happens locally in your browser.
             </p>
         </div>
       </header>
@@ -338,10 +338,8 @@ import Section from "@/components/Section.astro";
         if (e.key === 'Escape' && !modal?.classList.contains('hidden')) closeModal();
     });
 
-    // Form Logic
-    form?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
+    // Payload Logic
+    const updatePayload = () => {
         const ipsInput = (document.getElementById('ips') as HTMLInputElement).value;
         const portInput = (document.getElementById('port') as HTMLInputElement).value;
         const tokenInput = (document.getElementById('token') as HTMLInputElement).value;
@@ -349,12 +347,13 @@ import Section from "@/components/Section.astro";
 
         // Process IPs
         const ips = ipsInput.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0);
-
+        
+        // Basic payload structure even with empty fields for preview
         const payload = {
             type: "clawdbot-gateway",
             version: 1,
             ips: ips,
-            port: parseInt(portInput, 10),
+            port: parseInt(portInput, 10) || 18789,
             token: tokenInput,
             protocol: protocolInput
         };
@@ -366,6 +365,29 @@ import Section from "@/components/Section.astro";
         if (jsonPreview) {
             jsonPreview.textContent = JSON.stringify(payload, null, 2);
         }
+
+        return jsonString;
+    };
+
+    // Add listeners for real-time updates
+    const inputs = ['ips', 'port', 'token', 'protocol'];
+    inputs.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', updatePayload);
+            element.addEventListener('change', updatePayload); // For select element
+        }
+    });
+
+    // Initialize preview immediately
+    updatePayload();
+
+    // Form Logic
+    form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Ensure payload is up to date
+        const jsonString = updatePayload();
 
         // Show expand button
         if (expandBtn) expandBtn.classList.remove('hidden');
