@@ -12,35 +12,35 @@ export const NAV_LINKS: Array<{
   href?: string;
   children?: Array<{ title: string; href: string }>;
 }> = [
-  {
-    title: "Blog",
-  },
-  {
-    title: "Projects",
-  },
-  {
-    title: "Rabbit Tools",
-    children: [
-      {
-        title: "Creation Gen",
-        href: "r1-generator",
-      },
-      {
-        title: "R1 MoltBot QR Gen",
-        href: "r1-moltbot-qr",
-      },
-    ],
-  },
-  {
-    title: "Barkle",
-    href: "//barkle.chat/@Aidan",
-  },
-  {
-    title: "Github",
-    href: "//github.com/" + GITHUB_USERNAME,
-  },
-  {
-    title: "Buy Me a Coffee",
-    href: "//buymeacoffee.com/boondit",
-  },
-];
+    {
+      title: "Blog",
+    },
+    {
+      title: "Projects",
+    },
+    {
+      title: "Rabbit Tools",
+      children: [
+        {
+          title: "Creation Gen",
+          href: "r1-generator",
+        },
+        {
+          title: "R1 OpenClaw QR Gen",
+          href: "r1-moltbot-qr",
+        },
+      ],
+    },
+    {
+      title: "Barkle",
+      href: "//barkle.chat/@Aidan",
+    },
+    {
+      title: "Github",
+      href: "//github.com/" + GITHUB_USERNAME,
+    },
+    {
+      title: "Buy Me a Coffee",
+      href: "//buymeacoffee.com/boondit",
+    },
+  ];

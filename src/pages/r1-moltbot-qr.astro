@@ -3,8 +3,8 @@ import Layout from "@/layouts/Layout.astro";
 import Section from "@/components/Section.astro";
 ---
 
-<Layout title="R1 MoltBot QR Gen - Boondit">
-  <Section title="R1 MoltBot QR Generator" className="min-h-screen">
+<Layout title="R1 OpenClaw QR Gen - Boondit">
+  <Section title="R1 OpenClaw QR Generator" className="min-h-screen">
     <div class="max-w-7xl mx-auto p-6">
       <header class="text-center mb-10">
         
@@ -61,8 +61,7 @@ import Section from "@/components/Section.astro";
             <article class="card">
                  <h2 class="card-title">Test Connection</h2>
                  <div class="space-y-4">
-                    <p class="text-xs text-gray-400">
-                        Verify connectivity to your Moltbot instance.
+                        Verify connectivity to your OpenClaw instance.
                     </p>
                     
                     <div id="testLog" class="bg-black/30 rounded-lg p-3 border border-gray-700/50 min-h-[100px] font-mono text-[11px] overflow-y-auto max-h-[150px] flex flex-col gap-1">
@@ -172,7 +171,7 @@ import Section from "@/components/Section.astro";
                           <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
                             This indicates a network-level connectivity issue:
                             <ul class="list-disc ml-4 mt-2 space-y-1">
-                                <li><strong>Service Status:</strong> Ensure the Moltbot service is actually running on your computer.</li>
+                                <li><strong>Service Status:</strong> Ensure the OpenClaw service is actually running on your computer.</li>
                                 <li><strong>Firewall:</strong> Check that your OS firewall (Windows Defender/macOS Firewall) isn't blocking the port.</li>
                                 <li><strong>Port Forwarding:</strong> If connecting remotely, ensure ports are correctly forwarded on your router.</li>
                             </ul>
@@ -182,7 +181,7 @@ import Section from "@/components/Section.astro";
 
                   <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
                       <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">How do I setup moltbot?</h3>
+                          <h3 class="font-semibold text-white text-sm">How do I setup OpenClaw?</h3>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
@@ -194,7 +193,7 @@ import Section from "@/components/Section.astro";
 
                   <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
                       <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Is Moltbot a rabbit product?</h3>
+                          <h3 class="font-semibold text-white text-sm">Is OpenClaw a rabbit product?</h3>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
@@ -235,7 +234,7 @@ import Section from "@/components/Section.astro";
 
                   <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
                       <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Can I share my Moltbot?</h3>
+                          <h3 class="font-semibold text-white text-sm">Can I share my OpenClaw?</h3>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
@@ -249,7 +248,7 @@ import Section from "@/components/Section.astro";
                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Yes, MoltBot is the evolution of clawdbot.</p>
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Yes, OpenClaw is the evolution of MoltBot/clawdbot.</p>
                       </div>
                   </details>
 
@@ -491,7 +490,7 @@ import Section from "@/components/Section.astro";
         const timeout = setTimeout(() => {
             if (!isConnected) {
                 log('Connection timeout (5s). Gateway unreachable.', 'error');
-                log('Hint: Check Firewall, Port Forwarding, or start Moltbot.', 'warning');
+                log('Hint: Check Firewall, Port Forwarding, or start OpenClaw.', 'warning');
                 ws.close();
             }
         }, 5000);
@@ -588,7 +587,7 @@ import Section from "@/components/Section.astro";
                 if (window.location.protocol === 'https:' && protocolInput === 'ws') {
                     log('Hint: Mixed Content (HTTPS -> WS) blocked.', 'warning');
                 } else {
-                    log('Hint: Is the IP/Port correct? Is Moltbot running?', 'warning');
+                    log('Hint: Is the IP/Port correct? Is OpenClaw running?', 'warning');
                 }
             } else {
                 log('Socket error after connection.', 'error');
