@@ -135,7 +135,25 @@ import Section from "@/components/Section.astro";
                                 <li>Ensure your firewall is allowing traffic on the specified port.</li>
                                 <li>If using localhost/127.0.0.1, the R1 cannot see it. Use your computer's LAN IP (e.g. 192.168.x.x).</li>
                                 <li>For non-local IPs, you <strong>MUST</strong> use <strong>WSS</strong> with a valid SSL certificate.</li>
+                                <li>If using cloudflared, ensure you use port <strong>443</strong>.</li>
                                 <li>Verify the token is exactly as copied.</li>
+                            </ul>
+                          </p>
+                      </div>
+                  </details>
+
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-bold text-white text-sm">Device stuck on "Gateway unreachable"?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                            This indicates a network-level connectivity issue:
+                            <ul class="list-disc ml-4 mt-2 space-y-1">
+                                <li><strong>Service Status:</strong> Ensure the Moltbot service is actually running on your computer.</li>
+                                <li><strong>Firewall:</strong> Check that your OS firewall (Windows Defender/macOS Firewall) isn't blocking the port.</li>
+                                <li><strong>Port Forwarding:</strong> If connecting remotely, ensure ports are correctly forwarded on your router.</li>
                             </ul>
                           </p>
                       </div>
