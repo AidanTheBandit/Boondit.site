@@ -127,6 +127,58 @@ import Section from "@/components/Section.astro";
               <div class="space-y-3">
                   <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
                       <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-bold text-white text-sm">Device stuck on "Gateway error"?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                            Check the following:
+                            <ul class="list-disc ml-4 mt-2 space-y-1">
+                                <li>Ensure <strong>Settings &gt; Gateway &gt; Bind</strong> is set to <strong>LAN</strong> (not Loopback).</li>
+                                <li>Ensure your firewall is allowing traffic on the specified port.</li>
+                                <li>If using localhost/127.0.0.1, the R1 cannot see it. Use your computer's LAN IP (e.g. 192.168.x.x).</li>
+                                <li>For non-local IPs, you <strong>MUST</strong> use <strong>WSS</strong> with a valid SSL certificate.</li>
+                                <li>Verify the token is exactly as copied.</li>
+                            </ul>
+                          </p>
+                      </div>
+                  </details>
+
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">How do I setup moltbot?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                              Check out the documentation at <a href="https://docs.molt.bot/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">docs.molt.bot</a>
+                          </p>
+                      </div>
+                  </details>
+
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">Is Moltbot a rabbit product?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                              No. It is an open source project that can be found here: <a href="https://github.com/moltbot/moltbot" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">github.com/moltbot/moltbot</a>
+                          </p>
+                      </div>
+                  </details>
+
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                          <h3 class="font-semibold text-white text-sm">Is moltbot safe?</h3>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                      </summary>
+                      <div class="px-4 pb-4 pt-0">
+                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Use at your own risk.</p>
+                      </div>
+                  </details>
+                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">Is Tailscale supported?</h3>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
@@ -175,24 +227,7 @@ import Section from "@/components/Section.astro";
                       </div>
                   </details>
                   
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Device stuck on "Gateway error"?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
-                            Check the following:
-                            <ul class="list-disc ml-4 mt-2 space-y-1">
-                                <li>Ensure <strong>Settings &gt; Gateway &gt; Bind</strong> is set to <strong>LAN</strong> (not Loopback).</li>
-                                <li>Ensure your firewall is allowing traffic on the specified port.</li>
-                                <li>If using localhost/127.0.0.1, the R1 cannot see it. Use your computer's LAN IP (e.g. 192.168.x.x).</li>
-                                <li>For non-local IPs, you <strong>MUST</strong> use <strong>WSS</strong> with a valid SSL certificate.</li>
-                                <li>Verify the token is exactly as copied.</li>
-                            </ul>
-                          </p>
-                      </div>
-                  </details>
+
               </div>
           </article>
       </div>
