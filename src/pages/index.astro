@@ -21,6 +21,8 @@ const projects = allProjects.slice(0, 4);
 
 <Layout title="Boondit">
   <Hero />
+  <div class="w-full max-w-4xl mx-auto h-px bg-border/50 my-10 md:my-20"></div>
+
   <Section title="My Posts">
     <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
       {
@@ -36,6 +38,8 @@ const projects = allProjects.slice(0, 4);
     </div>
   </Section>
 
+  <div class="w-full max-w-4xl mx-auto h-px bg-border/50 my-10 md:my-20"></div>
+
   <Section title="Projects">
     <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
       {
@@ -49,28 +53,32 @@ const projects = allProjects.slice(0, 4);
         ))
       }
     </div>
-    <div class="w-full text-center mt-10">
+    <div class="w-full text-center mt-12 mb-6">
       <a
         href="/projects"
-        class="inline-flex items-center justify-center px-6 py-3 border border-accent/50 text-base font-medium rounded-full text-accent hover:bg-accent hover:text-white transition-all duration-300"
+        class="inline-flex items-center justify-center px-6 py-3 border border-accent/30 text-base font-medium rounded-full text-accent hover:bg-accent hover:text-white transition-all duration-300 hover:scale-105"
       >
         View all projects →
       </a>
     </div>
   </Section>
+
+  <div class="w-full max-w-4xl mx-auto h-px bg-border/50 my-10 md:my-20"></div>
+
   <Section title="Technologies I Know" full_screen={false}>
-    <div class="w-full grid place-items-center">
+    <div class="w-full grid place-items-center mb-10">
       <div
-        class="w-full gap-2 md:gap-4 flex flex-wrap px-3 max-w-4xl text-sm md:text-lg justify-center"
+        class="w-full gap-3 md:gap-4 flex flex-wrap px-3 max-w-4xl text-sm md:text-lg justify-center"
       >
         {KNOWN_TECH.map((x) => <Breadcrumb title={x} />)}
       </div>
     </div>
   </Section>
+
   <Section title="About Me">
-    <div class="w-full grid place-items-center">
+    <div class="w-full grid place-items-center mb-20">
       <div
-        class="max-w-4xl text-lg md:text-xl lg:text-lg opacity-90 text-center justify-evenly px-4"
+        class="max-w-3xl text-lg md:text-xl lg:text-2xl opacity-80 text-center justify-evenly px-4 leading-relaxed"
       >
         <p>{ABOUT_ME}</p>
       </div>

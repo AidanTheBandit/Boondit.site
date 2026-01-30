@@ -10,12 +10,12 @@ import { QUOTE, SITE_TITLE } from "@/consts";
 >
   <!-- Mobile Layout: Vertical -->
   <div class="flex flex-col justify-center items-center h-full md:hidden">
-    <div class="text-center mb-8">
-      <h1 class="font-bold text-4xl sm:text-5xl">{`<${SITE_TITLE} />`}</h1>
-      <h2 class="text-lg sm:text-xl opacity-95 mt-2">
-        {QUOTE}
-      </h2>
-    </div>
+      <div class="text-center mb-8">
+        <h1 class="font-bold text-5xl sm:text-6xl">{`<${SITE_TITLE} />`}</h1>
+        <h2 class="text-xl sm:text-2xl opacity-90 mt-3 font-medium text-muted-foreground">
+          {QUOTE}
+        </h2>
+      </div>
 
     <div class="w-full max-w-md sm:max-w-lg">
       <div class="hero-image-container mx-auto" id="hero-image-container">
@@ -42,8 +42,8 @@ import { QUOTE, SITE_TITLE } from "@/consts";
   <div class="hidden md:grid md:grid-cols-2 md:gap-4 md:items-center md:h-full">
     <div class="grid place-items-center">
       <div class="text-center">
-        <h1 class="font-bold text-6xl lg:text-7xl">{`<${SITE_TITLE} />`}</h1>
-        <h2 class="text-2xl opacity-95 mt-2">
+        <h1 class="font-bold text-7xl lg:text-8xl">{`<${SITE_TITLE} />`}</h1>
+        <h2 class="text-3xl opacity-90 mt-4 font-medium text-muted-foreground">
           {QUOTE}
         </h2>
       </div>
@@ -71,6 +71,24 @@ import { QUOTE, SITE_TITLE } from "@/consts";
         </a>
       </div>
     </div>
+  </div>
+  </div>
+  
+  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer opacity-70 hover:opacity-100 transition-opacity" onclick="document.getElementById('myposts').scrollIntoView({behavior: 'smooth'})">
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      class="h-10 w-10 text-muted-foreground" 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
+    >
+      <path 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M19 14l-7 7m0 0l-7-7m7 7V3" 
+      />
+    </svg>
   </div>
 </section>
 
