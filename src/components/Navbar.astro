@@ -3,23 +3,26 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
 ---
 
 <nav
-  class="w-full !z-[9999] py-3 md:py-5 px-3 md:px-4 bg-background/90 backdrop-blur-sm"
+  class="w-full py-3 md:py-4 px-4 bg-background/80 backdrop-blur-md border-b border-transparent transition-all duration-300"
+  id="navbar"
 >
   <div
-    class="w-full flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4"
+    class="max-w-7xl mx-auto flex items-center justify-between gap-4"
   >
-    <a href="/" class="flex-shrink-0">
+    <!-- Logo -->
+    <a href="/" class="flex-shrink-0 z-50 relative">
       <div
         id="logo"
-        class="pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base"
+        class="pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base border border-transparent"
       >
         {SITE_TITLE}
       </div>
     </a>
-    <div class="flex flex-wrap gap-2 md:gap-4 justify-center items-center">
-      <div class="hidden md:block">/</div>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex items-center gap-1">
       {
-        links.map((link) => {
+        links.map((link, index) => {
           const href =
             link.href ?? link.title.toLowerCase().replaceAll(" ", "-");
           const pathname = Astro.url.pathname.replace(
@@ -33,6 +36,7 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
           if (link.children) {
             return (
               <>
+                {index > 0 && <span class="text-muted-foreground/30 px-2 select-none">/</span>}
                 <div class="group relative px-2 py-1">
                   <button class="hover:text-accent-foreground transition-all ease-in-out text-sm md:text-base flex items-center justify-center gap-1">
                     {link.title}
@@ -51,12 +55,12 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
                       <path d="m6 9 6 6 6-6" />
                     </svg>
                   </button>
-                  <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-[200px]">
-                    <div class="bg-background/95 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg overflow-hidden p-1 flex flex-col gap-1">
+                  <div class="absolute left-1/2 -translate-x-1/2 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-[200px]">
+                    <div class="bg-popover/95 backdrop-blur-xl border border-border rounded-lg shadow-2xl overflow-hidden p-1 flex flex-col gap-1 ring-1 ring-black/5">
                       {link.children.map((child) => (
                         <a
                           href={`/${child.href}`}
-                          class="block px-4 py-2 hover:bg-accent hover:text-accent-foreground rounded-md text-sm transition-colors text-center"
+                          class="block px-4 py-2 hover:bg-accent hover:text-accent-foreground rounded-md text-sm transition-colors text-center whitespace-nowrap font-medium"
                         >
                           {child.title}
                         </a>
@@ -64,39 +68,194 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
                     </div>
                   </div>
                 </div>
-                <div class="hidden md:block">/</div>
               </>
             );
           }
 
           return (
             <>
+               {index > 0 && <span class="text-muted-foreground/30 px-2 select-none">/</span>}
               <a
                 class:list={[{ "bg-accent text-accent-foreground": isActive }]}
-                class="hover:bg-accent hover:text-accent-foreground transition-all ease-in-out px-2 py-1 max-w-fit text-sm md:text-base flex items-center justify-center"
+                class="hover:bg-accent hover:text-accent-foreground transition-all ease-in-out px-2 py-1 rounded-md text-sm md:text-base flex items-center justify-center font-medium"
                 href={`/${href}`}
               >
-                <div>{link.title}</div>
+                {link.title}
               </a>
-              <div class="hidden md:block">/</div>
             </>
           );
         })
       }
     </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden z-[10001] p-2 text-foreground hover:bg-muted/20 rounded-md transition-colors relative"
+      aria-label="Toggle Menu"
+      aria-expanded="false"
+    >
+      <div class="relative w-6 h-6 flex items-center justify-center overflow-hidden">
+         <svg
+        id="menu-open-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="transition-all duration-300 absolute"
+      >
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+      </div>
+    </button>
+
   </div>
 </nav>
 
+<!-- Mobile Menu Markup moved outside nav to escape backdrop-filter containing block -->
+<!-- Mobile Menu Backdrop -->
+<div
+  id="mobile-menu-backdrop"
+  class="fixed inset-0 bg-black/60 z-[9999] opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-sm md:hidden"
+></div>
+
+<!-- Mobile Sidebar -->
+<div
+  id="mobile-menu"
+  class="fixed inset-y-0 right-0 w-[85vw] max-w-sm bg-background border-l border-border z-[10000] transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl md:hidden overflow-y-auto"
+>
+  <div class="flex flex-col p-6 gap-6 min-h-full">
+    
+    <!-- Sidebar Header with Close Button -->
+    <div class="flex items-center justify-between border-b border-border/40 pb-4">
+        <span class="font-bold text-lg">{SITE_TITLE}</span>
+        <button id="sidebar-close-btn" class="p-2 hover:bg-muted/20 rounded-md transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    {
+      links.map((link) => {
+          const href =
+        link.href ?? link.title.toLowerCase().replaceAll(" ", "-");
+        
+        if (link.children) {
+          return (
+            <div class="flex flex-col gap-3 w-full animate-in slide-in-from-right-4 duration-500 fill-mode-both" style={`animation-delay: 100ms`}>
+              <div class="font-bold text-lg text-muted-foreground/80 uppercase tracking-wider text-xs border-b border-border/40 pb-1 mb-1">{link.title}</div>
+              <div class="flex flex-col gap-2 pl-2 border-l-2 border-border/30">
+                {link.children.map((child) => (
+                  <a
+                    href={`/${child.href}`}
+                    class="mobile-link py-2 px-3 text-base text-foreground/80 hover:text-foreground hover:bg-muted/30 rounded-md transition-all font-medium"
+                  >
+                    {child.title}
+                  </a>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <a
+            href={`/${href}`}
+            class="mobile-link text-xl font-bold text-foreground hover:text-accent-foreground transition-colors py-2 border-b border-border/20 last:border-0 animate-in slide-in-from-right-4 duration-500 fill-mode-both"
+             style={`animation-delay: 150ms`}
+          >
+            {link.title}
+          </a>
+        );
+      })
+    }
+    
+    <div class="mt-auto pt-8 text-xs text-muted-foreground text-center">
+        &copy; {new Date().getFullYear()} {SITE_TITLE}
+    </div>
+  </div>
+</div>
+
 <script>
+  // Mobile Menu Logic
+  const menuBtn = document.getElementById("mobile-menu-btn");
+  const sidebarCloseBtn = document.getElementById("sidebar-close-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const backdrop = document.getElementById("mobile-menu-backdrop");
+  const openIcon = document.getElementById("menu-open-icon");
+  const mobileLinks = document.querySelectorAll(".mobile-link");
+
+  let isMenuOpen = false;
+
+  function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    menuBtn?.setAttribute("aria-expanded", isMenuOpen.toString());
+
+    if (isMenuOpen) {
+      // Open Sidebar
+      mobileMenu?.classList.remove("translate-x-full");
+      
+      // Show Backdrop
+      backdrop?.classList.remove("opacity-0", "pointer-events-none");
+      
+      // Icon transformation (Optional: just fade out the hamburger or keep it)
+      // openIcon?.classList.add("opacity-0", "rotate-[-90deg]", "scale-50");
+
+    } else {
+      // Close Sidebar
+      mobileMenu?.classList.add("translate-x-full");
+      
+      // Hide Backdrop
+      backdrop?.classList.add("opacity-0", "pointer-events-none");
+      
+      // Icon transformation
+      // openIcon?.classList.remove("opacity-0", "rotate-[-90deg]", "scale-50");
+    }
+  }
+
+  menuBtn?.addEventListener("click", toggleMenu);
+  sidebarCloseBtn?.addEventListener("click", toggleMenu);
+  backdrop?.addEventListener("click", toggleMenu); // Close when clicking backdrop
+
+  // Close menu when clicking a link
+  mobileLinks.forEach(link => {
+    link.addEventListener("click", () => {
+       if (isMenuOpen) toggleMenu();
+    });
+  });
+
+  // Scroll Logic
   window.addEventListener("scroll", () => {
     const logo = document.getElementById("logo");
+    const navbar = document.getElementById("navbar");
+    
     if (!logo) return;
+    
+    // Add border and slightly more blur to navbar on scroll
+    if (window.scrollY > 20) {
+      navbar?.classList.remove("border-transparent", "backdrop-blur-md");
+      navbar?.classList.add("border-border/40", "backdrop-blur-xl");
+    } else {
+      navbar?.classList.add("border-transparent", "backdrop-blur-md");
+      navbar?.classList.remove("border-border/40", "backdrop-blur-xl");
+    }
+
     if (window.scrollY > 100) {
       logo.className =
-        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-foreground bg-background scale-100 hover:text-background text-foreground px-3 md:px-4 transition-all ease-in-out text-sm md:text-base";
+        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-foreground bg-background scale-100 hover:text-background text-foreground px-3 md:px-4 transition-all ease-in-out text-sm md:text-base rounded-md border border-foreground/10 shadow-sm";
     } else {
       logo.className =
-        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base";
+        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base border border-transparent";
     }
   });
 </script>

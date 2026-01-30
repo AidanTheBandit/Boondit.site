@@ -22,6 +22,10 @@ export const NAV_LINKS: Array<{
       title: "Rabbit Tools",
       children: [
         {
+          title: "R1 Create SDK",
+          href: "r1-create",
+        },
+        {
           title: "Creation Gen",
           href: "r1-generator",
         },
