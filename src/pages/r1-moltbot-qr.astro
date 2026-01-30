@@ -1,0 +1,325 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Section from "@/components/Section.astro";
+---
+
+<Layout title="R1 MoltBot QR Gen - Boondit">
+  <Section title="R1 MoltBot QR Generator" className="min-h-screen">
+    <div class="max-w-7xl mx-auto p-6">
+      <header class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-white mb-3">
+          R1 MoltBot QR Generator
+        </h1>
+        <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 mt-4 max-w-2xl mx-auto">
+            <p class="text-yellow-200 font-bold flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                SENSITIVE DATA
+            </p>
+            <p class="text-yellow-100 text-sm mt-1">
+                The generated QR code contains personal information (your token) and should <strong>NOT</strong> be shared with others.
+            </p>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Form -->
+        <article class="card">
+            <h2 class="card-title">Configuration</h2>
+            <form id="moltbotForm" class="space-y-4">
+                <div class="form-group">
+                    <label for="ips" class="form-label">
+                        IP Addresses <span class="text-gray-400 font-normal">(comma separated)</span>
+                    </label>
+                    <input type="text" id="ips" class="form-input" placeholder="1.2.3.4, 5.6.7.8" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="port" class="form-label">Port</label>
+                    <input type="number" id="port" class="form-input" value="18789" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="token" class="form-label">Token</label>
+                    <input type="text" id="token" class="form-input" placeholder="secret-token" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="protocol" class="form-label">Protocol</label>
+                    <select id="protocol" class="form-select">
+                        <option value="wss" selected>wss</option>
+                        <option value="ws">ws</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary w-full mt-4">
+                    Generate QR Code
+                </button>
+            </form>
+        </article>
+
+        <!-- Preview -->
+        <article class="card flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title mb-0">QR Code</h2>
+                <button id="expandQrBtn" class="btn-secondary text-sm py-1 px-3 hidden">
+                    Expand QR
+                </button>
+            </div>
+            
+            <div class="flex-1 flex flex-col items-center justify-center p-4 bg-black/20 rounded-lg border border-white/5 mb-4 relative" id="qrCodeContainer">
+                 <p class="text-gray-400 text-sm">Generate a QR code to see it here</p>
+            </div>
+            
+            <div class="w-full">
+                <h3 class="text-sm font-semibold text-gray-400 mb-2">JSON Payload:</h3>
+                <pre id="jsonPreview" class="json-preview"></pre>
+            </div>
+        </article>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Fullscreen Modal -->
+  <div id="qrModal" class="fixed inset-0 z-[10000] bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="relative w-full max-w-2xl flex flex-col items-center">
+          <button id="closeModalBtn" class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+          <div id="modalQrContainer" class="bg-white p-8 rounded-xl shadow-2xl"></div>
+          <p class="text-white/70 mt-6 text-center">Scan this code with your device</p>
+      </div>
+  </div>
+</Layout>
+
+<script>
+    import QRCodeStyling from "qr-code-styling";
+
+    // Define types
+    interface MoltBotPayload {
+        type: "clawdbot-gateway";
+        version: number;
+        ips: string[];
+        port: number;
+        token: string;
+        protocol: string;
+    }
+
+    const form = document.getElementById('moltbotForm') as HTMLFormElement;
+    const qrContainer = document.getElementById('qrCodeContainer');
+    const modalQrContainer = document.getElementById('modalQrContainer');
+    const jsonPreview = document.getElementById('jsonPreview');
+    const expandBtn = document.getElementById('expandQrBtn');
+    const modal = document.getElementById('qrModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    let currentPayload: string | null = null;
+    let qrCode: QRCodeStyling | null = null;
+    let modalQrCode: QRCodeStyling | null = null;
+
+    // Modal Logic
+    const openModal = () => {
+        if (!currentPayload || !modal || !modalQrContainer) return;
+        
+        modalQrContainer.innerHTML = '';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        modalQrCode = new QRCodeStyling({
+            width: 500,
+            height: 500,
+            data: currentPayload,
+            dotsOptions: { color: "#000000", type: "rounded" },
+            backgroundOptions: { color: "#ffffff" },
+        });
+        modalQrCode.append(modalQrContainer);
+    };
+
+    const closeModal = () => {
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    };
+
+    expandBtn?.addEventListener('click', openModal);
+    closeModalBtn?.addEventListener('click', closeModal);
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal?.classList.contains('hidden')) closeModal();
+    });
+
+    // Form Logic
+    form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const ipsInput = (document.getElementById('ips') as HTMLInputElement).value;
+        const portInput = (document.getElementById('port') as HTMLInputElement).value;
+        const tokenInput = (document.getElementById('token') as HTMLInputElement).value;
+        const protocolInput = (document.getElementById('protocol') as HTMLSelectElement).value;
+
+        // Process IPs
+        const ips = ipsInput.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0);
+
+        const payload = {
+            type: "clawdbot-gateway",
+            version: 1,
+            ips: ips,
+            port: parseInt(portInput, 10),
+            token: tokenInput,
+            protocol: protocolInput
+        };
+
+        const jsonString = JSON.stringify(payload);
+        currentPayload = jsonString;
+
+        // Update Text Preview
+        if (jsonPreview) {
+            jsonPreview.textContent = JSON.stringify(payload, null, 2);
+        }
+
+        // Show expand button
+        if (expandBtn) expandBtn.classList.remove('hidden');
+
+        // Generate QR
+        if (qrContainer) {
+            qrContainer.innerHTML = '';
+            
+            try {
+                qrCode = new QRCodeStyling({
+                    width: 300,
+                    height: 300,
+                    data: jsonString,
+                    dotsOptions: { color: "#000000", type: "rounded" },
+                    backgroundOptions: { color: "#ffffff" },
+                });
+                qrCode.append(qrContainer);
+            } catch (err) {
+               console.error(err);
+               qrContainer.innerHTML = '<p class="text-red-500">Error generating QR.</p>';
+            }
+        }
+    });
+
+</script>
+
+<style>
+  /* Reuse styles from creation gen for consistency */
+  .card {
+    background: rgba(31, 41, 55, 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card:hover {
+     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-input,
+  .form-select {
+    display: block;
+    width: 100%;
+    background: rgba(31, 41, 55, 0.8);
+    color: #fff;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(75, 85, 99, 0.6);
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+  
+  .form-input:hover,
+  .form-select:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+
+  .form-select {
+    padding-right: 2.5rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+  }
+
+  .btn-primary, .btn-secondary {
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+  }
+
+  .btn-secondary:hover {
+     background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+     transform: translateY(-1px);
+  }
+
+  .json-preview {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    color: #22d3ee;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    font-size: 0.75rem;
+    overflow-x: auto;
+    font-family: "Courier New", monospace;
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #1f2937;
+    max-height: 200px;
+  }
+</style>
