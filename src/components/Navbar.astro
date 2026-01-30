@@ -56,7 +56,7 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
                     </svg>
                   </button>
                   <div class="absolute left-1/2 -translate-x-1/2 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-[200px]">
-                    <div class="bg-black/90 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl overflow-hidden p-1 flex flex-col gap-1 ring-1 ring-white/5">
+                    <div class="bg-[#1a1a23]/95 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl overflow-hidden p-1 flex flex-col gap-1 ring-1 ring-white/5">
                       {link.children.map((child) => (
                         <a
                           href={`/${child.href}`}
@@ -72,13 +72,21 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
             );
           }
 
+          const isBuyMeCoffee = link.title === "Buy Me a Coffee";
+
           return (
             <>
                {index > 0 && <span class="text-muted-foreground/30 px-2 select-none">/</span>}
               <a
-                class:list={[{ "bg-accent text-accent-foreground": isActive }]}
-                class="hover:bg-accent hover:text-accent-foreground transition-all ease-in-out px-2 py-1 rounded-md text-sm md:text-base flex items-center justify-center font-medium"
-                href={`/${href}`}
+                class:list={[
+                    { "bg-accent text-accent-foreground": isActive && !isBuyMeCoffee },
+                    isBuyMeCoffee 
+                        ? "bg-[#FFDD00] text-black hover:bg-[#FFDD00]/90 hover:text-black/80 font-bold border border-transparent shadow-[0_0_10px_rgba(255,221,0,0.3)]" 
+                        : "hover:bg-accent hover:text-accent-foreground"
+                ]}
+                class="transition-all ease-in-out px-2 py-1 rounded-md text-sm md:text-base flex items-center justify-center font-medium"
+                href={link.href ? link.href : `/${href}`}
+                target={isBuyMeCoffee ? "_blank" : "_self"}
               >
                 {link.title}
               </a>
