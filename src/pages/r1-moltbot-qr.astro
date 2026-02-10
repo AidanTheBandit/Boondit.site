@@ -70,8 +70,9 @@ import Section from "@/components/Section.astro";
 
                     <button id="testConnectionBtn" type="button" class="btn-secondary w-full text-sm py-2 flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        Test Connectivity
+                        <span id="testConnectionLabel">Test Connectivity</span>
                     </button>
+                    <p id="testConnectionNote" class="text-xs text-yellow-300 hidden">Test connection doesn't work for local IPs when using WS.</p>
                  </div>
             </article>
         </div>
@@ -114,25 +115,8 @@ import Section from "@/components/Section.astro";
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold border border-blue-500/30">2</div>
                     <div>
-                        <h3 class="font-semibold text-white mb-2">Run Connection Script</h3>
-                        <p class="text-gray-400 text-sm mb-3">Accept the pairing request by running the script on your computer:</p>
-                        
-                        <div class="space-y-3">
-                            <div class="bg-black/30 rounded-lg p-3 border border-white/5">
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-xs text-blue-300 font-semibold uppercase tracking-wider">Mac / Linux</span>
-                                    <button class="text-xs text-gray-500 hover:text-white transition-colors copy-btn" data-clipboard-target="#script-mac">Copy</button>
-                                </div>
-                                <code id="script-mac" class="block text-xs font-mono text-gray-300 select-all break-all">curl -L http://rabbit.tech/r1-moltbot.sh | bash</code>
-                            </div>
-                            <div class="bg-black/30 rounded-lg p-3 border border-white/5">
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-xs text-blue-300 font-semibold uppercase tracking-wider">Windows</span>
-                                    <button class="text-xs text-gray-500 hover:text-white transition-colors copy-btn" data-clipboard-target="#script-win">Copy</button>
-                                </div>
-                                <code id="script-win" class="block text-xs font-mono text-gray-300 select-all break-all">iwr -useb https://rabbit.tech/r1-moltbot.ps1 | iex</code>
-                            </div>
-                        </div>
+                        <h3 class="font-semibold text-white mb-2">Approve in Web UI</h3>
+                        <p class="text-gray-400 text-sm">Open <a id="nodesLink" href="http://IP:port/nodes" class="text-blue-400 hover:text-blue-300 hover:underline">http://IP:port/nodes</a>, then click <strong>Approve</strong> next to <strong>Rabbit R1</strong>.</p>
                     </div>
                 </div>
             </div>
@@ -301,10 +285,27 @@ import Section from "@/components/Section.astro";
     const expandBtn = document.getElementById('expandQrBtn');
     const modal = document.getElementById('qrModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const testBtn = document.getElementById('testConnectionBtn') as HTMLButtonElement | null;
+    const testNote = document.getElementById('testConnectionNote');
+    const testLabel = document.getElementById('testConnectionLabel');
+    const nodesLink = document.getElementById('nodesLink') as HTMLAnchorElement | null;
 
     let currentPayload: string | null = null;
     let qrCode: QRCodeStyling | null = null;
     let modalQrCode: QRCodeStyling | null = null;
+
+    const updateTestButtonState = (protocolValue: string) => {
+        if (!testBtn) return;
+        const isWs = protocolValue === 'ws';
+        testBtn.disabled = isWs;
+        testBtn.setAttribute('aria-disabled', isWs ? 'true' : 'false');
+        if (testLabel) {
+            testLabel.textContent = isWs ? 'Test Disabled (WS/local IPs)' : 'Test Connectivity';
+        }
+        if (testNote) {
+            testNote.classList.toggle('hidden', !isWs);
+        }
+    };
 
     // Clipboard Logic
     document.querySelectorAll('.copy-btn').forEach(btn => {
@@ -360,13 +361,27 @@ import Section from "@/components/Section.astro";
 
     // Payload Logic
     const updatePayload = () => {
-        const ipsInput = (document.getElementById('ips') as HTMLInputElement).value;
+        const ipsInputEl = document.getElementById('ips') as HTMLInputElement;
         const portInput = (document.getElementById('port') as HTMLInputElement).value;
         const tokenInput = (document.getElementById('token') as HTMLInputElement).value;
-        const protocolInput = (document.getElementById('protocol') as HTMLSelectElement).value;
+        const protocolSelect = document.getElementById('protocol') as HTMLSelectElement;
+        const ipsInput = ipsInputEl?.value ?? '';
 
         // Process IPs
         const ips = ipsInput.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0);
+        if (ips.some(ip => ip.startsWith('192.')) && protocolSelect?.value !== 'ws') {
+            protocolSelect.value = 'ws';
+        }
+
+        const nodesHost = ips.length > 0 ? ips[0] : 'IP';
+        const nodesPort = portInput || 'port';
+        const nodesUrl = `http://${nodesHost}:${nodesPort}/nodes`;
+        if (nodesLink) {
+            nodesLink.href = nodesUrl;
+            nodesLink.textContent = nodesUrl;
+        }
+
+        const protocolInput = protocolSelect?.value ?? 'wss';
         
         // Basic payload structure even with empty fields for preview
         const payload = {
@@ -386,6 +401,8 @@ import Section from "@/components/Section.astro";
             jsonPreview.textContent = JSON.stringify(payload, null, 2);
         }
 
+        updateTestButtonState(protocolInput);
+
         return jsonString;
     };
 
@@ -398,6 +415,8 @@ import Section from "@/components/Section.astro";
             element.addEventListener('change', updatePayload); // For select element
         }
     });
+
+    updatePayload();
 
     // Initialize preview immediately
     updatePayload();
@@ -433,7 +452,6 @@ import Section from "@/components/Section.astro";
     });
 
     // Test Connection Logic
-    const testBtn = document.getElementById('testConnectionBtn');
     const testLog = document.getElementById('testLog');
 
     const log = (msg: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
@@ -718,6 +736,13 @@ import Section from "@/components/Section.astro";
      background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
      transform: translateY(-1px);
   }
+
+    .btn-secondary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
 
   .json-preview {
     background: rgba(30, 41, 59, 0.8);

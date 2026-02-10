@@ -199,3 +199,6 @@ When OpenClaw is installed fresh it can't exactly do much. I found in order to m
 
 2. Have OpenClaw download the following skills: Heartbeat, cron, OpenClaw docs, and self improvement.
 These skills allow OpenClaw to look at chat history and improve itself, work persistantly, and learn about itself to improve functionality
+
+3. Giving your bot suggestions will help its functionality substantally. You should recomend to it that it uses .env in its workspace to save important credentials, use python scripts often to create its own tools, always make MD files to save important information constantly, and always think of solutions to the given problems and pressent those solutions to the user. 
+
