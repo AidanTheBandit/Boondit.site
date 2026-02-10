@@ -198,5 +198,4 @@ When OpenClaw is installed fresh it can't exactly do much. I found in order to m
 1. Have your bot download and install ClawHub. This is a skill hub that allows your bot to find useful skills. **WANING**: ClawHub has prompt injections which can be used to breach your data. Use at your own risk!!!
 
 2. Have OpenClaw download the following skills: Heartbeat, cron, OpenClaw docs, and self improvement.
-
-3. 
+These skills allow OpenClaw to look at chat history and improve itself, work persistantly, and learn about itself to improve functionality
