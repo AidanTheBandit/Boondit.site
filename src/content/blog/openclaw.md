@@ -11,6 +11,7 @@ If you want a personal assistant that answers you on Discord (or other chat apps
 This guide keeps things simple and safe. No fancy stuff. Just the basics that work.
 
 Full docs if you want them later: https://docs.openclaw.ai/
+### If you struggle with setting up hosting I made a paid OpenClaw hosting provider that gets this done in one click over at https://clawfa.st
 
 ## \<Step 1: Install /\>
 
@@ -202,3 +203,19 @@ These skills allow OpenClaw to look at chat history and improve itself, work per
 
 3. Giving your bot suggestions will help its functionality substantally. You should recomend to it that it uses .env in its workspace to save important credentials, use python scripts often to create its own tools, always make MD files to save important information constantly, and always think of solutions to the given problems and pressent those solutions to the user. 
 
+## \<Step 5: Connecting to Rabbit R1 /\>
+If you are only planning on using OpenClaw while you are at home on r1 you can get your local ip by opening terminal/cmd/konsole/etc on the pc running openclaw and sending:
+
+Or
+
+You can ask your openclaw instance what your local ip for the computer is, openclaw token, and make sure to set OpenClaw gateway bind to "lan"
+
+Then enter your local ip (the one starting 192.168.1.xxx) into https://boondit.site/r1-moltbot-qr
+
+
+## \<Examples and suggestions /\>
+I personally have my OpenClaw setup to use my calendar by sending it my iCal links within the Google Calendar settings as well as access token's from my schools Canvas accounts. I then asked it to write a script that pull data from all that so that the Ai can summerize and send to me every morning to give me a morning briefing. 
+
+I also setup a brave search api so my bot can search the web.
+
+I'd also recomend setting up your bot to use Discord or another text based messaging service for convenance.
