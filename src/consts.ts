@@ -40,10 +40,6 @@ export const NAV_LINKS: Array<{
       ],
     },
     {
-      title: "Barkle",
-      href: "//barkle.chat/@Aidan",
-    },
-    {
       title: "Github",
       href: "//github.com/" + GITHUB_USERNAME,
     },
