@@ -1,0 +1,56 @@
+name: Mirror firmware release
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch latest release metadata
+        id: release
+        run: |
+          set -euo pipefail
+          api_url="https://api.github.com/repos/rabbit-hmi-oss/firmware/releases/latest"
+          json=$(curl -sL "$api_url")
+          asset_url=$(echo "$json" | jq -r '.assets[] | select(.name | endswith(".zip")) | .browser_download_url' | head -n 1)
+          asset_name=$(echo "$json" | jq -r '.assets[] | select(.name | endswith(".zip")) | .name' | head -n 1)
+          if [[ -z "$asset_url" || -z "$asset_name" || "$asset_url" == "null" || "$asset_name" == "null" ]]; then
+            echo "No zip asset found in latest release." >&2
+            exit 1
+          fi
+          echo "asset_url=$asset_url" >> "$GITHUB_OUTPUT"
+          echo "asset_name=$asset_name" >> "$GITHUB_OUTPUT"
+
+      - name: Download firmware
+        run: |
+          set -euo pipefail
+          mkdir -p public/firmware
+          asset_url="${{ steps.release.outputs.asset_url }}"
+          asset_name="${{ steps.release.outputs.asset_name }}"
+          target="public/firmware/$asset_name"
+          tmp="${target}.tmp"
+          echo "Downloading $asset_url"
+          curl -L --retry 3 --retry-delay 2 -o "$tmp" "$asset_url"
+          mv "$tmp" "$target"
+
+      - name: Commit mirror
+        run: |
+          set -euo pipefail
+          if [[ -z $(git status --porcelain) ]]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/firmware
+          git commit -m "chore: mirror latest firmware"
+          git push

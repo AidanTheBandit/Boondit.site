@@ -21,6 +21,17 @@ import Section from "@/components/Section.astro";
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
           <article class="card">
+            <h2 class="card-title">Step 0: Enter Fastboot (BROM)</h2>
+            <p class="text-gray-300 text-sm mb-4">
+              Optional: If the device is powered off, this sends the FASTBOOT
+              command over BROM to bring it into fastboot mode.
+            </p>
+            <button id="enterFastboot" class="btn-secondary w-full">
+              Enter fastboot mode
+            </button>
+          </article>
+
+          <article class="card">
             <h2 class="card-title">Step 1: Connect Bootloader</h2>
             <p class="text-gray-300 text-sm mb-4">
               Put your R1 into bootloader fastboot mode, then select it here.
@@ -79,6 +90,10 @@ import Section from "@/components/Section.astro";
                 <span id="webusbStatus" class="status-pill">Checking...</span>
               </div>
               <div class="status-row">
+                <span>Web Serial</span>
+                <span id="webserialStatus" class="status-pill">Checking...</span>
+              </div>
+              <div class="status-row">
                 <span>Bootloader</span>
                 <span id="bootloaderStatus" class="status-pill">Not connected</span>
               </div>
@@ -132,12 +147,16 @@ import Section from "@/components/Section.astro";
   const bootloaderDevice = new FastbootDevice();
   const fastbootdDevice = new FastbootDevice();
 
+  const FIRMWARE_MIRROR_BASE = "https://boondit.site/firmware";
+
   const elements = {
+    enterFastboot: document.getElementById("enterFastboot"),
     connectBootloader: document.getElementById("connectBootloader"),
     rebootFastbootd: document.getElementById("rebootFastbootd"),
     connectFastbootd: document.getElementById("connectFastbootd"),
     flashStock: document.getElementById("flashStock"),
     webusbStatus: document.getElementById("webusbStatus"),
+    webserialStatus: document.getElementById("webserialStatus"),
     bootloaderStatus: document.getElementById("bootloaderStatus"),
     fastbootdStatus: document.getElementById("fastbootdStatus"),
     statusLog: document.getElementById("statusLog"),
@@ -158,9 +177,13 @@ import Section from "@/components/Section.astro";
   setDebugLevel(1);
 
   const supportsWebUsb = "usb" in navigator;
+  const supportsWebSerial = "serial" in navigator;
   elements.webusbStatus.textContent = supportsWebUsb ? "Supported" : "Unavailable";
   elements.webusbStatus.classList.toggle("is-ok", supportsWebUsb);
   elements.webusbStatus.classList.toggle("is-error", !supportsWebUsb);
+  elements.webserialStatus.textContent = supportsWebSerial ? "Supported" : "Unavailable";
+  elements.webserialStatus.classList.toggle("is-ok", supportsWebSerial);
+  elements.webserialStatus.classList.toggle("is-error", !supportsWebSerial);
 
   function logStatus(message, type = "info") {
     if (!elements.statusLog) return;
@@ -178,6 +201,7 @@ import Section from "@/components/Section.astro";
   }
 
   function setButtonStates() {
+    elements.enterFastboot.disabled = !supportsWebSerial || state.busy;
     elements.connectBootloader.disabled = !supportsWebUsb || state.busy;
     elements.rebootFastbootd.disabled = !state.bootloaderConnected || state.busy;
     elements.connectFastbootd.disabled = !supportsWebUsb || state.busy;
@@ -212,6 +236,38 @@ import Section from "@/components/Section.astro";
       state.busy = false;
       setButtonStates();
       setConnectionStatus();
+    }
+  }
+
+  async function enterFastbootFromBrom() {
+    if (!supportsWebSerial) {
+      logStatus("Web Serial is not available in this browser.", "error");
+      return;
+    }
+    if (!window.isSecureContext) {
+      logStatus("Web Serial requires HTTPS or localhost.", "error");
+      return;
+    }
+    state.busy = true;
+    setButtonStates();
+    logStatus("Requesting BROM device...", "info");
+
+    try {
+      const port = await navigator.serial.requestPort({
+        filters: [{ usbVendorId: 0x0e8d, usbProductId: 0x2000 }],
+      });
+      await port.open({ baudRate: 115200 });
+      const writer = port.writable.getWriter();
+      const encoder = new TextEncoder();
+      await writer.write(encoder.encode("FASTBOOT"));
+      writer.releaseLock();
+      await port.close();
+      logStatus("FASTBOOT command sent. Select the device in Step 1.", "success");
+    } catch (error) {
+      logStatus(`BROM fastboot failed: ${error.message || error}`, "error");
+    } finally {
+      state.busy = false;
+      setButtonStates();
     }
   }
 
@@ -267,15 +323,52 @@ import Section from "@/components/Section.astro";
     }
     return {
       name: asset.name,
+      apiUrl: asset.url,
       url: asset.browser_download_url,
+      mirrorUrl: FIRMWARE_MIRROR_BASE ? `${FIRMWARE_MIRROR_BASE}/${asset.name}` : null,
     };
   }
 
-  async function downloadZip(url) {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Firmware download failed: ${response.status}`);
+  async function downloadZip(apiUrl, fallbackUrl, mirrorUrl) {
+    const proxyBases = [
+      "https://cors.isomorphic-git.org/",
+      "https://api.allorigins.win/raw?url=",
+    ];
+
+    const candidateUrls = [
+      { label: "GitHub API", url: apiUrl, headers: { Accept: "application/octet-stream" } },
+      { label: "GitHub Direct", url: fallbackUrl },
+      ...proxyBases.map((base) => ({
+        label: `Proxy ${base}`,
+        url: `${base}${encodeURIComponent(fallbackUrl)}`,
+      })),
+    ];
+
+    if (mirrorUrl) {
+      candidateUrls.unshift({ label: "Boondit Mirror", url: mirrorUrl });
     }
+
+    let response;
+    for (const candidate of candidateUrls) {
+      try {
+        logStatus(`Downloading via ${candidate.label}...`, "info");
+        response = await fetch(candidate.url, {
+          headers: candidate.headers || {},
+          redirect: "follow",
+          cache: "no-store",
+        });
+        if (response.ok) {
+          break;
+        }
+      } catch (error) {
+        response = undefined;
+      }
+    }
+
+    if (!response || !response.ok) {
+      throw new Error("Firmware download failed due to CORS restrictions.");
+    }
+
     const contentLength = Number(response.headers.get("content-length") || 0);
     if (!response.body || !response.body.getReader) {
       const blob = await response.blob();
@@ -310,12 +403,12 @@ import Section from "@/components/Section.astro";
     elements.flashItem.textContent = "Finding latest firmware";
 
     try {
-      const { name, url } = await fetchLatestFirmware();
+      const { name, url, apiUrl, mirrorUrl } = await fetchLatestFirmware();
       logStatus(`Latest firmware found: ${name}`);
       elements.flashAction.textContent = "Downloading";
       elements.flashItem.textContent = name;
 
-      const zipBlob = await downloadZip(url);
+      const zipBlob = await downloadZip(apiUrl, url, mirrorUrl);
       logStatus("Firmware downloaded. Starting flash...");
 
       await fastbootdDevice.flashFactoryZip(
@@ -345,6 +438,7 @@ import Section from "@/components/Section.astro";
   }
 
   elements.connectBootloader.addEventListener("click", connectBootloader);
+  elements.enterFastboot.addEventListener("click", enterFastbootFromBrom);
   elements.rebootFastbootd.addEventListener("click", rebootToFastbootd);
   elements.connectFastbootd.addEventListener("click", connectFastbootd);
   elements.flashStock.addEventListener("click", flashStockOs);
