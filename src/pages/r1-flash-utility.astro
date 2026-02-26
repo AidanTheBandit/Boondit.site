@@ -1,0 +1,506 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Section from "@/components/Section.astro";
+---
+
+<Layout title="R1 Flash Utility - Boondit">
+  <Section title="R1 Flash Utility" className="min-h-screen">
+    <div class="max-w-6xl mx-auto p-6 space-y-8">
+      <header class="text-center space-y-3">
+        <p class="text-gray-400 text-lg">
+          Flash the latest Rabbit R1 stock firmware directly from your browser.
+        </p>
+        <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 max-w-3xl mx-auto">
+          <p class="text-red-200 text-sm">
+            Warning: Flashing firmware can erase data or brick your device if
+            interrupted. Proceed only if you accept the risk.
+          </p>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+          <article class="card">
+            <h2 class="card-title">Step 1: Connect Bootloader</h2>
+            <p class="text-gray-300 text-sm mb-4">
+              Put your R1 into bootloader fastboot mode, then select it here.
+            </p>
+            <button id="connectBootloader" class="btn-primary w-full">
+              Select device (bootloader)
+            </button>
+          </article>
+
+          <article class="card">
+            <h2 class="card-title">Step 2: Switch to Fastbootd</h2>
+            <p class="text-gray-300 text-sm mb-4">
+              This will reboot the device into fastbootd. You will be asked to
+              select it again afterward.
+            </p>
+            <button id="rebootFastbootd" class="btn-secondary w-full" disabled>
+              Reboot to fastbootd
+            </button>
+          </article>
+
+          <article class="card">
+            <h2 class="card-title">Step 3: Connect Fastbootd</h2>
+            <p class="text-gray-300 text-sm mb-4">
+              Select the device again once it shows up in fastbootd mode.
+            </p>
+            <button id="connectFastbootd" class="btn-primary w-full" disabled>
+              Select device (fastbootd)
+            </button>
+          </article>
+
+          <article class="card">
+            <h2 class="card-title">Step 4: Flash Stock OS</h2>
+            <div class="space-y-4">
+              <p class="text-gray-300 text-sm">
+                This downloads the latest release zip, unpacks it locally in your
+                browser, and flashes the device without any manual downloads.
+              </p>
+              <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                <p class="text-red-200 text-xs">
+                  Wipe is always enabled for stock firmware flashes.
+                </p>
+              </div>
+              <button id="flashStock" class="btn-accent w-full" disabled>
+                Flash stock OS
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <aside class="space-y-6">
+          <article class="card">
+            <h2 class="card-title">Status</h2>
+            <div class="space-y-3">
+              <div class="status-row">
+                <span>WebUSB</span>
+                <span id="webusbStatus" class="status-pill">Checking...</span>
+              </div>
+              <div class="status-row">
+                <span>Bootloader</span>
+                <span id="bootloaderStatus" class="status-pill">Not connected</span>
+              </div>
+              <div class="status-row">
+                <span>Fastbootd</span>
+                <span id="fastbootdStatus" class="status-pill">Not connected</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="space-y-4">
+              <div>
+                <div class="flex items-center justify-between text-xs text-gray-400 mb-2">
+                  <span>Download</span>
+                  <span id="downloadPct">0%</span>
+                </div>
+                <div class="progress-track">
+                  <div id="downloadBar" class="progress-bar"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between text-xs text-gray-400 mb-2">
+                  <span id="flashAction">Waiting</span>
+                  <span id="flashPct">0%</span>
+                </div>
+                <div class="progress-track">
+                  <div id="flashBar" class="progress-bar"></div>
+                </div>
+                <p id="flashItem" class="text-xs text-gray-500 mt-2">No active flash</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2 class="card-title">Log</h2>
+            <div id="statusLog" class="status-log">
+              <span class="text-gray-500 italic">Ready.</span>
+            </div>
+          </article>
+        </aside>
+      </div>
+    </div>
+  </Section>
+</Layout>
+
+<script type="module">
+  import { FastbootDevice, USER_ACTION_MAP, setDebugLevel } from "https://cdn.jsdelivr.net/npm/android-fastboot@1.1.3/dist/fastboot.mjs";
+
+  const bootloaderDevice = new FastbootDevice();
+  const fastbootdDevice = new FastbootDevice();
+
+  const elements = {
+    connectBootloader: document.getElementById("connectBootloader"),
+    rebootFastbootd: document.getElementById("rebootFastbootd"),
+    connectFastbootd: document.getElementById("connectFastbootd"),
+    flashStock: document.getElementById("flashStock"),
+    webusbStatus: document.getElementById("webusbStatus"),
+    bootloaderStatus: document.getElementById("bootloaderStatus"),
+    fastbootdStatus: document.getElementById("fastbootdStatus"),
+    statusLog: document.getElementById("statusLog"),
+    downloadBar: document.getElementById("downloadBar"),
+    downloadPct: document.getElementById("downloadPct"),
+    flashBar: document.getElementById("flashBar"),
+    flashPct: document.getElementById("flashPct"),
+    flashAction: document.getElementById("flashAction"),
+    flashItem: document.getElementById("flashItem"),
+  };
+
+  const state = {
+    bootloaderConnected: false,
+    fastbootdConnected: false,
+    busy: false,
+  };
+
+  setDebugLevel(1);
+
+  const supportsWebUsb = "usb" in navigator;
+  elements.webusbStatus.textContent = supportsWebUsb ? "Supported" : "Unavailable";
+  elements.webusbStatus.classList.toggle("is-ok", supportsWebUsb);
+  elements.webusbStatus.classList.toggle("is-error", !supportsWebUsb);
+
+  function logStatus(message, type = "info") {
+    if (!elements.statusLog) return;
+    const entry = document.createElement("div");
+    entry.className = `log-entry log-${type}`;
+    entry.textContent = message;
+    elements.statusLog.appendChild(entry);
+    elements.statusLog.scrollTop = elements.statusLog.scrollHeight;
+  }
+
+  function setProgress(bar, label, value) {
+    const clamped = Math.max(0, Math.min(1, value));
+    if (bar) bar.style.width = `${clamped * 100}%`;
+    if (label) label.textContent = `${Math.round(clamped * 100)}%`;
+  }
+
+  function setButtonStates() {
+    elements.connectBootloader.disabled = !supportsWebUsb || state.busy;
+    elements.rebootFastbootd.disabled = !state.bootloaderConnected || state.busy;
+    elements.connectFastbootd.disabled = !supportsWebUsb || state.busy;
+    elements.flashStock.disabled = !state.fastbootdConnected || state.busy;
+  }
+
+  function setConnectionStatus() {
+    elements.bootloaderStatus.textContent = state.bootloaderConnected ? "Connected" : "Not connected";
+    elements.fastbootdStatus.textContent = state.fastbootdConnected ? "Connected" : "Not connected";
+    elements.bootloaderStatus.classList.toggle("is-ok", state.bootloaderConnected);
+    elements.fastbootdStatus.classList.toggle("is-ok", state.fastbootdConnected);
+  }
+
+  setButtonStates();
+  setConnectionStatus();
+
+  async function connectBootloader() {
+    if (!supportsWebUsb) {
+      logStatus("WebUSB is not available in this browser.", "error");
+      return;
+    }
+    state.busy = true;
+    setButtonStates();
+    logStatus("Requesting bootloader device...");
+    try {
+      await bootloaderDevice.connect();
+      state.bootloaderConnected = true;
+      logStatus("Bootloader device connected.", "success");
+    } catch (error) {
+      logStatus(`Bootloader connection failed: ${error.message || error}`, "error");
+    } finally {
+      state.busy = false;
+      setButtonStates();
+      setConnectionStatus();
+    }
+  }
+
+  async function rebootToFastbootd() {
+    state.busy = true;
+    setButtonStates();
+    logStatus("Rebooting device into fastbootd...");
+    try {
+      await bootloaderDevice.reboot("fastboot");
+      state.bootloaderConnected = false;
+      logStatus("Device rebooted. Select it again in fastbootd.", "success");
+    } catch (error) {
+      logStatus(`Reboot failed: ${error.message || error}`, "error");
+    } finally {
+      state.busy = false;
+      setButtonStates();
+      setConnectionStatus();
+    }
+  }
+
+  async function connectFastbootd() {
+    if (!supportsWebUsb) {
+      logStatus("WebUSB is not available in this browser.", "error");
+      return;
+    }
+    state.busy = true;
+    setButtonStates();
+    logStatus("Requesting fastbootd device...");
+    try {
+      await fastbootdDevice.connect();
+      state.fastbootdConnected = true;
+      logStatus("Fastbootd device connected.", "success");
+    } catch (error) {
+      logStatus(`Fastbootd connection failed: ${error.message || error}`, "error");
+    } finally {
+      state.busy = false;
+      setButtonStates();
+      setConnectionStatus();
+    }
+  }
+
+  async function fetchLatestFirmware() {
+    const response = await fetch("https://api.github.com/repos/rabbit-hmi-oss/firmware/releases/latest");
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+    const data = await response.json();
+    const asset = (data.assets || []).find((entry) =>
+      entry.name && entry.name.toLowerCase().endsWith(".zip")
+    );
+    if (!asset) {
+      throw new Error("No firmware zip asset found in the latest release.");
+    }
+    return {
+      name: asset.name,
+      url: asset.browser_download_url,
+    };
+  }
+
+  async function downloadZip(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Firmware download failed: ${response.status}`);
+    }
+    const contentLength = Number(response.headers.get("content-length") || 0);
+    if (!response.body || !response.body.getReader) {
+      const blob = await response.blob();
+      setProgress(elements.downloadBar, elements.downloadPct, 1);
+      return blob;
+    }
+
+    const reader = response.body.getReader();
+    const chunks = [];
+    let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        chunks.push(value);
+        received += value.length;
+        if (contentLength) {
+          setProgress(elements.downloadBar, elements.downloadPct, received / contentLength);
+        }
+      }
+    }
+    setProgress(elements.downloadBar, elements.downloadPct, 1);
+    return new Blob(chunks, { type: "application/zip" });
+  }
+
+  async function flashStockOs() {
+    state.busy = true;
+    setButtonStates();
+    setProgress(elements.flashBar, elements.flashPct, 0);
+    setProgress(elements.downloadBar, elements.downloadPct, 0);
+    elements.flashAction.textContent = "Preparing";
+    elements.flashItem.textContent = "Finding latest firmware";
+
+    try {
+      const { name, url } = await fetchLatestFirmware();
+      logStatus(`Latest firmware found: ${name}`);
+      elements.flashAction.textContent = "Downloading";
+      elements.flashItem.textContent = name;
+
+      const zipBlob = await downloadZip(url);
+      logStatus("Firmware downloaded. Starting flash...");
+
+      await fastbootdDevice.flashFactoryZip(
+        zipBlob,
+        true,
+        () => logStatus("Reconnect device if prompted.", "info"),
+        (action, item, progress) => {
+          const actionLabel = USER_ACTION_MAP[action] || action || "Working";
+          elements.flashAction.textContent = actionLabel;
+          elements.flashItem.textContent = item ? `Target: ${item}` : "Working";
+          setProgress(elements.flashBar, elements.flashPct, progress || 0);
+        }
+      );
+
+      logStatus("Flash completed successfully.", "success");
+      elements.flashAction.textContent = "Completed";
+      elements.flashItem.textContent = "Device flashed";
+      setProgress(elements.flashBar, elements.flashPct, 1);
+    } catch (error) {
+      logStatus(`Flash failed: ${error.message || error}`, "error");
+      elements.flashAction.textContent = "Error";
+      elements.flashItem.textContent = "Flash failed";
+    } finally {
+      state.busy = false;
+      setButtonStates();
+    }
+  }
+
+  elements.connectBootloader.addEventListener("click", connectBootloader);
+  elements.rebootFastbootd.addEventListener("click", rebootToFastbootd);
+  elements.connectFastbootd.addEventListener("click", connectFastbootd);
+  elements.flashStock.addEventListener("click", flashStockOs);
+</script>
+
+<style>
+  .card {
+    background: rgba(31, 41, 55, 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-checkbox {
+    width: 1rem;
+    height: 1rem;
+    accent-color: #a855f7;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-accent {
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: #fff;
+  }
+
+  .btn-accent {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+    color: #fff;
+  }
+
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .btn-accent:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-primary:disabled,
+  .btn-secondary:disabled,
+  .btn-accent:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #cbd5f5;
+  }
+
+  .status-pill {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+  }
+
+  .status-pill.is-ok {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+  }
+
+  .status-pill.is-error {
+    background: rgba(248, 113, 113, 0.2);
+    color: #fecaca;
+  }
+
+  .status-log {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #cbd5f5;
+    min-height: 180px;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  .log-entry {
+    margin-bottom: 0.5rem;
+  }
+
+  .log-success {
+    color: #86efac;
+  }
+
+  .log-error {
+    color: #fecaca;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 0.5rem;
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #a855f7 0%, #3b82f6 100%);
+    transition: width 0.2s ease;
+  }
+</style>

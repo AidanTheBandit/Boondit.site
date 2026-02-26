@@ -37,6 +37,10 @@ export const NAV_LINKS: Array<{
           title: "R1 OpenClaw QR Gen",
           href: "r1-moltbot-qr",
         },
+        {
+          title: "R1 Flash Utility",
+          href: "r1-flash-utility",
+        },
       ],
     },
     {
