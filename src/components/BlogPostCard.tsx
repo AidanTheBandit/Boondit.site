@@ -11,7 +11,7 @@ interface BlogPostCardProps {
 }
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ slug, title, excerpt, date }) => {
-  const formattedDate = new Intl.DateTimeTimeFormat('en-us', {
+  const formattedDate = new Intl.DateTimeFormat('en-us', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
