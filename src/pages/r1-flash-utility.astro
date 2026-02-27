@@ -23,12 +23,39 @@ import Section from "@/components/Section.astro";
           <article class="card bg-gradient-auto">
             <h2 class="card-title">Quick Start: Auto Flash</h2>
             <p class="text-gray-300 text-sm mb-4">
-              Let the tool handle all steps automatically. Connect your device in bootloader mode and click below. The tool will handle entering fastbootd and flashing.
+              Let the tool handle all steps automatically. Follow on-screen instructions for when to plug/unplug. You'll be guided through each step with clear prompts.
             </p>
             <button id="autoFlash" class="btn-auto w-full">
               ⚡ Start Auto Flash
             </button>
           </article>
+
+          <!-- Auto Flash Modal -->
+          <div id="autoFlashModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 id="modalTitle">🚀 Auto Flash</h2>
+                <button id="modalClose" class="modal-close">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div id="modalSteps" class="space-y-4">
+                  <!-- Steps will be inserted here -->
+                </div>
+                <div id="modalInstruction" class="instruction-box mt-6">
+                  <!-- Instructions will be inserted here -->
+                </div>
+              </div>
+              <div class="modal-actions">
+                <button id="modalContinue" class="btn-primary" style="display: none;">
+                  Continue
+                </button>
+                <button id="modalCancel" class="btn-secondary">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
 
           <div class="divider">OR proceed manually</div>
 
@@ -166,6 +193,13 @@ import Section from "@/components/Section.astro";
 
   const elements = {
     autoFlash: document.getElementById("autoFlash"),
+    autoFlashModal: document.getElementById("autoFlashModal"),
+    modalTitle: document.getElementById("modalTitle"),
+    modalSteps: document.getElementById("modalSteps"),
+    modalInstruction: document.getElementById("modalInstruction"),
+    modalContinue: document.getElementById("modalContinue"),
+    modalCancel: document.getElementById("modalCancel"),
+    modalClose: document.getElementById("modalClose"),
     enterFastboot: document.getElementById("enterFastboot"),
     connectBootloader: document.getElementById("connectBootloader"),
     rebootFastbootd: document.getElementById("rebootFastbootd"),
@@ -461,45 +495,163 @@ import Section from "@/components/Section.astro";
     }
   }
 
+  function showAutoFlashModal() {
+    elements.autoFlashModal.classList.remove("hidden");
+  }
+
+  function hideAutoFlashModal() {
+    elements.autoFlashModal.classList.add("hidden");
+  }
+
+  function updateModalStep(stepNum, title, status) {
+    const stepEl = elements.modalSteps.querySelector(`[data-step="${stepNum}"]`);
+    if (stepEl) {
+      stepEl.innerHTML = `
+        <div class="step-item ${status}">
+          <span class="step-icon">${status === "success" ? "✓" : status === "error" ? "✗" : "→"}</span>
+          <span class="step-text">${title}</span>
+        </div>
+      `;
+    }
+  }
+
+  function setModalInstruction(title, content, showContinue = false) {
+    elements.modalInstruction.innerHTML = `
+      <div class="instruction-box">
+        <p class="instruction-title">${title}</p>
+        <p class="instruction-text">${content}</p>
+      </div>
+    `;
+    elements.modalContinue.style.display = showContinue ? "block" : "none";
+  }
+
+  async function waitForUserConfirm() {
+    return new Promise(resolve => {
+      const handler = () => {
+        elements.modalContinue.removeEventListener("click", handler);
+        elements.modalContinue.style.display = "none";
+        resolve(true);
+      };
+      elements.modalContinue.addEventListener("click", handler);
+      elements.modalContinue.style.display = "block";
+    });
+  }
+
   async function autoFlash() {
     state.busy = true;
     setButtonStates();
-    logStatus("Starting auto flash sequence...", "info");
+    
+    showAutoFlashModal();
+    
+    // Initialize steps
+    elements.modalSteps.innerHTML = `
+      <div data-step="0" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Enter Fastboot (BROM)</span></div>
+      <div data-step="1" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Connect Bootloader</span></div>
+      <div data-step="2" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Reboot to Fastbootd</span></div>
+      <div data-step="3" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Connect Fastbootd</span></div>
+      <div data-step="4" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Flash Firmware</span></div>
+    `;
 
     try {
-      // Step 1: Connect bootloader
-      logStatus("Step 1: Connecting to bootloader...", "info");
-      await connectBootloader();
-      if (!state.bootloaderConnected) {
-        throw new Error("Failed to connect to bootloader");
+      // Step 0: BROM fastboot (optional - allow failure)
+      updateModalStep(0, "Enter Fastboot (BROM)", "active");
+      setModalInstruction(
+        "Step 0: Enter Fastboot Mode",
+        "If your device is powered off: Connect it to USB now (or hold Volume buttons if needed). The tool will attempt to send the FASTBOOT command via BROM mode."
+      );
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      try {
+        await enterFastbootFromBrom();
+        updateModalStep(0, "Enter Fastboot (BROM)", "success");
+      } catch (e) {
+        logStatus(`BROM step skipped (optional): ${e.message}`, "info");
+        updateModalStep(0, "Enter Fastboot (BROM)", "success");
       }
 
+      // Step 1: Connect bootloader
+      updateModalStep(1, "Connect Bootloader", "active");
+      setModalInstruction(
+        "Step 1: Connect Bootloader",
+        "🔌 Unplug your device if connected. Put it into bootloader mode (usually: plug in USB while holding specific key combination). Then click 'Continue' to select the device."
+      );
+      await waitForUserConfirm();
+
+      await connectBootloader();
+      if (!state.bootloaderConnected) {
+        throw new Error("Failed to connect to bootloader. Make sure device is in bootloader mode.");
+      }
+      updateModalStep(1, "Connect Bootloader", "success");
+
       // Step 2: Reboot to fastbootd
-      logStatus("Step 2: Rebooting to fastbootd...", "info");
-      await rebootToFastbootd();
+      updateModalStep(2, "Reboot to Fastbootd", "active");
+      setModalInstruction(
+        "Step 2: Reboot to Fastbootd",
+        "📱 The tool is now rebooting your device into fastbootd mode. This will take a few seconds..."
+      );
       
-      // Small delay to allow device reconnection
+      await rebootToFastbootd();
       await new Promise(resolve => setTimeout(resolve, 2000));
+      updateModalStep(2, "Reboot to Fastbootd", "success");
 
       // Step 3: Connect fastbootd
-      logStatus("Step 3: Connecting to fastbootd...", "info");
+      updateModalStep(3, "Connect Fastbootd", "active");
+      setModalInstruction(
+        "Step 3: Connect Fastbootd",
+        "✓ Device rebooted. Now click 'Continue' to select it again (it should now appear in fastbootd mode)."
+      );
+      await waitForUserConfirm();
+
       await connectFastbootd();
       if (!state.fastbootdConnected) {
         throw new Error("Failed to connect to fastbootd");
       }
+      updateModalStep(3, "Connect Fastbootd", "success");
 
-      // Step 4: Flash
-      logStatus("Step 4: Flashing firmware...", "info");
+      // Step 4: Flash firmware
+      updateModalStep(4, "Flash Firmware", "active");
+      setModalInstruction(
+        "Step 4: Flashing Firmware",
+        "⚡ Downloading and flashing firmware... This may take 5-10 minutes. Do not disconnect the device!"
+      );
+
       await flashStockOs();
+      updateModalStep(4, "Flash Firmware", "success");
 
       logStatus("Auto flash sequence completed successfully!", "success");
+      setModalInstruction(
+        "✅ Flash Complete!",
+        "Your Rabbit R1 has been successfully flashed with the latest firmware. The device will reboot automatically."
+      );
+      
     } catch (error) {
       logStatus(`Auto flash failed: ${error.message || error}`, "error");
+      setModalInstruction(
+        "❌ Flash Failed",
+        `Error: ${error.message || error}. Check the log for details. You can try again or proceed manually.`
+      );
     } finally {
       state.busy = false;
       setButtonStates();
     }
   }
+
+  // Modal controls
+  elements.modalCancel.addEventListener("click", () => {
+    if (state.busy) {
+      if (confirm("Cancel auto flash process? Device may be in an incomplete state.")) {
+        state.busy = false;
+        setButtonStates();
+        hideAutoFlashModal();
+      }
+    } else {
+      hideAutoFlashModal();
+    }
+  });
+
+  elements.modalClose.addEventListener("click", () => {
+    if (!state.busy) hideAutoFlashModal();
+  });
 
   elements.autoFlash.addEventListener("click", autoFlash);
   elements.connectBootloader.addEventListener("click", connectBootloader);
@@ -510,6 +662,177 @@ import Section from "@/components/Section.astro";
 </script>
 
 <style>
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.hidden {
+    display: none;
+  }
+
+  .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    position: relative;
+    background: rgba(31, 41, 55, 0.95);
+    border: 2px solid rgba(168, 85, 247, 0.5);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .modal-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover {
+    color: #fff;
+  }
+
+  .modal-body {
+    margin-bottom: 1.5rem;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-item.pending {
+    background: rgba(100, 116, 139, 0.2);
+    color: #cbd5f5;
+  }
+
+  .step-item.active {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border-left: 3px solid #3b82f6;
+  }
+
+  .step-item.success {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+  }
+
+  .step-item.error {
+    background: rgba(248, 113, 113, 0.2);
+    color: #fecaca;
+  }
+
+  .step-icon {
+    font-size: 1.25rem;
+    font-weight: 700;
+    min-width: 1.5rem;
+    text-align: center;
+  }
+
+  .step-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .instruction-box {
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .instruction-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #86efac;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .instruction-text {
+    color: #cbd5f5;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  .modal-actions .btn-primary {
+    flex: 1;
+    max-width: 200px;
+  }
+
+  .modal-actions .btn-secondary {
+    flex: 1;
+    max-width: 150px;
+  }
+
   .card {
     background: rgba(31, 41, 55, 0.6);
     backdrop-filter: blur(8px);
