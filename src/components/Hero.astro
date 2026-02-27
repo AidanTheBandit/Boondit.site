@@ -137,7 +137,9 @@ import { QUOTE, SITE_TITLE } from "@/consts";
     
     function setupMask(img, containerId) {
       if (!img) return;
-      const overlay = img.parentElement.querySelector(".hero-gradient-overlay");
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const overlay = container.querySelector(".hero-gradient-overlay");
       if (!overlay) return;
 
       if (img.complete && img.naturalHeight !== 0) {
