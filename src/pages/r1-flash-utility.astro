@@ -252,6 +252,7 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     elements.mtkUnlock.disabled = true;
   }
 
+  // Mirror is required for CORS-free downloads (GitHub blocks browser fetch)
   const FIRMWARE_MIRROR_BASE = 
     (window.location.hostname.includes("github.dev") ||
      window.location.hostname.includes("githubpreview.dev") ||
@@ -279,8 +280,13 @@ import FlashLog from "@/components/flash/FlashLog.astro";
   }
 
   async function downloadFirmware(asset, onProgress) {
+    // Extract version from asset name (e.g., "rabbit_OS_v0.8.293.zip" -> "v0.8.293")
+    const versionMatch = asset.name.match(/_(v[\d.]+)\.zip$/);
+    const version = versionMatch ? versionMatch[1] : null;
+    
     const candidateUrls = [
       { label: "Boondit Mirror", url: asset.mirrorUrl },
+      { label: "Boondit Proxy", url: version ? `${window.location.origin}/api/firmware/download?version=${version}` : null },
       { label: "GitHub Releases (Direct)", url: asset.url },
       { label: "GitHub API", url: asset.apiUrl, headers: { Accept: "application/octet-stream" } },
       { label: "CORS Proxy (isomorphic-git)", url: `https://cors.isomorphic-git.org/${encodeURIComponent(asset.url)}` },
