@@ -90,8 +90,7 @@ img,
   position: relative;
   z-index: 2;
   transition: all 0.3s ease;
-  opacity: 0;
-  /* Hide original image - gradient will replace it */
+  opacity: 1;
 }
 
 .hero-mask-image:hover {
@@ -104,11 +103,13 @@ img,
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg,
-      hsl(var(--accent) / 0.4),
-      hsl(var(--background) / 0.8),
-      hsl(var(--accent) / 0.3),
-      hsl(var(--background) / 0.9));
+  background: linear-gradient(
+    45deg,
+    hsl(var(--color-pink) / 0.6),
+    hsl(var(--color-purple) / 0.5),
+    hsl(var(--color-gray) / 0.4),
+    hsl(var(--color-pink) / 0.5)
+  );
   background-size: 400% 400%;
   animation: gradientShift 4s ease-in-out infinite;
   z-index: 3;
@@ -150,10 +151,10 @@ img,
   right: -2px;
   bottom: -2px;
   background: linear-gradient(45deg,
-      var(--accent),
-      var(--ring),
-      var(--accent),
-      var(--secondary));
+      hsl(var(--color-pink)),
+      hsl(var(--color-purple)),
+      hsl(var(--color-gray)),
+      hsl(var(--color-pink)));
   background-size: 300% 300%;
   animation: borderPulse 3s ease-in-out infinite;
   z-index: 1;

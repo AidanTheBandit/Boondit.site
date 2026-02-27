@@ -31,17 +31,19 @@ import { QUOTE, SITE_TITLE } from "@/consts";
       </div>
 
     <div class="w-full max-w-sm sm:max-w-md relative mt-4">
-      <div class="hero-image-container mx-auto relative z-10 p-2 bg-card border border-border/60 shadow-xl" id="hero-image-container">
+      <div class="mx-auto relative z-10 p-2 bg-card border border-border/60 shadow-xl">
         {/* Inner subtle frame like a polaroid */}
         <div class="p-1 border border-border/30 bg-background/50">
-          <Image
-            alt="Hero"
-            src={HeroImg}
-            class="hero-mask-image w-full scale-100 grayscale-[0.2] hover:grayscale-0 transition-all duration-700 object-cover"
-            id="hero-image"
-          />
+          <div class="hero-image-container relative w-full block" id="hero-image-container">
+            <Image
+              alt="Hero"
+              src={HeroImg}
+              class="hero-mask-image w-full scale-100 grayscale-[0.2] hover:grayscale-0 transition-all duration-700 object-cover"
+              id="hero-image"
+            />
+            <div class="hero-gradient-overlay"></div>
+          </div>
         </div>
-        <div class="hero-gradient-overlay"></div>
       </div>
       <div class="text-center mt-8 text-xs font-medium tracking-widest uppercase">
         <a
@@ -78,18 +80,19 @@ import { QUOTE, SITE_TITLE } from "@/consts";
 
     <div class="relative w-1/2 max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto flex flex-col items-center">
       <div
-        class="hero-image-container w-full relative z-10 p-3 bg-card border border-border/50 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700 ease-out"
-        id="hero-image-container-desktop"
+        class="w-full relative z-10 p-3 bg-card border border-border/50 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700 ease-out"
       >
         <div class="p-1 border border-border/20 bg-background/50">
-          <Image
-            alt="Hero"
-            src={HeroImg}
-            class="hero-mask-image w-full scale-100 grayscale-[0.2] hover:grayscale-0 transition-all duration-[2000ms] ease-out object-cover block"
-            id="hero-image-desktop"
-          />
+          <div class="hero-image-container relative w-full block" id="hero-image-container-desktop">
+            <Image
+              alt="Hero"
+              src={HeroImg}
+              class="hero-mask-image w-full scale-100 grayscale-[0.2] hover:grayscale-0 transition-all duration-[2000ms] ease-out object-cover block"
+              id="hero-image-desktop"
+            />
+            <div class="hero-gradient-overlay"></div>
+          </div>
         </div>
-        <div class="hero-gradient-overlay"></div>
       </div>
       <div class="text-center mt-12 text-xs font-medium tracking-widest w-full">
         <div class="flex items-center justify-center gap-4">
@@ -148,6 +151,7 @@ import { QUOTE, SITE_TITLE } from "@/consts";
           `url(${img.src})`
         );
         overlay.classList.add("mask-applied");
+        container.classList.add("mask-applied");
       } else {
         img.onload = () => setupMask(img, containerId);
       }
