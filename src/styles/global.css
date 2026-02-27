@@ -66,6 +66,17 @@ code {
   background: var(--accent);
 }
 
+/* QR watermark styling for generator and moltbot pages */
+.qr-footer {
+  display: block;
+  color: hsl(var(--muted-foreground) / 0.9);
+}
+.qr-footer #qr-watermark,
+.qr-footer #molt-qr-watermark {
+  color: hsl(var(--muted-foreground) / 0.9);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+}
+
 /* For Firefox */
 * {
   scrollbar-width: thin;
