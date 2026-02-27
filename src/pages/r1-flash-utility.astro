@@ -1,6 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Section from "@/components/Section.astro";
+import FlashStatus from "@/components/flash/FlashStatus.astro";
+import FlashProgress from "@/components/flash/FlashProgress.astro";
+import FlashLog from "@/components/flash/FlashLog.astro";
 ---
 
 <Layout title="R1 Flash Utility - Boondit">
@@ -13,168 +16,137 @@ import Section from "@/components/Section.astro";
         <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 max-w-3xl mx-auto">
           <p class="text-red-200 text-sm">
             Warning: Flashing firmware can erase data or brick your device if
-            interrupted. Proceed only if you accept the risk.
+            interrupted. Wipe is always enabled. Proceed only if you accept the risk.
           </p>
         </div>
       </header>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Controls -->
         <div class="lg:col-span-2 space-y-6">
+          
+          <!-- Auto Flash Mode -->
           <article class="card bg-gradient-auto">
-            <h2 class="card-title">Quick Start: Auto Flash</h2>
+            <h2 class="card-title">Auto Flash</h2>
             <p class="text-gray-300 text-sm mb-4">
-              Let the tool handle all steps automatically. Follow on-screen instructions for when to plug/unplug. You'll be guided through each step with clear prompts.
+              Automated workflow: Powers on device via BROM, downloads latest firmware, and flashes automatically.
             </p>
             <button id="autoFlash" class="btn-auto w-full">
-              ⚡ Start Auto Flash
+              Start Auto Flash
             </button>
           </article>
 
-          <!-- Auto Flash Modal -->
-          <div id="autoFlashModal" class="modal hidden">
-            <div class="modal-overlay"></div>
-            <div class="modal-content">
-              <div class="modal-header">
-                <h2 id="modalTitle">🚀 Auto Flash</h2>
-                <button id="modalClose" class="modal-close">&times;</button>
-              </div>
-              <div class="modal-body">
-                <div id="modalSteps" class="space-y-4">
-                  <!-- Steps will be inserted here -->
-                </div>
-                <div id="modalInstruction" class="instruction-box mt-6">
-                  <!-- Instructions will be inserted here -->
-                </div>
-              </div>
-              <div class="modal-actions">
-                <button id="modalContinue" class="btn-primary" style="display: none;">
-                  Continue
-                </button>
-                <button id="modalCancel" class="btn-secondary">
-                  Cancel
+          <div class="divider">Manual Mode</div>
+
+          <!-- Manual Controls -->
+          <details class="card" open>
+            <summary class="card-title cursor-pointer">Manual Flash Steps</summary>
+            <div class="space-y-4 mt-4">
+              
+              <div>
+                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 0: Enter Fastboot (BROM)</h3>
+                <p class="text-xs text-gray-400 mb-2">
+                  If device is powered off, send FASTBOOT command via BROM (Web Serial).
+                </p>
+                <button id="enterFastboot" class="btn-secondary w-full">
+                  Enter Fastboot Mode
                 </button>
               </div>
+
+              <div>
+                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 1: Connect Bootloader</h3>
+                <p class="text-xs text-gray-400 mb-2">
+                  Put device in bootloader fastboot mode and select it.
+                </p>
+                <button id="connectBootloader" class="btn-primary w-full">
+                  Select Device (Bootloader)
+                </button>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 2: Switch to Fastbootd</h3>
+                <p class="text-xs text-gray-400 mb-2">
+                  Reboot device into fastbootd mode.
+                </p>
+                <button id="rebootFastbootd" class="btn-secondary w-full" disabled>
+                  Reboot to Fastbootd
+                </button>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 3: Connect Fastbootd</h3>
+                <p class="text-xs text-gray-400 mb-2">
+                  Select device again once in fastbootd mode.
+                </p>
+                <button id="connectFastbootd" class="btn-primary w-full" disabled>
+                  Select Device (Fastbootd)
+                </button>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 4: Flash Firmware</h3>
+                <p class="text-xs text-gray-400 mb-2">
+                  Download and flash latest firmware. Wipe is always enabled.
+                </p>
+                <button id="flashStock" class="btn-accent w-full" disabled>
+                  Flash Stock OS
+                </button>
+              </div>
+
             </div>
-          </div>
+          </details>
 
-          <div class="divider">OR proceed manually</div>
-
-          <article class="card">
-            <h2 class="card-title">Step 0: Enter Fastboot (BROM)</h2>
-            <p class="text-gray-300 text-sm mb-4">
-              Optional: If the device is powered off, this sends the FASTBOOT
-              command over BROM to bring it into fastboot mode.
-            </p>
-            <button id="enterFastboot" class="btn-secondary w-full">
-              Enter fastboot mode
-            </button>
-          </article>
-
-          <article class="card">
-            <h2 class="card-title">Step 1: Connect Bootloader</h2>
-            <p class="text-gray-300 text-sm mb-4">
-              Put your R1 into bootloader fastboot mode, then select it here.
-            </p>
-            <button id="connectBootloader" class="btn-primary w-full">
-              Select device (bootloader)
-            </button>
-          </article>
-
-          <article class="card">
-            <h2 class="card-title">Step 2: Switch to Fastbootd</h2>
-            <p class="text-gray-300 text-sm mb-4">
-              This will reboot the device into fastbootd. You will be asked to
-              select it again afterward.
-            </p>
-            <button id="rebootFastbootd" class="btn-secondary w-full" disabled>
-              Reboot to fastbootd
-            </button>
-          </article>
-
-          <article class="card">
-            <h2 class="card-title">Step 3: Connect Fastbootd</h2>
-            <p class="text-gray-300 text-sm mb-4">
-              Select the device again once it shows up in fastbootd mode.
-            </p>
-            <button id="connectFastbootd" class="btn-primary w-full" disabled>
-              Select device (fastbootd)
-            </button>
-          </article>
-
-          <article class="card">
-            <h2 class="card-title">Step 4: Flash Stock OS</h2>
-            <div class="space-y-4">
-              <p class="text-gray-300 text-sm">
-                This downloads the latest release zip, unpacks it locally in your
-                browser, and flashes the device without any manual downloads.
+          <!-- MTK Bootloader Unlock -->
+          <details class="card">
+            <summary class="card-title cursor-pointer">MTK Bootloader Unlock (Experimental)</summary>
+            <div class="space-y-3 mt-4">
+              <p class="text-xs text-gray-400">
+                Web Serial implementation of MTKClient for unlocking MediaTek bootloaders.
+                Currently supports MT6765 and related chipsets via BROM exploitation.
               </p>
-              <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                <p class="text-red-200 text-xs">
-                  Wipe is always enabled for stock firmware flashes.
+              <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                <p class="text-yellow-200 text-xs">
+                  Experimental: Requires BROM exploit payloads. May brick device if interrupted.
                 </p>
               </div>
-              <button id="flashStock" class="btn-accent w-full" disabled>
-                Flash stock OS
+              <button id="mtkUnlock" class="btn-secondary w-full" disabled>
+                Unlock Bootloader (MTK)
               </button>
             </div>
-          </article>
+          </details>
+
         </div>
 
+        <!-- Sidebar: Status, Progress, Log -->
         <aside class="space-y-6">
-          <article class="card">
-            <h2 class="card-title">Status</h2>
-            <div class="space-y-3">
-              <div class="status-row">
-                <span>WebUSB</span>
-                <span id="webusbStatus" class="status-pill">Checking...</span>
-              </div>
-              <div class="status-row">
-                <span>Web Serial</span>
-                <span id="webserialStatus" class="status-pill">Checking...</span>
-              </div>
-              <div class="status-row">
-                <span>Bootloader</span>
-                <span id="bootloaderStatus" class="status-pill">Not connected</span>
-              </div>
-              <div class="status-row">
-                <span>Fastbootd</span>
-                <span id="fastbootdStatus" class="status-pill">Not connected</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="card">
-            <h2 class="card-title">Progress</h2>
-            <div class="space-y-4">
-              <div>
-                <div class="flex items-center justify-between text-xs text-gray-400 mb-2">
-                  <span>Download</span>
-                  <span id="downloadPct">0%</span>
-                </div>
-                <div class="progress-track">
-                  <div id="downloadBar" class="progress-bar"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex items-center justify-between text-xs text-gray-400 mb-2">
-                  <span id="flashAction">Waiting</span>
-                  <span id="flashPct">0%</span>
-                </div>
-                <div class="progress-track">
-                  <div id="flashBar" class="progress-bar"></div>
-                </div>
-                <p id="flashItem" class="text-xs text-gray-500 mt-2">No active flash</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="card">
-            <h2 class="card-title">Log</h2>
-            <div id="statusLog" class="status-log">
-              <span class="text-gray-500 italic">Ready.</span>
-            </div>
-          </article>
+          <FlashStatus />
+          <FlashProgress />
+          <FlashLog />
         </aside>
+      </div>
+    </div>
+
+    <!-- Auto-Flash Modal -->
+    <div id="autoFlashModal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalStepTitle" class="text-xl font-bold text-white">Auto Flash Mode</h2>
+          <div class="text-sm text-gray-400">Step <span id="modalCurrentStep">1</span> of <span id="modalTotalSteps">4</span></div>
+        </div>
+        <div class="modal-body">
+          <p id="modalInstruction" class="text-gray-300 mb-4">Preparing auto-flash...</p>
+          <div id="modalProgress" class="hidden">
+            <div class="progress-track mb-2">
+              <div id="modalProgressBar" class="progress-bar"></div>
+            </div>
+            <p id="modalProgressText" class="text-xs text-gray-400 text-center">0%</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="modalContinue" class="btn-primary">Continue</button>
+          <button id="modalCancel" class="btn-secondary">Cancel</button>
+        </div>
       </div>
     </div>
   </Section>
@@ -183,28 +155,26 @@ import Section from "@/components/Section.astro";
 <script type="module">
   import { FastbootDevice, USER_ACTION_MAP, setDebugLevel } from "https://cdn.jsdelivr.net/npm/android-fastboot@1.1.3/dist/fastboot.mjs";
 
+  // Inline the essential logic here - import utilities from our library
+  // (Library files are for organization, actual logic needs to be browser-compatible)
+
   const bootloaderDevice = new FastbootDevice();
   const fastbootdDevice = new FastbootDevice();
 
-  const isLocalOrCodespace = window.location.hostname.includes("github.dev") ||
-    window.location.hostname.includes("githubpreview.dev") ||
-    window.location.hostname.includes("localhost");
-  const FIRMWARE_MIRROR_BASE = isLocalOrCodespace ? "/firmware" : "https://boondit.site/firmware";
+  const state = {
+    bootloaderConnected: false,
+    fastbootdConnected: false,
+    busy: false,
+  };
 
   const elements = {
     autoFlash: document.getElementById("autoFlash"),
-    autoFlashModal: document.getElementById("autoFlashModal"),
-    modalTitle: document.getElementById("modalTitle"),
-    modalSteps: document.getElementById("modalSteps"),
-    modalInstruction: document.getElementById("modalInstruction"),
-    modalContinue: document.getElementById("modalContinue"),
-    modalCancel: document.getElementById("modalCancel"),
-    modalClose: document.getElementById("modalClose"),
     enterFastboot: document.getElementById("enterFastboot"),
     connectBootloader: document.getElementById("connectBootloader"),
     rebootFastbootd: document.getElementById("rebootFastbootd"),
     connectFastbootd: document.getElementById("connectFastbootd"),
     flashStock: document.getElementById("flashStock"),
+    mtkUnlock: document.getElementById("mtkUnlock"),
     webusbStatus: document.getElementById("webusbStatus"),
     webserialStatus: document.getElementById("webserialStatus"),
     bootloaderStatus: document.getElementById("bootloaderStatus"),
@@ -216,21 +186,27 @@ import Section from "@/components/Section.astro";
     flashPct: document.getElementById("flashPct"),
     flashAction: document.getElementById("flashAction"),
     flashItem: document.getElementById("flashItem"),
-  };
-
-  const state = {
-    bootloaderConnected: false,
-    fastbootdConnected: false,
-    busy: false,
+    autoFlashModal: document.getElementById("autoFlashModal"),
+    modalStepTitle: document.getElementById("modalStepTitle"),
+    modalCurrentStep: document.getElementById("modalCurrentStep"),
+    modalTotalSteps: document.getElementById("modalTotalSteps"),
+    modalInstruction: document.getElementById("modalInstruction"),
+    modalProgress: document.getElementById("modalProgress"),
+    modalProgressBar: document.getElementById("modalProgressBar"),
+    modalProgressText: document.getElementById("modalProgressText"),
+    modalContinue: document.getElementById("modalContinue"),
+    modalCancel: document.getElementById("modalCancel"),
   };
 
   setDebugLevel(1);
 
   const supportsWebUsb = "usb" in navigator;
   const supportsWebSerial = "serial" in navigator;
+
   elements.webusbStatus.textContent = supportsWebUsb ? "Supported" : "Unavailable";
   elements.webusbStatus.classList.toggle("is-ok", supportsWebUsb);
   elements.webusbStatus.classList.toggle("is-error", !supportsWebUsb);
+
   elements.webserialStatus.textContent = supportsWebSerial ? "Supported" : "Unavailable";
   elements.webserialStatus.classList.toggle("is-ok", supportsWebSerial);
   elements.webserialStatus.classList.toggle("is-error", !supportsWebSerial);
@@ -239,43 +215,169 @@ import Section from "@/components/Section.astro";
     if (!elements.statusLog) return;
     const entry = document.createElement("div");
     entry.className = `log-entry log-${type}`;
-    entry.textContent = message;
+    entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
     elements.statusLog.appendChild(entry);
     elements.statusLog.scrollTop = elements.statusLog.scrollHeight;
   }
 
   function setProgress(bar, label, value) {
-    const clamped = Math.max(0, Math.min(1, value));
-    if (bar) bar.style.width = `${clamped * 100}%`;
-    if (label) label.textContent = `${Math.round(clamped * 100)}%`;
-  }
-
-  function setButtonStates() {
-    elements.enterFastboot.disabled = !supportsWebSerial || state.busy;
-    elements.connectBootloader.disabled = !supportsWebUsb || state.busy;
-    elements.rebootFastbootd.disabled = !state.bootloaderConnected || state.busy;
-    elements.connectFastbootd.disabled = !supportsWebUsb || state.busy;
-    elements.flashStock.disabled = !state.fastbootdConnected || state.busy;
+    if (!bar || !label) return;
+    const pct = Math.round(value * 100);
+    bar.style.width = `${pct}%`;
+    label.textContent = `${pct}%`;
   }
 
   function setConnectionStatus() {
-    elements.bootloaderStatus.textContent = state.bootloaderConnected ? "Connected" : "Not connected";
-    elements.fastbootdStatus.textContent = state.fastbootdConnected ? "Connected" : "Not connected";
+    elements.bootloaderStatus.textContent = state.bootloaderConnected
+      ? "Connected"
+      : "Not connected";
     elements.bootloaderStatus.classList.toggle("is-ok", state.bootloaderConnected);
+    elements.bootloaderStatus.classList.toggle("is-error", !state.bootloaderConnected);
+
+    elements.fastbootdStatus.textContent = state.fastbootdConnected
+      ? "Connected"
+      : "Not connected";
     elements.fastbootdStatus.classList.toggle("is-ok", state.fastbootdConnected);
+    elements.fastbootdStatus.classList.toggle("is-error", !state.fastbootdConnected);
   }
 
-  setButtonStates();
-  setConnectionStatus();
+  function setButtonStates() {
+    const { bootloaderConnected, fastbootdConnected, busy } = state;
+    elements.autoFlash.disabled = busy;
+    elements.enterFastboot.disabled = busy;
+    elements.connectBootloader.disabled = busy;
+    elements.rebootFastbootd.disabled = busy || !bootloaderConnected;
+    elements.connectFastbootd.disabled = busy;
+    elements.flashStock.disabled = busy || !fastbootdConnected;
+    elements.mtkUnlock.disabled = true;
+  }
+
+  const FIRMWARE_MIRROR_BASE = 
+    (window.location.hostname.includes("github.dev") ||
+     window.location.hostname.includes("githubpreview.dev") ||
+     window.location.hostname.includes("localhost"))
+      ? "/firmware"
+      : "https://boondit.site/firmware";
+
+  async function fetchLatestFirmware() {
+    const response = await fetch("https://api.github.com/repos/rabbit-hmi-oss/firmware/releases/latest");
+    if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+    
+    const data = await response.json();
+    const asset = (data.assets || []).find((entry) =>
+      entry.name && entry.name.toLowerCase().endsWith(".zip")
+    );
+    
+    if (!asset) throw new Error("No firmware zip asset found.");
+    
+    return {
+      name: asset.name,
+      apiUrl: asset.url,
+      url: asset.browser_download_url,
+      mirrorUrl: FIRMWARE_MIRROR_BASE ? `${FIRMWARE_MIRROR_BASE}/${asset.name}` : null,
+    };
+  }
+
+  async function downloadFirmware(asset, onProgress) {
+    const candidateUrls = [
+      { label: "Mirror", url: asset.mirrorUrl },
+      { label: "GitHub API", url: asset.apiUrl, headers: { Accept: "application/octet-stream" } },
+      { label: "Direct", url: asset.url },
+    ].filter(c => c.url);
+
+    let response;
+    for (const candidate of candidateUrls) {
+      try {
+        response = await fetch(candidate.url, {
+          headers: candidate.headers || {},
+          redirect: "follow",
+          cache: "no-store",
+        });
+        if (response.ok) break;
+      } catch (error) {
+        response = undefined;
+      }
+    }
+
+    if (!response || !response.ok) {
+      throw new Error("Firmware download failed from all sources.");
+    }
+
+    const contentLength = Number(response.headers.get("content-length") || 0);
+    
+    if (!response.body || !response.body.getReader) {
+      const blob = await response.blob();
+      return new File([blob], asset.name, { type: "application/zip" });
+    }
+
+    const reader = response.body.getReader();
+    const chunks = [];
+    let received = 0;
+    const startTime = Date.now();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      if (value) {
+        chunks.push(value);
+        received += value.length;
+        
+        if (onProgress && contentLength) {
+          const elapsed = (Date.now() - startTime) / 1000;
+          const speed = received / elapsed;
+          const remaining = contentLength - received;
+          const eta = remaining / speed;
+          
+          onProgress({
+            loaded: received,
+            total: contentLength,
+            percentage: received / contentLength,
+            speed,
+            eta,
+          });
+        }
+      }
+    }
+
+    const blob = new Blob(chunks, { type: "application/zip" });
+    return new File([blob], asset.name, { type: "application/zip" });
+  }
+
+  async function enterFastbootFromBrom() {
+    state.busy = true;
+    setButtonStates();
+    logStatus("Requesting BROM device...");
+    
+    try {
+      const port = await navigator.serial.requestPort({
+        filters: [{ usbVendorId: 0x0e8d, usbProductId: 0x2000 }],
+      });
+
+      await port.open({ baudRate: 115200 });
+      const writer = port.writable.getWriter();
+      
+      const encoder = new TextEncoder();
+      const command = encoder.encode("FASTBOOT");
+       
+      await writer.write(command);
+      await writer.close();
+      await port.close();
+      
+      logStatus("BROM fastboot command sent.", "success");
+    } catch (error) {
+      logStatus(`BROM fastboot failed: ${error.message || error}`, "error");
+    } finally {
+      state.busy = false;
+      setButtonStates();
+    }
+  }
 
   async function connectBootloader() {
-    if (!supportsWebUsb) {
-      logStatus("WebUSB is not available in this browser.", "error");
-      return;
-    }
     state.busy = true;
     setButtonStates();
     logStatus("Requesting bootloader device...");
+    
     try {
       await bootloaderDevice.connect();
       state.bootloaderConnected = true;
@@ -289,44 +391,13 @@ import Section from "@/components/Section.astro";
     }
   }
 
-  async function enterFastbootFromBrom() {
-    if (!supportsWebSerial) {
-      logStatus("Web Serial is not available in this browser.", "error");
-      return;
-    }
-    if (!window.isSecureContext) {
-      logStatus("Web Serial requires HTTPS or localhost.", "error");
-      return;
-    }
-    state.busy = true;
-    setButtonStates();
-    logStatus("Requesting BROM device...", "info");
-
-    try {
-      const port = await navigator.serial.requestPort({
-        filters: [{ usbVendorId: 0x0e8d, usbProductId: 0x2000 }],
-      });
-      await port.open({ baudRate: 115200 });
-      const writer = port.writable.getWriter();
-      const encoder = new TextEncoder();
-      await writer.write(encoder.encode("FASTBOOT"));
-      writer.releaseLock();
-      await port.close();
-      logStatus("FASTBOOT command sent. Select the device in Step 1.", "success");
-    } catch (error) {
-      logStatus(`BROM fastboot failed: ${error.message || error}`, "error");
-    } finally {
-      state.busy = false;
-      setButtonStates();
-    }
-  }
-
   async function rebootToFastbootd() {
     state.busy = true;
     setButtonStates();
     logStatus("Rebooting device into fastbootd...");
+    
     try {
-      await bootloaderDevice.reboot("fastboot");
+      await bootloaderDevice.runCommand("reboot-fastboot");
       state.bootloaderConnected = false;
       logStatus("Device rebooted. Select it again in fastbootd.", "success");
     } catch (error) {
@@ -339,13 +410,10 @@ import Section from "@/components/Section.astro";
   }
 
   async function connectFastbootd() {
-    if (!supportsWebUsb) {
-      logStatus("WebUSB is not available in this browser.", "error");
-      return;
-    }
     state.busy = true;
     setButtonStates();
     logStatus("Requesting fastbootd device...");
+    
     try {
       await fastbootdDevice.connect();
       state.fastbootdConnected = true;
@@ -359,91 +427,6 @@ import Section from "@/components/Section.astro";
     }
   }
 
-  async function fetchLatestFirmware() {
-    const response = await fetch("https://api.github.com/repos/rabbit-hmi-oss/firmware/releases/latest");
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
-    }
-    const data = await response.json();
-    const asset = (data.assets || []).find((entry) =>
-      entry.name && entry.name.toLowerCase().endsWith(".zip")
-    );
-    if (!asset) {
-      throw new Error("No firmware zip asset found in the latest release.");
-    }
-    return {
-      name: asset.name,
-      apiUrl: asset.url,
-      url: asset.browser_download_url,
-      mirrorUrl: FIRMWARE_MIRROR_BASE ? `${FIRMWARE_MIRROR_BASE}/${asset.name}` : null,
-    };
-  }
-
-  async function downloadZip(apiUrl, fallbackUrl, mirrorUrl) {
-    const proxyBases = [
-      "https://cors.isomorphic-git.org/",
-      "https://api.allorigins.win/raw?url=",
-    ];
-
-    const candidateUrls = [
-      { label: "GitHub API", url: apiUrl, headers: { Accept: "application/octet-stream" } },
-      { label: "GitHub Direct", url: fallbackUrl },
-      ...proxyBases.map((base) => ({
-        label: `Proxy ${base}`,
-        url: `${base}${encodeURIComponent(fallbackUrl)}`,
-      })),
-    ];
-
-    if (mirrorUrl) {
-      candidateUrls.unshift({ label: "Boondit Mirror", url: mirrorUrl });
-    }
-
-    let response;
-    for (const candidate of candidateUrls) {
-      try {
-        logStatus(`Downloading via ${candidate.label}...`, "info");
-        response = await fetch(candidate.url, {
-          headers: candidate.headers || {},
-          redirect: "follow",
-          cache: "no-store",
-        });
-        if (response.ok) {
-          break;
-        }
-      } catch (error) {
-        response = undefined;
-      }
-    }
-
-    if (!response || !response.ok) {
-      throw new Error("Firmware download failed due to CORS restrictions.");
-    }
-
-    const contentLength = Number(response.headers.get("content-length") || 0);
-    if (!response.body || !response.body.getReader) {
-      const blob = await response.blob();
-      setProgress(elements.downloadBar, elements.downloadPct, 1);
-      return blob;
-    }
-
-    const reader = response.body.getReader();
-    const chunks = [];
-    let received = 0;
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (value) {
-        chunks.push(value);
-        received += value.length;
-        if (contentLength) {
-          setProgress(elements.downloadBar, elements.downloadPct, received / contentLength);
-        }
-      }
-    }
-    setProgress(elements.downloadBar, elements.downloadPct, 1);
-    return new Blob(chunks, { type: "application/zip" });
-  }
-
   async function flashStockOs() {
     state.busy = true;
     setButtonStates();
@@ -453,22 +436,34 @@ import Section from "@/components/Section.astro";
     elements.flashItem.textContent = "Finding latest firmware";
 
     try {
-      const { name, url, apiUrl, mirrorUrl } = await fetchLatestFirmware();
-      logStatus(`Latest firmware found: ${name}`);
+      const asset = await fetchLatestFirmware();
+      logStatus(`Latest firmware found: ${asset.name}`);
       elements.flashAction.textContent = "Downloading";
-      elements.flashItem.textContent = name;
+      elements.flashItem.textContent = asset.name;
 
-      const zipBlob = await downloadZip(apiUrl, url, mirrorUrl);
-      logStatus("Firmware downloaded. Starting flash...");
+      const firmwareFile = await downloadFirmware(asset, (progress) => {
+        setProgress(elements.downloadBar, elements.downloadPct, progress.percentage);
+        const sizeMB = (progress.loaded / 1024 / 1024).toFixed(1);
+        const totalMB = (progress.total / 1024 / 1024).toFixed(1);
+        const speedMBps = (progress.speed / 1024 / 1024).toFixed(2);
+        const etaMin = Math.ceil(progress.eta / 60);
+        elements.flashItem.textContent = `${sizeMB}/${totalMB} MB @ ${speedMBps} MB/s (~${etaMin}m)`;
+      });
 
-      // Convert blob to File object for better compatibility
-      const zipFile = new File([zipBlob], name, { type: "application/zip" });
-      logStatus(`Prepared firmware file: ${zipFile.name} (${zipFile.size} bytes)`);
+      logStatus(`Firmware downloaded: ${(firmwareFile.size / 1024 / 1024).toFixed(1)} MB`);
+      elements.flashAction.textContent = "Flashing";
+      elements.flashItem.textContent = "Preparing flash...";
+
+      // Reconnect callback with delay to avoid race conditions
+      const reconnectCallback = async () => {
+        logStatus("Device reconnecting - waiting for stability...", "info");
+        await new Promise(resolve => setTimeout(resolve, 2500));
+      };
 
       await fastbootdDevice.flashFactoryZip(
-        zipFile,
+        firmwareFile,
         true,
-        () => logStatus("Reconnect device if prompted.", "info"),
+        reconnectCallback,
         (action, item, progress) => {
           const actionLabel = USER_ACTION_MAP[action] || action || "Working";
           elements.flashAction.textContent = actionLabel;
@@ -477,16 +472,19 @@ import Section from "@/components/Section.astro";
         }
       );
 
-      logStatus("Flash completed successfully.", "success");
+      logStatus("Flash completed successfully!", "success");
       elements.flashAction.textContent = "Completed";
       elements.flashItem.textContent = "Device flashed";
       setProgress(elements.flashBar, elements.flashPct, 1);
     } catch (error) {
-      logStatus(`Flash failed: ${error.message || error}`, "error");
-      if (error.stack) {
-        console.error("Stack trace:", error.stack);
-        logStatus(`Error details: ${error.stack.split('\n')[1]}`, "error");
+      // Check for device state race condition
+      if (error.message && error.message.includes("operation that changes the device state is in progress")) {
+        logStatus("Device reconnection race condition detected. Please wait a moment and try flashing again.", "error");
+        logStatus("Tip: Give the device 5-10 seconds to stabilize after connecting to fastbootd before flashing.", "info");
+      } else {
+        logStatus(`Flash failed: ${error.message || error}`, "error");
       }
+      if (error.stack) console.error("Stack trace:", error.stack);
       elements.flashAction.textContent = "Error";
       elements.flashItem.textContent = "Flash failed";
     } finally {
@@ -495,352 +493,116 @@ import Section from "@/components/Section.astro";
     }
   }
 
-  function showAutoFlashModal() {
+  function showModal(step, title, instruction, showProgress = false) {
+    elements.modalCurrentStep.textContent = step;
+    elements.modalTotalSteps.textContent = "4";
+    elements.modalStepTitle.textContent = title;
+    elements.modalInstruction.textContent = instruction;
+    elements.modalProgress.classList.toggle("hidden", !showProgress);
     elements.autoFlashModal.classList.remove("hidden");
   }
 
-  function hideAutoFlashModal() {
+  function hideModal() {
     elements.autoFlashModal.classList.add("hidden");
   }
 
-  function updateModalStep(stepNum, title, status) {
-    const stepEl = elements.modalSteps.querySelector(`[data-step="${stepNum}"]`);
-    if (stepEl) {
-      stepEl.innerHTML = `
-        <div class="step-item ${status}">
-          <span class="step-icon">${status === "success" ? "✓" : status === "error" ? "✗" : "→"}</span>
-          <span class="step-text">${title}</span>
-        </div>
-      `;
-    }
-  }
-
-  function setModalInstruction(title, content, showContinue = false) {
-    elements.modalInstruction.innerHTML = `
-      <div class="instruction-box">
-        <p class="instruction-title">${title}</p>
-        <p class="instruction-text">${content}</p>
-      </div>
-    `;
-    elements.modalContinue.style.display = showContinue ? "block" : "none";
-  }
-
-  async function waitForUserConfirm() {
-    return new Promise(resolve => {
-      const handler = () => {
-        elements.modalContinue.removeEventListener("click", handler);
-        elements.modalContinue.style.display = "none";
-        resolve(true);
+  function waitForUserClick() {
+    return new Promise((resolve, reject) => {
+      elements.modalContinue.onclick = () => {
+        elements.modalContinue.onclick = null;
+        elements.modalCancel.onclick = null;
+        resolve();
       };
-      elements.modalContinue.addEventListener("click", handler);
-      elements.modalContinue.style.display = "block";
+      elements.modalCancel.onclick = () => {
+        elements.modalContinue.onclick = null;
+        elements.modalCancel.onclick = null;
+        reject(new Error("User cancelled"));
+      };
     });
   }
 
   async function autoFlash() {
     state.busy = true;
     setButtonStates();
-    
-    showAutoFlashModal();
-    
-    // Initialize steps
-    elements.modalSteps.innerHTML = `
-      <div data-step="0" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Enter Fastboot (BROM)</span></div>
-      <div data-step="1" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Connect Bootloader</span></div>
-      <div data-step="2" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Reboot to Fastbootd</span></div>
-      <div data-step="3" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Connect Fastbootd</span></div>
-      <div data-step="4" class="step-item pending"><span class="step-icon">→</span><span class="step-text">Flash Firmware</span></div>
-    `;
+    logStatus("Starting auto flash sequence...", "info");
 
     try {
-      // Step 0: BROM fastboot (optional - allow failure)
-      updateModalStep(0, "Enter Fastboot (BROM)", "active");
-      setModalInstruction(
-        "Step 0: Enter Fastboot Mode",
-        "If your device is powered off: Connect it to USB now (or hold Volume buttons if needed). The tool will attempt to send the FASTBOOT command via BROM mode."
-      );
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // Step 1: BROM (optional)
+      showModal(1, "Enter Fastboot via BROM", "Connect your powered-off device. Click Continue to select the BROM serial port and send the FASTBOOT command.");
+      await waitForUserClick();
+      logStatus("Step 1: Entering fastboot mode from BROM...", "info");
       try {
         await enterFastbootFromBrom();
-        updateModalStep(0, "Enter Fastboot (BROM)", "success");
-      } catch (e) {
-        logStatus(`BROM step skipped (optional): ${e.message}`, "info");
-        updateModalStep(0, "Enter Fastboot (BROM)", "success");
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        logStatus("BROM fastboot command sent.", "success");
+      } catch (error) {
+        logStatus("BROM step skipped (device may already be in fastboot)", "info");
       }
 
-      // Step 1: Connect bootloader
-      updateModalStep(1, "Connect Bootloader", "active");
-      setModalInstruction(
-        "Step 1: Connect Bootloader",
-        "🔌 Unplug your device if connected. Put it into bootloader mode (usually: plug in USB while holding specific key combination). Then click 'Continue' to select the device."
-      );
-      await waitForUserConfirm();
-
+      // Step 2: Connect bootloader
+      showModal(2, "Connect Bootloader", "Device should now be in fastboot bootloader mode. Click Continue to select the USB device.");
+      await waitForUserClick();
+      logStatus("Step 2: Connecting to bootloader...", "info");
       await connectBootloader();
       if (!state.bootloaderConnected) {
-        throw new Error("Failed to connect to bootloader. Make sure device is in bootloader mode.");
+        throw new Error("Failed to connect to bootloader");
       }
-      updateModalStep(1, "Connect Bootloader", "success");
 
-      // Step 2: Reboot to fastbootd
-      updateModalStep(2, "Reboot to Fastbootd", "active");
-      setModalInstruction(
-        "Step 2: Reboot to Fastbootd",
-        "📱 The tool is now rebooting your device into fastbootd mode. This will take a few seconds..."
-      );
-      
+      // Step 3: Reboot to fastbootd
+      showModal(3, "Reboot to Fastbootd", "Rebooting device to fastbootd mode. The device will disconnect and reconnect. Click Continue when ready to select it again.");
+      logStatus("Step 3: Rebooting to fastbootd...", "info");
       await rebootToFastbootd();
       await new Promise(resolve => setTimeout(resolve, 2000));
-      updateModalStep(2, "Reboot to Fastbootd", "success");
-
-      // Step 3: Connect fastbootd
-      updateModalStep(3, "Connect Fastbootd", "active");
-      setModalInstruction(
-        "Step 3: Connect Fastbootd",
-        "✓ Device rebooted. Now click 'Continue' to select it again (it should now appear in fastbootd mode)."
-      );
-      await waitForUserConfirm();
-
+      await waitForUserClick();
+      logStatus("Step 3: Connecting to fastbootd...", "info");
       await connectFastbootd();
       if (!state.fastbootdConnected) {
         throw new Error("Failed to connect to fastbootd");
       }
-      updateModalStep(3, "Connect Fastbootd", "success");
+      
+      // Give device time to stabilize before flash
+      logStatus("Device connected. Waiting for stability...", "info");
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
       // Step 4: Flash firmware
-      updateModalStep(4, "Flash Firmware", "active");
-      setModalInstruction(
-        "Step 4: Flashing Firmware",
-        "⚡ Downloading and flashing firmware... This may take 5-10 minutes. Do not disconnect the device!"
-      );
-
+      showModal(4, "Flash Firmware", "Downloading and flashing latest firmware. This may take 10-15 minutes. Do not disconnect the device.", true);
+      logStatus("Step 4: Flashing firmware...", "info");
       await flashStockOs();
-      updateModalStep(4, "Flash Firmware", "success");
 
+      hideModal();
       logStatus("Auto flash sequence completed successfully!", "success");
-      setModalInstruction(
-        "✅ Flash Complete!",
-        "Your Rabbit R1 has been successfully flashed with the latest firmware. The device will reboot automatically."
-      );
-      
     } catch (error) {
+      hideModal();
       logStatus(`Auto flash failed: ${error.message || error}`, "error");
-      setModalInstruction(
-        "❌ Flash Failed",
-        `Error: ${error.message || error}. Check the log for details. You can try again or proceed manually.`
-      );
     } finally {
       state.busy = false;
       setButtonStates();
     }
   }
 
-  // Modal controls
-  elements.modalCancel.addEventListener("click", () => {
-    if (state.busy) {
-      if (confirm("Cancel auto flash process? Device may be in an incomplete state.")) {
-        state.busy = false;
-        setButtonStates();
-        hideAutoFlashModal();
-      }
-    } else {
-      hideAutoFlashModal();
-    }
-  });
-
-  elements.modalClose.addEventListener("click", () => {
-    if (!state.busy) hideAutoFlashModal();
-  });
-
   elements.autoFlash.addEventListener("click", autoFlash);
-  elements.connectBootloader.addEventListener("click", connectBootloader);
   elements.enterFastboot.addEventListener("click", enterFastbootFromBrom);
+  elements.connectBootloader.addEventListener("click", connectBootloader);
   elements.rebootFastbootd.addEventListener("click", rebootToFastbootd);
   elements.connectFastbootd.addEventListener("click", connectFastbootd);
   elements.flashStock.addEventListener("click", flashStockOs);
+  elements.mtkUnlock.addEventListener("click", () => {
+    logStatus("MTK bootloader unlock is experimental and not yet implemented.", "error");
+  });
+
+  setButtonStates();
+  setConnectionStatus();
+  logStatus("R1 Flash Utility ready.");
 </script>
 
 <style>
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal.hidden {
-    display: none;
-  }
-
-  .modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-  }
-
-  .modal-content {
-    position: relative;
-    background: rgba(31, 41, 55, 0.95);
-    border: 2px solid rgba(168, 85, 247, 0.5);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    animation: slideUp 0.3s ease-out;
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
-  }
-
-  .modal-header h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0;
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    color: #94a3b8;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
-  }
-
-  .modal-close:hover {
-    color: #fff;
-  }
-
-  .modal-body {
-    margin-bottom: 1.5rem;
-  }
-
-  .step-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-    margin-bottom: 0.5rem;
-  }
-
-  .step-item.pending {
-    background: rgba(100, 116, 139, 0.2);
-    color: #cbd5f5;
-  }
-
-  .step-item.active {
-    background: rgba(59, 130, 246, 0.2);
-    color: #93c5fd;
-    border-left: 3px solid #3b82f6;
-  }
-
-  .step-item.success {
-    background: rgba(34, 197, 94, 0.2);
-    color: #86efac;
-  }
-
-  .step-item.error {
-    background: rgba(248, 113, 113, 0.2);
-    color: #fecaca;
-  }
-
-  .step-icon {
-    font-size: 1.25rem;
-    font-weight: 700;
-    min-width: 1.5rem;
-    text-align: center;
-  }
-
-  .step-text {
-    font-size: 0.95rem;
-    font-weight: 500;
-  }
-
-  .instruction-box {
-    background: rgba(168, 85, 247, 0.1);
-    border: 1px solid rgba(168, 85, 247, 0.3);
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    margin-top: 1rem;
-  }
-
-  .instruction-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: #86efac;
-    margin: 0 0 0.5rem 0;
-  }
-
-  .instruction-text {
-    color: #cbd5f5;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-  }
-
-  .modal-actions .btn-primary {
-    flex: 1;
-    max-width: 200px;
-  }
-
-  .modal-actions .btn-secondary {
-    flex: 1;
-    max-width: 150px;
-  }
-
   .card {
     background: rgba(31, 41, 55, 0.6);
     backdrop-filter: blur(8px);
     border-radius: 1rem;
     padding: 2rem;
     border: 1px solid rgba(75, 85, 99, 0.5);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
   }
 
   .card.bg-gradient-auto {
@@ -848,9 +610,23 @@ import Section from "@/components/Section.astro";
     border: 1px solid rgba(168, 85, 247, 0.3);
   }
 
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+  }
+
+  details[open] .card-title::after {
+    content: " ▼";
+    font-size: 0.75rem;
+  }
+
+  details:not([open]) .card-title::after {
+    content: " ▶";
+    font-size: 0.75rem;
   }
 
   .divider {
@@ -880,34 +656,6 @@ import Section from "@/components/Section.astro";
     right: 0;
   }
 
-  .card-title {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
-  }
-
-  .form-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #e2e8f0;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .form-checkbox {
-    width: 1rem;
-    height: 1rem;
-    accent-color: #a855f7;
-  }
-
   .btn-primary,
   .btn-secondary,
   .btn-accent,
@@ -919,7 +667,6 @@ import Section from "@/components/Section.astro";
     transition: all 0.2s;
     border: none;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .btn-primary {
@@ -959,72 +706,66 @@ import Section from "@/components/Section.astro";
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
-    box-shadow: none;
   }
 
-  .status-row {
+  /* Modal Styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    color: #cbd5f5;
+    justify-content: center;
   }
 
-  .status-pill {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-    background: rgba(148, 163, 184, 0.2);
-    color: #94a3b8;
+  .modal.hidden {
+    display: none;
   }
 
-  .status-pill.is-ok {
-    background: rgba(34, 197, 94, 0.2);
-    color: #86efac;
+  .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
   }
 
-  .status-pill.is-error {
-    background: rgba(248, 113, 113, 0.2);
-    color: #fecaca;
+  .modal-content {
+    position: relative;
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.95) 0%, rgba(17, 24, 39, 0.95) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   }
 
-  .status-log {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(75, 85, 99, 0.5);
-    border-radius: 0.75rem;
-    padding: 1rem;
-    font-size: 0.75rem;
-    line-height: 1.4;
-    color: #cbd5f5;
-    min-height: 180px;
-    max-height: 260px;
-    overflow-y: auto;
+  .modal-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+    padding-bottom: 1rem;
   }
 
-  .log-entry {
-    margin-bottom: 0.5rem;
+  .modal-body {
+    margin-bottom: 1.5rem;
+    min-height: 100px;
   }
 
-  .log-success {
-    color: #86efac;
+  .modal-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
   }
 
-  .log-error {
-    color: #fecaca;
-  }
-
-  .progress-track {
-    width: 100%;
-    height: 0.5rem;
-    background: rgba(148, 163, 184, 0.2);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #a855f7 0%, #3b82f6 100%);
-    transition: width 0.2s ease;
+  .modal-footer button {
+    flex: 1;
+    max-width: 200px;
   }
 </style>
