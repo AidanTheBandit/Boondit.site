@@ -43,7 +43,7 @@ const DropdownMenuInner = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
     <div
       ref={ref}
       className={cn(
-        "bg-popover/95 backdrop-blur-xl border border-border rounded shadow-2xl overflow-hidden p-1 flex flex-col gap-1",
+        "bg-background/90 backdrop-blur-2xl border-2 border-border/50 rounded shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden p-1.5 flex flex-col gap-1 relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/5 before:to-transparent before:pointer-events-none",
         className
       )}
       {...props}

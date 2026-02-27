@@ -5,140 +5,154 @@ import { QUOTE, SITE_TITLE } from "@/consts";
 ---
 
 <section
-  class="min-h-screen !z-[20] relative w-full px-4 py-8 md:py-0"
+  class="min-h-screen !z-[20] relative w-full px-4 py-8 md:py-0 overflow-hidden bg-background"
   id="hero"
 >
+  {/* Modern Clean Background with subtle texture instead of grid */}
+  <div class="absolute inset-0 z-0 opacity-[0.03] pointer-events-none mix-blend-multiply dark:mix-blend-screen" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.8\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+  
+  {/* Polaroid Color Bars Accent (top) */}
+  <div class="absolute top-0 left-0 w-full h-2 flex z-50">
+    <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+    <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+    <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+  </div>
+
   <!-- Mobile Layout: Vertical -->
-  <div class="flex flex-col justify-center items-center h-full md:hidden">
-      <div class="text-center mb-8">
-        <h1 class="font-bold text-5xl sm:text-6xl tracking-tighter transition-all duration-300">{SITE_TITLE}</h1>
-        <h2 class="text-lg sm:text-lg opacity-80 mt-4 font-light text-muted-foreground min-h-[1.5em] flex justify-center items-center uppercase tracking-[0.2em]">
-          <span id="hero-quote">{QUOTE}</span>
+  <div class="flex flex-col justify-center items-center h-full relative z-10 md:hidden pt-24 pb-20">
+      <div class="text-center mb-12 relative w-full px-4">
+        <h1 class="font-bold text-6xl sm:text-7xl tracking-tighter uppercase transition-all duration-300 relative z-10">
+          <span class="text-foreground">{SITE_TITLE.split(' ')[0]}</span><br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{SITE_TITLE.split(' ').slice(1).join(' ')}</span>
+        </h1>
+        <h2 class="text-sm md:text-base opacity-80 mt-6 font-medium text-muted-foreground min-h-[1.5em] flex justify-center items-center uppercase tracking-widest px-4">
+          <span id="hero-quote" class="leading-relaxed">{QUOTE}</span>
         </h2>
       </div>
 
-    <div class="w-full max-w-md sm:max-w-lg">
-      <div class="hero-image-container mx-auto" id="hero-image-container">
-        <Image
-          alt="Hero"
-          src={HeroImg}
-          class="hero-mask-image w-full scale-100"
-          id="hero-image"
-        />
+    <div class="w-full max-w-sm sm:max-w-md relative mt-4">
+      <div class="hero-image-container mx-auto relative z-10 p-2 bg-card border border-border/60 shadow-xl" id="hero-image-container">
+        {/* Inner subtle frame like a polaroid */}
+        <div class="p-1 border border-border/30 bg-background/50">
+          <Image
+            alt="Hero"
+            src={HeroImg}
+            class="hero-mask-image w-full scale-100 grayscale-[0.2] hover:grayscale-0 transition-all duration-700 object-cover"
+            id="hero-image"
+          />
+        </div>
         <div class="hero-gradient-overlay"></div>
       </div>
-      <div class="text-center mt-2 text-sm">
+      <div class="text-center mt-8 text-xs font-medium tracking-widest uppercase">
         <a
           href="https://www.instagram.com/howtoeatart"
-          class="hover:text-accent transition-colors"
+          class="text-muted-foreground hover:text-accent transition-colors block pb-1 flex items-center justify-center gap-2"
         >
-          Profile picture by @howtoeatart
+          <span class="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
+          Art by @howtoeatart
         </a>
       </div>
     </div>
   </div>
 
   <!-- Desktop Layout: Side by Side -->
-  <div class="hidden md:grid md:grid-cols-2 md:gap-4 md:items-center md:h-full">
-    <div class="grid place-items-center">
-      <div class="text-center">
-        <h1 class="font-bold text-7xl lg:text-8xl tracking-tighter transition-all duration-300">{SITE_TITLE}</h1>
-        <h2 class="text-lg lg:text-xl opacity-80 mt-6 font-light text-muted-foreground min-h-[1.5em] flex justify-center items-center uppercase tracking-[0.2em]">
-          <span id="hero-quote-desktop">{QUOTE}</span>
-        </h2>
+  <div class="hidden md:flex md:flex-row items-center justify-between h-full relative z-10 max-w-7xl mx-auto px-8 lg:px-12 pt-16">
+    <div class="flex flex-col justify-center items-start relative w-1/2 pr-8 lg:pr-16">
+      
+      <h1 class="font-bold text-7xl lg:text-8xl xl:text-9xl tracking-tighter uppercase transition-all duration-300 leading-[0.9]">
+        <span class="text-foreground block">{SITE_TITLE.split(' ')[0]}</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent block">{SITE_TITLE.split(' ').slice(1).join(' ')}</span>
+      </h1>
+      
+      {/* Short color bars accent instead of generic line */}
+      <div class="flex h-1.5 w-32 mt-10 mb-8 rounded-full overflow-hidden shadow-sm">
+        <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+        <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+        <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
       </div>
+      
+      <h2 class="text-base lg:text-lg opacity-80 font-medium text-muted-foreground min-h-[1.5em] flex items-center uppercase tracking-widest">
+        <span id="hero-quote-desktop" class="leading-relaxed">{QUOTE}</span>
+      </h2>
     </div>
 
-    <div>
+    <div class="relative w-1/2 max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto flex flex-col items-center">
       <div
-        class="hero-image-container max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto"
+        class="hero-image-container w-full relative z-10 p-3 bg-card border border-border/50 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700 ease-out"
         id="hero-image-container-desktop"
       >
-        <Image
-          alt="Hero"
-          src={HeroImg}
-          class="hero-mask-image w-full scale-100"
-          id="hero-image-desktop"
-        />
+        <div class="p-1 border border-border/20 bg-background/50">
+          <Image
+            alt="Hero"
+            src={HeroImg}
+            class="hero-mask-image w-full scale-100 grayscale-[0.2] hover:grayscale-0 transition-all duration-[2000ms] ease-out object-cover block"
+            id="hero-image-desktop"
+          />
+        </div>
         <div class="hero-gradient-overlay"></div>
       </div>
-      <div class="text-center mt-2 text-sm">
-        <a
-          href="https://www.instagram.com/howtoeatart"
-          class="hover:text-accent transition-colors"
-        >
-          Profile picture by @howtoeatart
-        </a>
+      <div class="text-center mt-12 text-xs font-medium tracking-widest w-full">
+        <div class="flex items-center justify-center gap-4">
+          <div class="h-px w-12 bg-border/50"></div>
+          <a
+            href="https://www.instagram.com/howtoeatart"
+            class="text-muted-foreground hover:text-accent transition-colors inline-flex items-center gap-2 uppercase"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
+            Profile picture by @howtoeatart
+          </a>
+          <div class="h-px w-12 bg-border/50"></div>
+        </div>
       </div>
     </div>
   </div>
-  </div>
   
-  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer opacity-70 hover:opacity-100 transition-opacity" onclick="document.getElementById('myposts').scrollIntoView({behavior: 'smooth'})">
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      class="h-10 w-10 text-muted-foreground" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor"
-    >
-      <path 
-        stroke-linecap="round" 
-        stroke-linejoin="round" 
-        stroke-width="2" 
-        d="M19 14l-7 7m0 0l-7-7m7 7V3" 
-      />
-    </svg>
+  <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-20"></div>
+
+  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer opacity-70 hover:opacity-100 hover:text-accent transition-all duration-300 z-30 group" onclick="document.getElementById('myposts').scrollIntoView({behavior: 'smooth'})">
+    <div class="flex flex-col items-center gap-2">
+      <span class="text-[10px] uppercase font-bold tracking-widest group-hover:text-accent transition-colors">SCROLL</span>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        class="h-6 w-6 text-muted-foreground group-hover:text-accent group-hover:translate-y-2 transition-all duration-300" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor"
+      >
+        <path 
+          stroke-linecap="square" 
+          stroke-linejoin="miter" 
+          stroke-width="2" 
+          d="M19 14l-7 7m0 0l-7-7m7 7V3" 
+        />
+      </svg>
+    </div>
   </div>
 </section>
 
 <script is:inline>
   function initializeHeroMask() {
     const heroImage = document.getElementById("hero-image");
-    const heroContainer = document.getElementById("hero-image-container");
-    const gradientOverlay = document.querySelector(".hero-gradient-overlay");
+    const desktopHeroImage = document.getElementById("hero-image-desktop");
+    
+    function setupMask(img, containerId) {
+      if (!img) return;
+      const overlay = img.parentElement.querySelector(".hero-gradient-overlay");
+      if (!overlay) return;
 
-    console.log("Initializing hero mask...", {
-      heroImage,
-      heroContainer,
-      gradientOverlay,
-    });
-
-    if (!heroImage || !heroContainer || !gradientOverlay) {
-      console.log("Missing elements, retrying in 100ms...");
-      setTimeout(initializeHeroMask, 100);
-      return;
-    }
-
-    function applyMask() {
-      // Wait for image to be fully loaded
-      if (heroImage.complete && heroImage.naturalHeight !== 0) {
-        const imageSrc = heroImage.src;
-        console.log("Applying mask with image:", imageSrc);
-
-        // Set the CSS custom property
+      if (img.complete && img.naturalHeight !== 0) {
         document.documentElement.style.setProperty(
           "--hero-mask",
-          `url(${imageSrc})`,
+          `url(${img.src})`
         );
-
-        // Apply the mask-applied class to show the gradient
-        gradientOverlay.classList.add("mask-applied");
-
-        console.log("Mask applied successfully");
+        overlay.classList.add("mask-applied");
       } else {
-        console.log("Image not ready, waiting...");
-        heroImage.onload = applyMask;
-        // Fallback timeout
-        setTimeout(applyMask, 500);
+        img.onload = () => setupMask(img, containerId);
       }
     }
 
-    // Try to apply mask immediately
-    applyMask();
-
-    // Also set up onload handler in case image isn't ready
-    heroImage.onload = applyMask;
+    setupMask(heroImage, "hero-image-container");
+    setupMask(desktopHeroImage, "hero-image-container-desktop");
   }
 
   // Initialize on DOM ready
@@ -150,15 +164,6 @@ import { QUOTE, SITE_TITLE } from "@/consts";
 
   // Handle Astro navigation
   document.addEventListener("astro:page-load", () => {
-    console.log("Astro page load detected");
     setTimeout(initializeHeroMask, 100);
-  });
-
-  // Handle visibility changes
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-      console.log("Page became visible");
-      setTimeout(initializeHeroMask, 100);
-    }
   });
 </script>

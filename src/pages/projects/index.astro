@@ -9,19 +9,23 @@ const projects = (await getCollection("projects")).sort(
 );
 ---
 
-<Layout title="My Projects">
-  <Section title="My Projects">
-    <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-      {
-        projects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            period={project.data.period}
-            link={project.data.link}
-            description={project.data.description}
-          />
-        ))
-      }
-    </div>
-  </Section>
+<Layout title="PROJECT_DIR">
+  <div class="mt-24 md:mt-32">
+    <Section title="ACTIVE_PROJECTS">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12">
+        {
+          projects.map((project, index) => (
+            <div class={`h-full transform hover:-translate-y-2 transition-transform duration-500 delay-${(index % 4) * 100}`}>
+              <ProjectCard
+                title={project.data.title}
+                link={project.data.link}
+                period={project.data.period}
+                description={project.data.description}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </Section>
+  </div>
 </Layout>

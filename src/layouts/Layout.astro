@@ -11,6 +11,22 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 <html lang="en" class="dark !overflow-x-hidden">
   <head>
     <BaseHead title={title} description={description} />
+    <script is:inline>
+      // Early theme initialization to prevent flash of wrong theme
+      const getThemePreference = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      };
+      
+      const theme = getThemePreference();
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
   </head>
 
   <body class="bg-background text-foreground tracking-wide !overflow-x-hidden">
@@ -26,6 +42,26 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
     ></script>
 
     <script is:inline>
+      // Apply theme on initial load and handle Astro view transitions
+      function applyTheme() {
+        const getThemePreference = () => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        };
+        
+        const theme = getThemePreference();
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      }
+
+      // Initial application
+      applyTheme();
+
       // Scroll Reveal Observer
       function initScrollReveal() {
         const observerOptions = {
@@ -49,8 +85,15 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
       }
 
       // Initialize on load and after Astro swaps
-      document.addEventListener('DOMContentLoaded', initScrollReveal);
-      document.addEventListener('astro:page-load', initScrollReveal);
+      document.addEventListener('DOMContentLoaded', () => {
+        initScrollReveal();
+      });
+      document.addEventListener('astro:after-swap', () => {
+        applyTheme();
+      });
+      document.addEventListener('astro:page-load', () => {
+        initScrollReveal();
+      });
     </script>
   </body>
 </html>

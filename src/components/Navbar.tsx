@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from './ui/button'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuInner, DropdownMenuItem } from './ui/dropdown-menu'
+import { ThemeToggle } from './ThemeToggle'
 import { SITE_TITLE, NAV_LINKS } from '@/consts'
 
 interface NavbarProps {
@@ -37,8 +38,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Logo */}
         <a href="/" className="flex-shrink-0 z-50 relative group">
-          <div className={`pt-2 pb-1 grid place-items-center select-none leading-none transition-all duration-300 ease-in-out text-sm md:text-base border ${
-            scrolled ? 'bg-background scale-100 text-foreground border-foreground px-4' : 'bg-foreground scale-110 text-background border-transparent px-3 md:px-4'
+          <div className={`pt-2 pb-1 grid place-items-center select-none leading-none transition-all duration-300 ease-in-out text-[10px] md:text-xs font-mono tracking-[0.2em] uppercase border ${
+            scrolled 
+              ? 'bg-background scale-100 text-foreground border-foreground px-4 hover:bg-accent hover:border-accent hover:text-accent-foreground' 
+              : 'bg-foreground scale-110 text-background border-transparent px-3 md:px-4 hover:bg-accent hover:text-accent-foreground hover:border-accent'
           }`}>
             {SITE_TITLE}
           </div>
@@ -88,10 +91,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
                 <a
                   href={href.startsWith('//') ? `https:${href}` : href}
                   target={isBuyMeCoffee ? '_blank' : '_self'}
-                  className={`transition-all ease-in-out px-3 py-1.5 rounded text-sm md:text-sm tracking-wide flex items-center justify-center font-medium ${
+                  className={`transition-all ease-in-out px-3 py-1.5 rounded-none text-[10px] uppercase font-mono tracking-[0.2em] flex items-center justify-center ${
                     isBuyMeCoffee
-                      ? 'bg-[#FFDD00] text-black hover:bg-[#FFDD00]/90 hover:text-black/80 font-bold border border-transparent shadow-[0_0_10px_rgba(255,221,0,0.3)]'
-                      : `${isActive(href, subpath) ? 'bg-accent text-accent-foreground shadow-sm' : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'}`
+                      ? 'bg-accent text-accent-foreground font-bold border border-transparent hover:shadow-[0_0_15px_hsl(var(--accent)/0.3)]'
+                      : `${isActive(href, subpath) ? 'border-b-2 border-accent text-foreground' : 'text-muted-foreground hover:text-accent border-b-2 border-transparent hover:border-accent/50'}`
                   }`}
                 >
                   {link.title}
@@ -99,20 +102,27 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
               </React.Fragment>
             )
           })}
+          
+          {/* Theme Switcher Separator */}
+          <span className="text-muted-foreground/30 px-2 select-none">|</span>
+          <ThemeToggle />
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden z-40 p-2 hover:bg-accent/20 rounded-md transition-colors"
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </button>
+        <div className="flex items-center gap-2 md:hidden z-40">
+          <ThemeToggle />
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 hover:bg-accent/20 rounded-none transition-colors border border-transparent hover:border-border"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}
@@ -125,20 +135,20 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
             if (link.children) {
               return (
                 <details key={index} className="group">
-                  <summary className="cursor-pointer px-3 py-2 hover:bg-accent/20 rounded-md font-medium flex items-center justify-between">
+                  <summary className="cursor-pointer px-4 py-3 hover:bg-accent/5 rounded-none font-mono text-xs uppercase tracking-[0.2em] flex items-center justify-between border-l-2 border-transparent hover:border-accent text-muted-foreground hover:text-foreground">
                     {link.title}
                     <ChevronDown className="w-4 h-4 group-open:rotate-180 transition-transform" />
                   </summary>
-                  <div className="pl-4 mt-2 space-y-2">
+                  <div className="pl-6 mt-1 space-y-1 border-l border-border/30 ml-4 mb-2">
                     {link.children.map((child, idx) => (
                       <a
                         key={idx}
                         href={child.href.startsWith('//') ? `https:${child.href}` : `/${child.href}`}
                         target={child.href.startsWith('//') ? '_blank' : '_self'}
-                        className="block px-3 py-2 hover:bg-accent/20 rounded-md text-sm transition-colors"
+                        className="block px-3 py-2 hover:bg-accent/5 rounded-none text-xs font-mono tracking-wider transition-colors border-l-2 border-transparent hover:border-accent text-muted-foreground hover:text-foreground"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        {child.title}
+                        - {child.title}
                       </a>
                     ))}
                   </div>
@@ -151,10 +161,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
                 key={index}
                 href={href.startsWith('//') ? `https:${href}` : href}
                 target={isBuyMeCoffee ? '_blank' : '_self'}
-                className={`block px-3 py-2 rounded-md font-medium transition-colors ${
+                className={`block px-4 py-3 rounded-none font-mono text-xs uppercase tracking-[0.2em] transition-colors border-l-2 ${
                   isBuyMeCoffee
-                    ? 'bg-[#FFDD00] text-black hover:bg-[#FFDD00]/90'
-                    : 'hover:bg-accent/20'
+                    ? 'bg-accent/10 border-accent text-accent hover:bg-accent/20'
+                    : 'border-transparent text-muted-foreground hover:bg-accent/5 hover:border-accent hover:text-foreground'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
