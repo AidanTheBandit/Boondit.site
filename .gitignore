@@ -24,3 +24,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 package-lock.json
+
+# firmware files (too large for git, served from GitHub Action mirror)
+public/firmware/*.zip

@@ -20,6 +20,18 @@ import Section from "@/components/Section.astro";
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
+          <article class="card bg-gradient-auto">
+            <h2 class="card-title">Quick Start: Auto Flash</h2>
+            <p class="text-gray-300 text-sm mb-4">
+              Let the tool handle all steps automatically. Connect your device in bootloader mode and click below. The tool will handle entering fastbootd and flashing.
+            </p>
+            <button id="autoFlash" class="btn-auto w-full">
+              ⚡ Start Auto Flash
+            </button>
+          </article>
+
+          <div class="divider">OR proceed manually</div>
+
           <article class="card">
             <h2 class="card-title">Step 0: Enter Fastboot (BROM)</h2>
             <p class="text-gray-300 text-sm mb-4">
@@ -147,9 +159,13 @@ import Section from "@/components/Section.astro";
   const bootloaderDevice = new FastbootDevice();
   const fastbootdDevice = new FastbootDevice();
 
-  const FIRMWARE_MIRROR_BASE = "https://boondit.site/firmware";
+  const isLocalOrCodespace = window.location.hostname.includes("github.dev") ||
+    window.location.hostname.includes("githubpreview.dev") ||
+    window.location.hostname.includes("localhost");
+  const FIRMWARE_MIRROR_BASE = isLocalOrCodespace ? "/firmware" : "https://boondit.site/firmware";
 
   const elements = {
+    autoFlash: document.getElementById("autoFlash"),
     enterFastboot: document.getElementById("enterFastboot"),
     connectBootloader: document.getElementById("connectBootloader"),
     rebootFastbootd: document.getElementById("rebootFastbootd"),
@@ -411,8 +427,12 @@ import Section from "@/components/Section.astro";
       const zipBlob = await downloadZip(apiUrl, url, mirrorUrl);
       logStatus("Firmware downloaded. Starting flash...");
 
+      // Convert blob to File object for better compatibility
+      const zipFile = new File([zipBlob], name, { type: "application/zip" });
+      logStatus(`Prepared firmware file: ${zipFile.name} (${zipFile.size} bytes)`);
+
       await fastbootdDevice.flashFactoryZip(
-        zipBlob,
+        zipFile,
         true,
         () => logStatus("Reconnect device if prompted.", "info"),
         (action, item, progress) => {
@@ -429,6 +449,10 @@ import Section from "@/components/Section.astro";
       setProgress(elements.flashBar, elements.flashPct, 1);
     } catch (error) {
       logStatus(`Flash failed: ${error.message || error}`, "error");
+      if (error.stack) {
+        console.error("Stack trace:", error.stack);
+        logStatus(`Error details: ${error.stack.split('\n')[1]}`, "error");
+      }
       elements.flashAction.textContent = "Error";
       elements.flashItem.textContent = "Flash failed";
     } finally {
@@ -437,6 +461,47 @@ import Section from "@/components/Section.astro";
     }
   }
 
+  async function autoFlash() {
+    state.busy = true;
+    setButtonStates();
+    logStatus("Starting auto flash sequence...", "info");
+
+    try {
+      // Step 1: Connect bootloader
+      logStatus("Step 1: Connecting to bootloader...", "info");
+      await connectBootloader();
+      if (!state.bootloaderConnected) {
+        throw new Error("Failed to connect to bootloader");
+      }
+
+      // Step 2: Reboot to fastbootd
+      logStatus("Step 2: Rebooting to fastbootd...", "info");
+      await rebootToFastbootd();
+      
+      // Small delay to allow device reconnection
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Step 3: Connect fastbootd
+      logStatus("Step 3: Connecting to fastbootd...", "info");
+      await connectFastbootd();
+      if (!state.fastbootdConnected) {
+        throw new Error("Failed to connect to fastbootd");
+      }
+
+      // Step 4: Flash
+      logStatus("Step 4: Flashing firmware...", "info");
+      await flashStockOs();
+
+      logStatus("Auto flash sequence completed successfully!", "success");
+    } catch (error) {
+      logStatus(`Auto flash failed: ${error.message || error}`, "error");
+    } finally {
+      state.busy = false;
+      setButtonStates();
+    }
+  }
+
+  elements.autoFlash.addEventListener("click", autoFlash);
   elements.connectBootloader.addEventListener("click", connectBootloader);
   elements.enterFastboot.addEventListener("click", enterFastbootFromBrom);
   elements.rebootFastbootd.addEventListener("click", rebootToFastbootd);
@@ -455,9 +520,41 @@ import Section from "@/components/Section.astro";
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
+  .card.bg-gradient-auto {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+
   .card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .divider {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: rgba(148, 163, 184, 0.3);
+  }
+
+  .divider::before {
+    left: 0;
+  }
+
+  .divider::after {
+    right: 0;
   }
 
   .card-title {
@@ -490,7 +587,8 @@ import Section from "@/components/Section.astro";
 
   .btn-primary,
   .btn-secondary,
-  .btn-accent {
+  .btn-accent,
+  .btn-auto {
     font-weight: 600;
     border-radius: 0.5rem;
     padding: 0.875rem 1.5rem;
@@ -516,16 +614,25 @@ import Section from "@/components/Section.astro";
     color: #fff;
   }
 
+  .btn-auto {
+    background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+    color: #fff;
+    font-size: 1.125rem;
+    padding: 1.125rem 2rem;
+  }
+
   .btn-primary:hover,
   .btn-secondary:hover,
-  .btn-accent:hover {
+  .btn-accent:hover,
+  .btn-auto:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
   .btn-primary:disabled,
   .btn-secondary:disabled,
-  .btn-accent:disabled {
+  .btn-accent:disabled,
+  .btn-auto:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
