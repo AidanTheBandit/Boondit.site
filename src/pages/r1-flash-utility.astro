@@ -280,27 +280,37 @@ import FlashLog from "@/components/flash/FlashLog.astro";
 
   async function downloadFirmware(asset, onProgress) {
     const candidateUrls = [
-      { label: "Mirror", url: asset.mirrorUrl },
+      { label: "Boondit Mirror", url: asset.mirrorUrl },
+      { label: "GitHub Releases (Direct)", url: asset.url },
       { label: "GitHub API", url: asset.apiUrl, headers: { Accept: "application/octet-stream" } },
-      { label: "Direct", url: asset.url },
+      { label: "CORS Proxy (isomorphic-git)", url: `https://cors.isomorphic-git.org/${encodeURIComponent(asset.url)}` },
+      { label: "CORS Proxy (allorigins)", url: `https://api.allorigins.win/raw?url=${encodeURIComponent(asset.url)}` },
     ].filter(c => c.url);
 
     let response;
+    let usedSource = "";
+    
     for (const candidate of candidateUrls) {
       try {
+        logStatus(`Trying ${candidate.label}...`, "info");
         response = await fetch(candidate.url, {
           headers: candidate.headers || {},
           redirect: "follow",
           cache: "no-store",
         });
-        if (response.ok) break;
+        if (response.ok) {
+          usedSource = candidate.label;
+          logStatus(`Downloading from ${candidate.label}`, "success");
+          break;
+        }
       } catch (error) {
+        logStatus(`${candidate.label} failed: ${error.message}`, "error");
         response = undefined;
       }
     }
 
     if (!response || !response.ok) {
-      throw new Error("Firmware download failed from all sources.");
+      throw new Error("Firmware download failed from all sources (Mirror, GitHub, and CORS proxies).");
     }
 
     const contentLength = Number(response.headers.get("content-length") || 0);
