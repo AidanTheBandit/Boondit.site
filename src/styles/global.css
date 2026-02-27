@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: "Retro", "Courier New", Courier, monospace !important;
+  font-family: "Retro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   color: var(--foreground);
   background-color: var(--background);
   line-height: 1.6;
@@ -17,9 +17,9 @@ body {
 
 pre,
 code {
-  font-family: "Retro", "Courier New", Courier, monospace !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   background-color: var(--card);
-  color: var(--accent);
+  color: var(--foreground);
   padding: 8px;
   border-radius: 6px;
   border: 1px solid var(--border);
@@ -105,10 +105,10 @@ img,
   right: 0;
   bottom: 0;
   background: linear-gradient(45deg,
-      hsl(270 20% 55% / 0.6),
-      hsl(240 15% 24% / 0.4),
-      hsl(270 20% 55% / 0.8),
-      hsl(240 15% 16% / 0.5));
+      hsl(0 0% 12% / 0.6),
+      hsl(0 0% 4% / 0.8),
+      hsl(0 0% 25% / 0.5),
+      hsl(0 0% 6% / 0.7));
   background-size: 400% 400%;
   animation: gradientShift 4s ease-in-out infinite;
   z-index: 3;

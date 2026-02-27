@@ -1,22 +1,22 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
-import Navbar from "@/components/Navbar.astro";
-import Footer from "@/components/Footer.astro";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 
 const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 ---
 
-<html lang="en" class="!overflow-x-hidden">
+<html lang="en" class="dark !overflow-x-hidden">
   <head>
     <BaseHead title={title} description={description} />
   </head>
 
   <body class="bg-background text-foreground tracking-wide !overflow-x-hidden">
-    <header class="fixed top-0 w-screen z-[9999]"><Navbar /></header>
+    <header class="fixed top-0 w-screen z-[9999]"><Navbar client:load currentPath={Astro.url.pathname} /></header>
     <main class="pt-20 md:pt-24 lg:pt-20"><slot /></main>
-    <footer class="w-screen bottom-0 overflow-x-hidden"><Footer /></footer>
+    <footer class="w-screen bottom-0 overflow-x-hidden"><Footer client:load /></footer>
 
     <!-- QR Code Styling Library -->
     <script

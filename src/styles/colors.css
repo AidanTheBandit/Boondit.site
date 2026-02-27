@@ -1,27 +1,38 @@
 /* Color configuration for the site */
-/* Change these CSS custom properties to update the entire site's color scheme */
+/* High-end minimalist designer dark theme (Zinc/Geist inspired) */
 
 :root {
-  --background: hsl(250 20% 7%);
-  --card: hsl(250 20% 11%);
-  --popover: hsl(250 20% 11%);
-  --primary: hsl(250 20% 15%);
-  --secondary: hsl(250 20% 20%);
-  --muted: hsl(250 20% 20%);
-  --accent: hsl(265 80% 65%);
-  --destructive: hsl(0 80% 55%);
-  --foreground: hsl(250 10% 98%);
-  --card-foreground: hsl(250 10% 98%);
-  --popover-foreground: hsl(250 10% 98%);
-  --primary-foreground: hsl(250 10% 98%);
-  --secondary-foreground: hsl(250 10% 98%);
-  --muted-foreground: hsl(250 10% 70%);
-  --accent-foreground: hsl(250 10% 98%);
+  --background: hsl(0 0% 2%);
+  --foreground: hsl(0 0% 98%);
+  
+  --card: hsl(0 0% 4%);
+  --card-foreground: hsl(0 0% 98%);
+  
+  --popover: hsl(0 0% 5%);
+  --popover-foreground: hsl(0 0% 98%);
+  
+  --primary: hsl(0 0% 98%);
+  --primary-foreground: hsl(0 0% 9%);
+  
+  --secondary: hsl(0 0% 9%);
+  --secondary-foreground: hsl(0 0% 98%);
+  
+  --muted: hsl(0 0% 12%);
+  --muted-foreground: hsl(0 0% 64%);
+  
+  --accent: hsl(0 0% 12%);
+  --accent-foreground: hsl(0 0% 98%);
+  
+  --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(250 20% 20%);
-  --input: hsl(250 20% 20%);
-  --ring: hsl(265 80% 65%);
+  
+  --border: hsl(0 0% 15%);
+  --input: hsl(0 0% 15%);
+  --ring: hsl(0 0% 83%);
+  
+  --radius: 0.5rem;
 }
+
 
 /* Alternative themes - uncomment one to switch themes */
 
