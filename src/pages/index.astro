@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
 import Hero from "@/components/Hero.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
+import Breadcrumb from "@/components/Breadcrumb";
 import Section from "@/components/Section.astro";
-import BlogPostCard from "@/components/BlogPostCard.astro";
-import ProjectCard from "@/components/ProjectCard.astro";
+import BlogPostCard from "@/components/BlogPostCard";
+import ProjectCard from "@/components/ProjectCard";
 import Layout from "@/layouts/Layout.astro";
 import { KNOWN_TECH, ABOUT_ME } from "@/consts";
 const posts = (await getCollection("blog")).sort(
@@ -56,7 +56,7 @@ const projects = allProjects.slice(0, 4);
     <div class="w-full text-center mt-12 mb-6 reveal">
       <a
         href="/projects"
-        class="inline-flex items-center justify-center px-6 py-3 border border-accent/30 text-base font-medium rounded-full text-accent hover:bg-accent hover:text-white transition-all duration-300 hover:scale-105"
+        class="inline-flex items-center justify-center px-8 py-3 border border-border bg-background text-sm uppercase tracking-widest font-medium text-foreground hover:bg-foreground hover:text-background transition-all duration-300"
       >
         View all projects →
       </a>
@@ -78,7 +78,7 @@ const projects = allProjects.slice(0, 4);
   <Section title="About Me" className="reveal">
     <div class="w-full grid place-items-center mb-20">
       <div
-        class="max-w-3xl text-lg md:text-xl lg:text-2xl opacity-80 text-center justify-evenly px-4 leading-relaxed reveal"
+        class="max-w-3xl text-base md:text-lg lg:text-xl text-muted-foreground text-center justify-evenly px-4 leading-relaxed font-light reveal"
       >
         <p>{ABOUT_ME}</p>
       </div>

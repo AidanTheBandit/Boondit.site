@@ -1,22 +1,38 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseHead from "@/components/BaseHead.astro";
-import Navbar from "@/components/Navbar.astro";
-import Footer from "@/components/Footer.astro";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 
 const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 ---
 
-<html lang="en" class="!overflow-x-hidden">
+<html lang="en" class="dark !overflow-x-hidden">
   <head>
     <BaseHead title={title} description={description} />
+    <script is:inline>
+      // Early theme initialization to prevent flash of wrong theme
+      const getThemePreference = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      };
+      
+      const theme = getThemePreference();
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
   </head>
 
   <body class="bg-background text-foreground tracking-wide !overflow-x-hidden">
-    <header class="fixed top-0 w-screen z-[9999]"><Navbar /></header>
+    <header class="fixed top-0 w-screen z-[9999]"><Navbar client:load currentPath={Astro.url.pathname} /></header>
     <main class="pt-20 md:pt-24 lg:pt-20"><slot /></main>
-    <footer class="w-screen bottom-0 overflow-x-hidden"><Footer /></footer>
+    <footer class="w-screen bottom-0 overflow-x-hidden"><Footer client:load /></footer>
 
     <!-- QR Code Styling Library -->
     <script
@@ -26,6 +42,26 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
     ></script>
 
     <script is:inline>
+      // Apply theme on initial load and handle Astro view transitions
+      function applyTheme() {
+        const getThemePreference = () => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        };
+        
+        const theme = getThemePreference();
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      }
+
+      // Initial application
+      applyTheme();
+
       // Scroll Reveal Observer
       function initScrollReveal() {
         const observerOptions = {
@@ -49,8 +85,15 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
       }
 
       // Initialize on load and after Astro swaps
-      document.addEventListener('DOMContentLoaded', initScrollReveal);
-      document.addEventListener('astro:page-load', initScrollReveal);
+      document.addEventListener('DOMContentLoaded', () => {
+        initScrollReveal();
+      });
+      document.addEventListener('astro:after-swap', () => {
+        applyTheme();
+      });
+      document.addEventListener('astro:page-load', () => {
+        initScrollReveal();
+      });
     </script>
   </body>
 </html>

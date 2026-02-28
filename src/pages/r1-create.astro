@@ -4,240 +4,111 @@ import Section from "@/components/Section.astro";
 ---
 
 <Layout title="R1 Create SDK - Boondit">
-  <Section title="R1 Create SDK" className="min-h-screen">
-    <div class="max-w-4xl mx-auto p-6">
-      <div class="prose prose-invert prose-lg max-w-none">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 relative">
+    <Section title="R1 Create SDK" description="Unofficial community JavaScript/TypeScript SDK for building R1 plugins">
+      
+      <div class="prose prose-zinc dark:prose-invert max-w-none 
+        prose-headings:font-bold prose-headings:tracking-tight
+        prose-h2:border-b prose-h2:border-border/30 prose-h2:pb-2 prose-h2:text-2xl mt-8
+        prose-h3:text-xl prose-p:font-medium prose-p:leading-relaxed prose-p:text-muted-foreground 
+        prose-a:text-primary prose-a:font-semibold hover:prose-a:text-accent
+        prose-strong:text-foreground
+        prose-code:text-primary prose-code:bg-primary/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:font-semibold
+        prose-pre:bg-card/50 prose-pre:border prose-pre:border-border/50 prose-pre:rounded-xl">
         
-        <div class="bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/20 rounded-xl p-6 mb-8 text-center backdrop-blur-sm">
-            <h2 class="text-2xl font-bold text-orange-200 m-0 mb-2">r1-create</h2>
-            <p class="text-orange-100/80 m-0">
-                Unofficial community JavaScript/TypeScript SDK for building R1/RabbitOS plugins with full hardware access, AI integration, and mobile optimization.
-            </p>
-            <div class="mt-4">
-                 <a href="https://www.npmjs.com/package/r1-create" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-md transition-colors no-underline font-semibold text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4-3.5L18 6Z"/><path d="M12 13v9"/><path d="M12 2v4"/></svg>
+        <div class="bg-card/50 border border-border/50 rounded-2xl p-8 mb-12 text-center shadow-lg relative overflow-hidden group">
+          <div class="absolute top-0 left-0 w-full h-1 flex opacity-50 group-hover:opacity-100 transition-opacity">
+            <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+            <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+            <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+          </div>
+          <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          
+          <h2 class="text-3xl font-bold text-foreground m-0 mb-4 border-none pt-2">r1-create</h2>
+          <p class="text-muted-foreground m-0 max-w-2xl mx-auto text-lg leading-relaxed">
+              Unofficial community JavaScript/TypeScript SDK for building R1/RabbitOS plugins with full hardware access, AI integration, and mobile optimization.
+          </p>
+          <div class="mt-8">
+                <a href="https://www.npmjs.com/package/r1-create" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all shadow-md hover:shadow-lg hover:-translate-y-1 no-underline font-bold text-sm tracking-wide">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4-3.5L18 6Z"/><path d="M12 13v9"/><path d="M12 2v4"/></svg>
                     View on NPM
-                </a>
-            </div>
+              </a>
+          </div>
         </div>
 
-        <h3>Features</h3>
-        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <li>🔧 <strong>Hardware Access</strong>: Accelerometer, touch simulation, PTT button, scroll wheel</li>
-            <li>💾 <strong>Storage</strong>: Secure and plain storage with automatic Base64 encoding</li>
-            <li>🤖 <strong>LLM Integration</strong>: Direct interaction with R1's AI system + text-to-speech</li>
-            <li>🌐 <strong>Web Search</strong>: SERP API integration for real-time information</li>
-            <li>📱 <strong>Optimized UI</strong>: Purpose-built for 240x282px display with hardware acceleration</li>
-            <li>🎨 <strong>UI Design System</strong>: Responsive components and design utilities</li>
-            <li>🎥 <strong>Media APIs</strong>: Camera, microphone, speaker with web standard compatibility</li>
-            <li>🎮 <strong>Device Controls</strong>: Convenient hardware event management</li>
-            <li>⚡ <strong>Performance</strong>: Minimal DOM operations, hardware-accelerated CSS</li>
-            <li>📦 <strong>TypeScript</strong>: Full type definitions and IntelliSense support</li>
+        <h3 class="flex items-center gap-3">
+          <div class="w-8 h-1 rounded-full bg-[hsl(var(--color-pink))]"></div>
+          Features
+        </h3>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm not-prose list-none p-0 mt-6 mb-12">
+            <li class="bg-card/30 border border-border/40 rounded-xl p-4 flex items-start gap-3 hover:bg-card/60 transition-colors">
+              <span class="text-xl">🔧</span> 
+              <div><strong class="block text-foreground mb-1">Hardware Access</strong> <span class="text-muted-foreground leading-snug">Accelerometer, touch simulation, PTT button, scroll wheel</span></div>
+            </li>
+            <li class="bg-card/30 border border-border/40 rounded-xl p-4 flex items-start gap-3 hover:bg-card/60 transition-colors">
+              <span class="text-xl">💾</span> 
+              <div><strong class="block text-foreground mb-1">Storage</strong> <span class="text-muted-foreground leading-snug">Secure and plain storage with automatic Base64 encoding</span></div>
+            </li>
+            <li class="bg-card/30 border border-border/40 rounded-xl p-4 flex items-start gap-3 hover:bg-card/60 transition-colors">
+              <span class="text-xl">🤖</span> 
+              <div><strong class="block text-foreground mb-1">LLM Integration</strong> <span class="text-muted-foreground leading-snug">Direct interaction with R1's AI system + text-to-speech</span></div>
+            </li>
+            <li class="bg-card/30 border border-border/40 rounded-xl p-4 flex items-start gap-3 hover:bg-card/60 transition-colors">
+              <span class="text-xl">🌐</span> 
+              <div><strong class="block text-foreground mb-1">Web Search</strong> <span class="text-muted-foreground leading-snug">SERP API integration for real-time information</span></div>
+            </li>
+            <li class="bg-card/30 border border-border/40 rounded-xl p-4 flex items-start gap-3 hover:bg-card/60 transition-colors">
+              <span class="text-xl">📱</span> 
+              <div><strong class="block text-foreground mb-1">Optimized UI</strong> <span class="text-muted-foreground leading-snug">Purpose-built for 240x282px display with hardware acceleration</span></div>
+            </li>
         </ul>
 
-        <hr class="border-white/10 my-8"/>
+        <h3 class="flex items-center gap-3">
+          <div class="w-8 h-1 rounded-full bg-[hsl(var(--color-purple))]"></div>
+          Installation
+        </h3>
+        <pre class="relative group"><code>npm install r1-create</code>
+        <div class="absolute top-3 right-3 text-xs font-mono text-muted-foreground/50 border border-border/30 px-2 py-1 rounded bg-background/50">bash</div>
+        </pre>
 
-        <h3>Installation</h3>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code>npm install r1-create</code></pre>
+        <h3 class="flex items-center gap-3 mt-12">
+          <div class="w-8 h-1 rounded-full bg-[hsl(var(--color-gray))]"></div>
+          Basic Usage
+        </h3>
+        <p>Initialize the SDK and interact with the RabbitOS environment.</p>
+        <pre class="relative"><code>import &#123; R1Create &#125; from 'r1-create';
 
-        <h3>Quick Start</h3>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">import &#123; r1, createR1App, deviceControls, ui &#125; from 'r1-create';
-
-// Simple setup
-createR1App(async (sdk) => &#123;
-  console.log('R1 App initialized!');
-  
-  // Setup UI
-  ui.setupViewport();
-  
-  // Setup device controls
-  deviceControls.init();
-  deviceControls.on('sideButton', () => &#123;
-    console.log('Side button clicked!');
-  &#125;);
-  
-  // Text-to-speech
-  await sdk.messaging.speakText('Hello from R1!');
-  
-  // Ask the LLM something
-  await sdk.llm.askLLMSpeak('Hello, how are you today?');
-&#125;);</code></pre>
-
-        <h3>Core APIs</h3>
-        
-        <h4>Hardware</h4>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">// Accelerometer
-await r1.accelerometer.start((data) => &#123;
-  console.log(`Tilt: x=$&#123;data.x&#125;, y=$&#123;data.y&#125;, z=$&#123;data.z&#125;`);
+await R1Create.init(&#123;
+    verbose: true,
+    logger: console.log
 &#125;);
 
-// Touch simulation
-r1.touch.tap(120, 141); // Center of screen
+// Use LLM
+const response = await R1Create.AI.prompt("What is the meaning of life?", &#123; voice: true &#125;);
 
-// Hardware buttons
-r1.hardware.on('sideClick', () => console.log('PTT clicked'));
-r1.hardware.on('scrollUp', () => console.log('Scroll up'));</code></pre>
+// Listen to hardware buttons
+R1Create.Hardware.on('ptt_down', () => &#123;
+    console.log("Button pressed!");
+&#125;);</code>
+<div class="absolute top-3 right-3 text-xs font-mono text-muted-foreground/50 border border-border/30 px-2 py-1 rounded bg-background/50">ts</div>
+</pre>
 
-        <h4>Storage</h4>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">// Store user preferences (automatically Base64 encoded)
-await r1.storage.plain.setItem('theme', &#123; dark: true, color: 'blue' &#125;);
-const theme = await r1.storage.plain.getItem('theme');
+        <h3 class="flex items-center gap-3 mt-12">
+          <div class="w-8 h-1 rounded-full bg-[hsl(var(--color-pink))]"></div>
+          Deploying Your Creation
+        </h3>
+        <p>
+            Once you have built your standalone web app using the hardware SDK, you can generate deployment metadata to load it onto your device seamlessly or submit it to the Boondit Store.
+        </p>
+        <div class="mt-8 text-center bg-card/30 p-8 rounded-2xl border border-border/50">
+            <a href="/r1-generator" class="inline-flex items-center gap-2 px-6 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl transition-all shadow-sm hover:shadow font-bold text-sm tracking-wide no-underline group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:rotate-12 transition-transform"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Open Payload Generator
+            </a>
+            <p class="text-sm text-muted-foreground mt-4 mb-0">Generate your r1 metadata payload to share or sideload locally via QR Code.</p>
+        </div>
 
-// Secure storage for sensitive data
-await r1.storage.secure.setItem('api_key', 'secret123');
-const apiKey = await r1.storage.secure.getItem('api_key', false); // Get as string</code></pre>
-
-        <h4>LLM Integration</h4>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">// Send message to LLM
-await r1.messaging.sendMessage('What time is it?', &#123; useLLM: true &#125;);
-
-// Ask LLM to speak response
-await r1.llm.askLLMSpeak('Tell me a joke', true); // Save to journal
-
-// Direct text-to-speech (no LLM processing)
-await r1.messaging.speakText('Hello world!');
-await r1.llm.textToSpeech('This will be spoken directly');
-
-// Web search with SERP API
-await r1.messaging.searchWeb('current weather in Tokyo');
-
-// Send message with plugin ID and image
-await r1.messaging.sendMessage('Analyze this image', &#123;
-  useLLM: true,
-  pluginId: 'image-analyzer',
-  imageBase64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
-&#125;);
-
-// Get structured JSON response
-await r1.llm.askLLMJSON('List 3 facts about rabbits in JSON format');
-
-// Handle responses
-r1.messaging.onMessage((response) => &#123;
-  if (response.parsedData) &#123;
-    console.log('Parsed response:', response.parsedData);
-  &#125;
-&#125;);</code></pre>
-
-        <h4>Media APIs</h4>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">// Camera
-const stream = await r1.camera.start(&#123; facingMode: 'user' &#125;);
-const videoElement = r1.camera.createVideoElement();
-document.body.appendChild(videoElement);
-
-// Capture photo
-const photo = r1.camera.capturePhoto(240, 282);
-
-// Microphone
-await r1.microphone.startRecording();
-const audioBlob = await r1.microphone.stopRecording();
-
-// Speaker
-await r1.speaker.play(audioBlob);
-await r1.speaker.playTone(440, 1000); // A note for 1 second</code></pre>
-
-        <h3>UI Utilities</h3>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">import &#123; LayoutUtils, CSSUtils, R1_DIMENSIONS &#125; from 'r1-create';
-
-// Create R1-optimized container
-const container = document.createElement('div');
-LayoutUtils.applyR1Container(container);
-
-// Hardware-accelerated animations
-CSSUtils.setTransform(element, 'translateX(10px)');
-CSSUtils.addTransition(element, 'transform', 300);
-
-// Screen dimensions
-console.log(`Screen: $&#123;R1_DIMENSIONS.width&#125;x$&#123;R1_DIMENSIONS.height&#125;px`);</code></pre>
-
-        <h3>UI Design System</h3>
-         <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">import &#123; ui &#125; from 'r1-create';
-
-// Setup viewport for proper scaling
-ui.setupViewport();
-
-// Create responsive button
-const button = document.createElement('button');
-ui.createButton(button, &#123; type: 'wide', background: '#FE5F00' &#125;);
-button.textContent = 'Press Me';
-
-// Create responsive text
-const title = document.createElement('h1');
-ui.createText(title, &#123; size: 'title', color: '#FFFFFF' &#125;);
-title.textContent = 'Welcome';
-
-// Create grid layout
-const grid = document.createElement('div');
-ui.createGrid(grid, &#123; columns: 2, gap: ui.getSpacing().md &#125;);
-
-// Get design tokens
-const colors = ui.getColors();
-const fonts = ui.getFontSizes();
-const spacing = ui.getSpacing();
-
-// Convert pixels to viewport units
-const vwValue = ui.pxToVw(30); // "12.5vw"</code></pre>
-
-        <h3>Device Controls</h3>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">import &#123; deviceControls &#125; from 'r1-create';
-
-// Initialize with options
-deviceControls.init(&#123;
-  sideButtonEnabled: true,
-  scrollWheelEnabled: true,
-  keyboardFallback: true // Space bar simulates side button
-&#125;);
-
-// Register event handlers
-deviceControls.on('sideButton', (event) => &#123;
-  console.log('Side button pressed');
-&#125;);
-
-deviceControls.on('scrollWheel', (data) => &#123;
-  console.log('Scrolled', data.direction); // 'up' or 'down'
-&#125;);
-
-// Control enable/disable
-deviceControls.setSideButtonEnabled(false);
-deviceControls.setScrollWheelEnabled(true);
-
-// Programmatic triggering (for testing)
-deviceControls.triggerSideButton();</code></pre>
-
-        <h3>Advanced Usage</h3>
-        <h4>Custom Plugin Class</h4>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">import &#123; R1Plugin &#125; from 'r1-create';
-
-const plugin = new R1Plugin(&#123;
-  onMount: () => console.log('Plugin mounted'),
-  onMessage: (data) => console.log('Received:', data),
-  onHardwareEvent: (event) => console.log('Hardware event:', event)
-&#125;);
-
-plugin.mount();</code></pre>
-
-        <h4>Performance Monitoring</h4>
-        <pre class="bg-black/50 p-4 rounded-lg border border-white/10"><code class="language-typescript">import &#123; PerformanceUtils &#125; from 'r1-create';
-
-// Measure performance
-PerformanceUtils.startMeasure('animation');
-// ... do animation work
-PerformanceUtils.endMeasure('animation');
-
-// Monitor frame rate
-PerformanceUtils.monitorFPS(5, (fps) => &#123;
-  console.log(`Average FPS: $&#123;fps&#125;`);
-&#125;);</code></pre>
-
-        <h3>Best Practices</h3>
-        <ul class="text-sm">
-            <li><strong>Optimize for Mobile</strong>: Use hardware-accelerated CSS properties (transform, opacity)</li>
-            <li><strong>Minimize DOM Operations</strong>: Use <code>DOMUtils.batchOperations()</code> for multiple changes</li>
-            <li><strong>Handle Storage Errors</strong>: Always check if storage is available before use</li>
-            <li><strong>Audio Context</strong>: Initialize audio on user interaction for browser compatibility</li>
-            <li><strong>Memory Management</strong>: Clean up event listeners and media streams</li>
-        </ul>
-        
       </div>
-    </div>
-  </Section>
+    </Section>
+  </div>
 </Layout>

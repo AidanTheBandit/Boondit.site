@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import BlogPostCard from "@/components/BlogPostCard.astro";
+import BlogPostCard from "@/components/BlogPostCard";
 import Section from "@/components/Section.astro";
 import Layout from "@/layouts/Layout.astro";
 
@@ -9,19 +9,23 @@ const posts = (await getCollection("blog")).sort(
 );
 ---
 
-<Layout title="My Own Blog Posts">
-  <Section title="My Blog Posts">
-    <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-      {
-        posts.map((post) => (
-          <BlogPostCard
-            slug={post.id}
-            title={post.data.title}
-            excerpt={post.data.description}
-            date={post.data.pubDate}
-          />
-        ))
-      }
-    </div>
-  </Section>
+<Layout title="SYSTEM_LOGS">
+  <div class="mt-24 md:mt-32">
+    <Section title="SYSTEM_LOGS">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {
+          posts.map((post) => (
+            <div class="h-full transform hover:-translate-y-2 transition-transform duration-300">
+              <BlogPostCard
+                slug={post.id}
+                title={post.data.title}
+                excerpt={post.data.description}
+                date={post.data.pubDate}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </Section>
+  </div>
 </Layout>

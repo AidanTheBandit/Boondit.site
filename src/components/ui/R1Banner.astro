@@ -1,0 +1,56 @@
+---
+interface Props {
+  type?: 'info' | 'warning' | 'error' | 'success';
+  className?: string;
+  icon?: string;
+}
+
+const { type = 'info', className = "", icon } = Astro.props;
+
+const config = {
+  info: {
+    accent: 'bg-[hsl(var(--color-pink))]',
+    border: 'border-border/50',
+    text: 'text-muted-foreground',
+    iconColor: 'text-[hsl(var(--color-pink))]',
+    defaultIcon: '❯',
+    glow: 'shadow-[hsl(var(--color-pink))/0.1]'
+  },
+  warning: {
+    accent: 'bg-yellow-500',
+    border: 'border-yellow-500/20',
+    text: 'text-muted-foreground',
+    iconColor: 'text-yellow-500',
+    defaultIcon: '⚠',
+    glow: 'shadow-yellow-500/10'
+  },
+  error: {
+    accent: 'bg-red-500',
+    border: 'border-red-500/20',
+    text: 'text-muted-foreground',
+    iconColor: 'text-red-500',
+    defaultIcon: '⚠',
+    glow: 'shadow-red-500/10'
+  },
+  success: {
+    accent: 'bg-green-500',
+    border: 'border-green-500/20',
+    text: 'text-muted-foreground',
+    iconColor: 'text-green-500',
+    defaultIcon: '✓',
+    glow: 'shadow-green-500/10'
+  }
+};
+
+const style = config[type];
+---
+
+<div class={`mt-8 mx-auto max-w-3xl relative group ${className}`}>
+  <div class={`relative bg-card/80 backdrop-blur-sm border ${style.border} rounded-2xl p-4 shadow-sm group-hover:${style.glow} transition-all flex items-center justify-center gap-3 overflow-hidden`}>
+      <div class={`absolute left-0 top-0 bottom-0 w-1 ${style.accent}`}></div>
+      <span class={`${style.iconColor} font-mono font-bold ml-1`}>{icon || style.defaultIcon}</span>
+      <div class={`${style.text} font-mono text-xs uppercase tracking-wide`}>
+        <slot />
+      </div>
+  </div>
+</div>
