@@ -2,7 +2,6 @@
 import Layout from "@/layouts/Layout.astro";
 import Section from "@/components/Section.astro";
 import R1Card from "@/components/ui/R1Card.astro";
-import R1Header from "@/components/ui/R1Header.astro";
 import R1Banner from "@/components/ui/R1Banner.astro";
 ---
 
@@ -19,14 +18,14 @@ import R1Banner from "@/components/ui/R1Banner.astro";
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <!-- Form Section -->
           <div class="lg:col-span-7">
-            <R1Card title="Metadata Payload" accent="pink">
+            <R1Card title="Metadata Details" accent="pink">
               <form id="creation-form" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <!-- Title -->
                   <div>
                     <label for="title" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>TITLE</span>
-                      <span class="text-[hsl(var(--color-pink))]">[REQ]</span>
+                      <span>Plugin Name</span>
+                      <span class="text-[hsl(var(--color-pink))]">Required</span>
                     </label>
                     <input type="text" id="title" name="title" required value="Barkle" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2.5 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm" placeholder="Barkle" />
                   </div>
@@ -34,8 +33,8 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                   <!-- Theme Color -->
                   <div>
                     <label for="themeColor" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>THEME_COLOR</span>
-                      <span class="text-[hsl(var(--color-pink))]">[REQ]</span>
+                      <span>Theme Color</span>
+                      <span class="text-[hsl(var(--color-pink))]">Required</span>
                     </label>
                     <div class="flex gap-2">
                       <div class="relative w-10 h-10 rounded-lg overflow-hidden border border-border/60 shrink-0 shadow-sm cursor-pointer">
@@ -49,8 +48,8 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                 <!-- URL -->
                 <div>
                   <label for="url" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                    <span>WEB_URL</span>
-                    <span class="text-[hsl(var(--color-pink))]">[REQ]</span>
+                    <span>Website URL</span>
+                    <span class="text-[hsl(var(--color-pink))]">Required</span>
                   </label>
                   <input type="url" id="url" name="url" required value="https://barkle.chat" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2.5 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm" placeholder="https://barkle.chat" />
                 </div>
@@ -58,8 +57,8 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                 <!-- Description -->
                 <div>
                   <label for="description" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                    <span>DESCRIPTION</span>
-                    <span class="text-[hsl(var(--color-pink))]">[REQ]</span>
+                    <span>Description</span>
+                    <span class="text-[hsl(var(--color-pink))]">Required</span>
                   </label>
                   <textarea id="description" name="description" required rows="2" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2.5 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none resize-none font-mono text-xs" placeholder="Describe your creation...">A community plugin for Rabbit R1.</textarea>
                 </div>
@@ -67,15 +66,15 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label for="author" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>AUTHOR</span>
-                      <span class="text-muted-foreground">[OPT]</span>
+                      <span>Author</span>
+                      <span class="text-muted-foreground">Optional</span>
                     </label>
                     <input type="text" id="author" name="author" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-purple))]/20 focus:border-[hsl(var(--color-purple))] transition-all outline-none font-mono text-xs" placeholder="@username" />
                   </div>
                   <div>
                     <label for="iconUrl" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>ICON_URL</span>
-                      <span class="text-muted-foreground">[OPT]</span>
+                      <span>Icon URL</span>
+                      <span class="text-muted-foreground">Optional</span>
                     </label>
                     <input type="url" id="iconUrl" name="iconUrl" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-purple))]/20 focus:border-[hsl(var(--color-purple))] transition-all outline-none font-mono text-xs" placeholder="https://..." />
                   </div>
@@ -84,9 +83,9 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                 <!-- Output Box -->
                 <div class="mt-8 pt-6 border-t border-border/30">
                   <div class="flex justify-between items-center mb-3">
-                    <label class="block text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-[0.2em]">OUTPUT.JSON</label>
+                    <label class="block text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-[0.2em]">Generated Data</label>
                     <button type="button" id="copy-btn" class="text-[10px] px-3 py-1.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-md font-mono transition-colors border border-border/50 shadow-sm flex items-center gap-2 uppercase tracking-widest">
-                      <span>[ COPY ]</span>
+                      <span>Copy JSON</span>
                     </button>
                   </div>
                   <div class="relative bg-slate-950 border border-border/60 rounded-xl overflow-hidden group p-1">
@@ -99,10 +98,10 @@ import R1Banner from "@/components/ui/R1Banner.astro";
 
           <!-- Preview & Actions -->
           <div class="lg:col-span-5 space-y-8">
-            <R1Card title="Scan To Deploy" accent="purple">
+            <R1Card title="Scan to Install" accent="purple">
               <div class="flex flex-col items-center justify-center p-6 bg-background/50 rounded-2xl border border-border/40 relative overflow-hidden mb-6" style="background-image: radial-gradient(circle at 2px 2px, rgba(150,150,150,0.05) 1px, transparent 0); background-size: 20px 20px;">
                 <div id="qr-code" class="bg-white p-4 rounded-xl shadow-sm mb-4 flex items-center justify-center min-w-[200px] min-h-[200px] relative z-10 border border-border/20">
-                  <p class="text-gray-400 text-[10px] font-mono p-4 text-center">AWAITING_INPUT<span class="animate-pulse">_</span></p>
+                  <p class="text-gray-400 text-[10px] font-mono p-4 text-center">Waiting for details<span class="animate-pulse">_</span></p>
                 </div>
                 <div class="qr-footer text-[10px] text-muted-foreground mt-2 text-center uppercase tracking-widest"> 
                   <span id="qr-watermark">UNTITLED | BOONDIT.SITE</span>
@@ -116,23 +115,26 @@ import R1Banner from "@/components/ui/R1Banner.astro";
               
               <div class="grid grid-cols-2 gap-3">
                  <button id="download-btn" class="py-2.5 bg-secondary/50 hover:bg-secondary text-foreground rounded-xl font-mono text-[10px] tracking-widest transition-all border border-border/50 uppercase disabled:opacity-30" disabled>
-                    JSON
+                    Save JSON
                   </button>
                   <button id="download-qr-btn" class="py-2.5 bg-secondary/50 hover:bg-secondary text-foreground rounded-xl font-mono text-[10px] tracking-widest transition-all border border-border/50 uppercase disabled:opacity-30" disabled>
-                    QR_IMG
+                    Save Image
+                  </button>
+                  <button id="expand-qr-btn" class="py-2.5 bg-background hover:bg-secondary/30 text-foreground rounded-xl w-full border border-border/50 font-mono text-[10px] tracking-widest transition-all uppercase flex justify-center items-center gap-2 hidden">
+                    Fullscreen
                   </button>
                   <div class="relative col-span-2">
                     <input type="file" id="import-file" accept=".json" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10" />
                     <button type="button" class="py-2.5 bg-background/50 hover:bg-secondary/30 text-foreground rounded-xl w-full border border-border/50 font-mono text-[10px] tracking-widest transition-all uppercase flex justify-center items-center gap-2">
-                      IMPORT_JSON
+                      Import File
                     </button>
                   </div>
               </div>
             </R1Card>
 
-            <R1Card title="Instructions" accent="gray" corners="none" className="opacity-80">
+            <R1Card title="Quick Guide" accent="gray" corners="none" className="opacity-80">
               <ul class="space-y-3 font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                <li class="flex gap-3"><span class="text-[hsl(var(--color-pink))]">01</span> Fill in the metadata payload</li>
+                <li class="flex gap-3"><span class="text-[hsl(var(--color-pink))]">01</span> Fill in the plugin details</li>
                 <li class="flex gap-3"><span class="text-[hsl(var(--color-pink))]">02</span> Scan the QR with Rabbit R1 camera</li>
                 <li class="flex gap-3"><span class="text-[hsl(var(--color-pink))]">03</span> Deploy and test your creation</li>
               </ul>
@@ -141,6 +143,16 @@ import R1Banner from "@/components/ui/R1Banner.astro";
         </div>
       </div>
     </Section>
+  </div>
+
+  <div id="qrModal" class="fixed inset-0 z-[10000] bg-black/95 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="relative w-full max-w-2xl flex flex-col items-center">
+          <button id="closeModalBtn" class="absolute -top-16 right-0 text-white hover:text-[hsl(var(--color-pink))] transition-colors p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+          <div id="modalQrContainer" class="bg-white p-10 rounded-2xl shadow-2xl border-4 border-[hsl(var(--color-pink))]/20"></div>
+          <p class="text-[hsl(var(--color-pink))] mt-8 text-center font-mono font-bold uppercase tracking-widest animate-pulse">Scan with Rabbit R1</p>
+      </div>
   </div>
 </Layout>
 
@@ -167,6 +179,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
     const qrContainer = document.getElementById("qr-code");
     const downloadBtn = document.getElementById("download-btn");
     const downloadQrBtn = document.getElementById("download-qr-btn");
+    const expandBtn = document.getElementById("expand-qr-btn");
     const importFile = document.getElementById("import-file");
     const copyBtn = document.getElementById("copy-btn");
     
@@ -176,12 +189,50 @@ import R1Banner from "@/components/ui/R1Banner.astro";
     const themeColorText = document.getElementById("themeColor");
     const themeColorPicker = document.getElementById("themeColorPicker");
 
+    const modal = document.getElementById('qrModal');
+    const modalQrContainer = document.getElementById('modalQrContainer');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
     if (typeof QRCodeStyling === 'undefined') {
       setTimeout(initGenerator, 200);
       return;
     }
 
     if (!form || !jsonOutput || !qrContainer) return;
+
+    // Modal Logic
+    const openModal = () => {
+        if (!jsonOutput.value || !modal || !modalQrContainer) return;
+        const themeColor = themeColorText.value || "#000000";
+        
+        modalQrContainer.innerHTML = '';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        const modalQrCode = new QRCodeStyling({
+            width: 500,
+            height: 500,
+            data: jsonOutput.value,
+            dotsOptions: { color: themeColor, type: "rounded" },
+            backgroundOptions: { color: "#ffffff" },
+        });
+        modalQrCode.append(modalQrContainer);
+    };
+
+    const closeModal = () => {
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    };
+
+    expandBtn?.addEventListener('click', openModal);
+    closeModalBtn?.addEventListener('click', closeModal);
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal?.classList.contains('hidden')) closeModal();
+    });
 
     themeColorPicker.addEventListener('input', (e) => {
       themeColorText.value = e.target.value.toUpperCase();
@@ -225,18 +276,21 @@ import R1Banner from "@/components/ui/R1Banner.astro";
       if (urlValue && title && themeColor && description) {
         downloadBtn.disabled = false;
         if (downloadQrBtn) downloadQrBtn.disabled = false;
+        if (expandBtn) expandBtn.classList.remove('hidden');
         generateQR(jsonStr);
         const watermark = document.getElementById('qr-watermark');
         if (watermark) watermark.textContent = `${title.toUpperCase() || 'UNTITLED'} | BOONDIT.SITE`;
       } else {
         downloadBtn.disabled = true;
         if (downloadQrBtn) downloadQrBtn.disabled = true;
-        qrContainer.innerHTML = '<p class="text-muted-foreground text-[10px] font-mono p-4 text-center uppercase">AWAITING_INPUT<span class="animate-pulse">_</span></p>';
+        if (expandBtn) expandBtn.classList.add('hidden');
+        qrContainer.innerHTML = '<p class="text-muted-foreground text-[10px] font-mono p-4 text-center uppercase">Waiting for details<span class="animate-pulse">_</span></p>';
       }
     }
 
     let generatedDataUrl = null;
     async function buildWatermarkedQR(dataStr) {
+      const themeColor = (document.getElementById('themeColor')?.value || '#000000').toUpperCase();
       const canvas = document.createElement('canvas');
       canvas.width = 340;
       canvas.height = 380;
@@ -251,7 +305,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
           data: dataStr,
           margin: 10,
           qrOptions: { errorCorrectionLevel: 'H' },
-          dotsOptions: { color: '#000000', type: 'rounded' },
+          dotsOptions: { color: themeColor, type: "rounded" },
           backgroundOptions: { color: '#ffffff' },
         });
 
@@ -282,7 +336,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
       jsonOutput.select();
       document.execCommand("copy");
       const old = copyBtn.innerHTML;
-      copyBtn.innerHTML = "<span>[ COPIED! ]</span>";
+      copyBtn.innerHTML = "<span>JSON Copied!</span>";
       setTimeout(() => copyBtn.innerHTML = old, 2000);
     });
 

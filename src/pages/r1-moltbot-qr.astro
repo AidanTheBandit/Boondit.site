@@ -2,7 +2,6 @@
 import Layout from "@/layouts/Layout.astro";
 import Section from "@/components/Section.astro";
 import R1Card from "@/components/ui/R1Card.astro";
-import R1Header from "@/components/ui/R1Header.astro";
 import R1Banner from "@/components/ui/R1Banner.astro";
 ---
 
@@ -21,8 +20,8 @@ import R1Banner from "@/components/ui/R1Banner.astro";
               <form id="moltbotForm" class="space-y-6">
                 <div>
                   <label for="ips" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                    <span>IP_ADDRESSES</span>
-                    <span class="text-muted-foreground">[CSV]</span>
+                    <span>IP Addresses</span>
+                    <span class="text-muted-foreground">List</span>
                   </label>
                   <input type="text" id="ips" required value="192.168.1.100" class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-xs" placeholder="1.2.3.4, 5.6.7.8" />
                 </div>
@@ -30,15 +29,15 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                 <div class="grid grid-cols-2 gap-4">
                   <div>
                     <label for="port" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>PORT</span>
-                      <span class="text-[hsl(var(--color-pink))]">[REQ]</span>
+                      <span>Port</span>
+                      <span class="text-[hsl(var(--color-pink))]">Required</span>
                     </label>
                     <input type="number" id="port" value="18789" required class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-xs" />
                   </div>
                   <div>
                     <label for="protocol" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>PROTOCOL</span>
-                      <span class="text-[hsl(var(--color-pink))]">[REQ]</span>
+                      <span>Protocol</span>
+                      <span class="text-[hsl(var(--color-pink))]">Required</span>
                     </label>
                     <select id="protocol" class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-xs appearance-none">
                       <option value="wss">wss</option>
@@ -49,25 +48,25 @@ import R1Banner from "@/components/ui/R1Banner.astro";
 
                 <div>
                   <label for="token" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                    <span>TOKEN</span>
-                    <span class="text-[hsl(var(--color-pink))]">[REQ]</span>
+                    <span>Token</span>
+                    <span class="text-[hsl(var(--color-pink))]">Required</span>
                   </label>
                   <input type="text" id="token" required value="example-token" class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-xs" placeholder="secret-token" />
                 </div>
 
                 <button type="submit" class="w-full py-4 bg-[hsl(var(--color-pink))] hover:bg-[hsl(var(--color-pink))]/90 text-white rounded-xl font-mono text-xs font-bold tracking-[0.2em] transition-all shadow-lg shadow-[hsl(var(--color-pink))]/20 uppercase">
-                  GENERATE_QR
+                  Generate QR
                 </button>
               </form>
             </R1Card>
 
-            <R1Card title="Connection_Test" accent="purple" headerBar={false}>
+            <R1Card title="Connection Test" accent="purple" headerBar={false}>
               <div id="testLog" class="bg-slate-950 border border-border/60 rounded-xl p-4 font-mono text-[10px] h-32 overflow-y-auto mb-4 custom-scrollbar flex flex-col gap-1 uppercase">
-                  <span class="text-muted-foreground italic">READY_FOR_TEST...</span>
+                  <span class="text-muted-foreground italic">Ready for Test...</span>
               </div>
               <button id="testConnectionBtn" type="button" class="w-full py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl font-mono text-[10px] tracking-widest transition-all border border-border/50 shadow-sm flex items-center justify-center gap-2 uppercase">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <span id="testConnectionLabel">Test_Connectivity</span>
+                <span id="testConnectionLabel">Run Connectivity Test</span>
               </button>
               <p id="testConnectionNote" class="text-[9px] text-yellow-500/80 mt-2 font-mono uppercase hidden text-center">Test disabled for WS/local IPs</p>
             </R1Card>
@@ -77,7 +76,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
           <div class="lg:col-span-5 space-y-8">
             <R1Card title="Gateway QR" accent="purple">
               <div class="flex flex-col items-center justify-center p-6 bg-background/50 rounded-2xl border border-border/40 relative overflow-hidden mb-6" id="qrCodeContainer" style="background-image: radial-gradient(circle at 2px 2px, rgba(150,150,150,0.05) 1px, transparent 0); background-size: 20px 20px;">
-                <p class="text-muted-foreground text-[10px] font-mono p-4 text-center uppercase">AWAITING_CONFIG<span class="animate-pulse">_</span></p>
+                <p class="text-muted-foreground text-[10px] font-mono p-4 text-center uppercase">Awaiting details<span class="animate-pulse">_</span></p>
               </div>
               
               <div class="qr-footer text-[10px] text-muted-foreground mt-4 text-center uppercase tracking-widest border-b border-border/30 pb-4 mb-6"> 
@@ -85,16 +84,16 @@ import R1Banner from "@/components/ui/R1Banner.astro";
               </div>
 
               <div class="space-y-4">
-                <label class="block text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-[0.2em]">Payload.json</label>
+                <label class="block text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-[0.2em]">Generated JSON</label>
                 <div class="relative bg-slate-950 border border-border/60 rounded-xl overflow-hidden p-1">
                   <pre id="jsonPreview" class="w-full px-4 py-4 text-[hsl(var(--color-pink))] font-mono text-[10px] h-24 overflow-y-auto custom-scrollbar">{}</pre>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <button id="downloadQrBtn" disabled class="py-2.5 bg-secondary hover:bg-secondary/80 text-foreground rounded-xl font-mono text-[10px] tracking-widest transition-all border border-border/50 uppercase disabled:opacity-30">
-                    DL_QR
+                    Save Image
                   </button>
                   <button id="expandQrBtn" class="py-2.5 bg-background hover:bg-secondary/30 text-foreground rounded-xl border border-border/50 font-mono text-[10px] tracking-widest transition-all uppercase hidden">
-                    EXPAND
+                    Fullscreen
                   </button>
                 </div>
               </div>
@@ -113,11 +112,47 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                 </details>
                 <details class="group">
                   <summary class="flex items-center justify-between py-2 cursor-pointer select-none text-[10px] font-mono uppercase tracking-wider text-foreground hover:text-[hsl(var(--color-pink))] transition-colors">
-                    <span>WSS vs WS?</span>
+                    <span>How to setup OpenClaw?</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                   </summary>
                   <div class="pt-2 pb-4 text-[9px] font-mono text-muted-foreground uppercase leading-relaxed border-t border-border/30">
-                    WS is local only. WSS is required for remote access and security.
+                    Check out the official documentation at <a href="https://docs.molt.bot/" target="_blank" class="text-[hsl(var(--color-pink))] hover:underline">docs.molt.bot</a>
+                  </div>
+                </details>
+                <details class="group">
+                  <summary class="flex items-center justify-between py-2 cursor-pointer select-none text-[10px] font-mono uppercase tracking-wider text-foreground hover:text-[hsl(var(--color-pink))] transition-colors">
+                    <span>Is this a rabbit product?</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                  </summary>
+                  <div class="pt-2 pb-4 text-[9px] font-mono text-muted-foreground uppercase leading-relaxed border-t border-border/30">
+                    No. It is a community-driven open source project. <a href="https://github.com/moltbot/moltbot" target="_blank" class="text-[hsl(var(--color-pink))] hover:underline">View on GitHub</a>
+                  </div>
+                </details>
+                <details class="group">
+                  <summary class="flex items-center justify-between py-2 cursor-pointer select-none text-[10px] font-mono uppercase tracking-wider text-foreground hover:text-[hsl(var(--color-pink))] transition-colors">
+                    <span>Is Tailscale supported?</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                  </summary>
+                  <div class="pt-2 pb-4 text-[9px] font-mono text-muted-foreground uppercase leading-relaxed border-t border-border/30">
+                    No. Use a reverse proxy or tunneling service like cloudflared for remote access.
+                  </div>
+                </details>
+                <details class="group">
+                  <summary class="flex items-center justify-between py-2 cursor-pointer select-none text-[10px] font-mono uppercase tracking-wider text-foreground hover:text-[hsl(var(--color-pink))] transition-colors">
+                    <span>Can I share my token?</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                  </summary>
+                  <div class="pt-2 pb-4 text-[9px] font-mono text-red-400 uppercase leading-relaxed border-t border-border/30 font-bold">
+                    NEVER. Your token grants full access to your R1 device. Keep it private.
+                  </div>
+                </details>
+                <details class="group">
+                  <summary class="flex items-center justify-between py-2 cursor-pointer select-none text-[10px] font-mono uppercase tracking-wider text-foreground hover:text-[hsl(var(--color-pink))] transition-colors">
+                    <span>How to unlink my R1?</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                  </summary>
+                  <div class="pt-2 pb-4 text-[9px] font-mono text-muted-foreground uppercase leading-relaxed border-t border-border/30">
+                    Go to the Web UI > Nodes > Rabbit R1 > Revoke.
                   </div>
                 </details>
               </div>
@@ -134,7 +169,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
           <div id="modalQrContainer" class="bg-white p-10 rounded-2xl shadow-2xl border-4 border-[hsl(var(--color-pink))]/20"></div>
-          <p class="text-[hsl(var(--color-pink))] mt-8 text-center font-mono font-bold uppercase tracking-widest animate-pulse">Scan_with_Rabbit_R1</p>
+          <p class="text-[hsl(var(--color-pink))] mt-8 text-center font-mono font-bold uppercase tracking-widest animate-pulse">Scan with Rabbit R1</p>
       </div>
   </div>
 </Layout>
@@ -168,7 +203,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
         if (!testBtn) return;
         const isWs = protocolValue === 'ws';
         testBtn.disabled = isWs;
-        if (testLabel) testLabel.textContent = isWs ? 'Test Disabled (WS/local IPs)' : 'Test Connectivity';
+        if (testLabel) testLabel.textContent = isWs ? 'Test Disabled (WS/local IPs)' : 'Run Connectivity Test';
         if (testNote) testNote.classList.toggle('hidden', !isWs);
     };
 
@@ -179,7 +214,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
         modal.classList.add('flex');
         modalQrCode = new QRCodeStyling({
             width: 500, height: 500, data: currentPayload,
-            dotsOptions: { color: "#000000", type: "rounded" },
+            dotsOptions: { color: "#ec4899", type: "rounded" },
             backgroundOptions: { color: "#ffffff" },
         });
         modalQrCode.append(modalQrContainer);
@@ -223,7 +258,7 @@ import R1Banner from "@/components/ui/R1Banner.astro";
             wrapper.className = 'bg-white p-4 rounded-xl shadow-sm mb-2 flex items-center justify-center min-w-[200px] min-h-[200px] relative z-10 border border-border/20';
             qrCode = new QRCodeStyling({
                 width: 200, height: 200, data: jsonString,
-                dotsOptions: { color: "#000000", type: "rounded" },
+                dotsOptions: { color: "#ec4899", type: "rounded" },
                 backgroundOptions: { color: "#ffffff" }
             });
             qrCode.append(wrapper);
@@ -232,6 +267,14 @@ import R1Banner from "@/components/ui/R1Banner.astro";
 
         const dlBtn = document.getElementById('downloadQrBtn') as HTMLButtonElement;
         if (dlBtn) dlBtn.disabled = !(tokenInput && ips.length > 0);
+        
+        if (expandBtn) {
+            if (tokenInput && ips.length > 0) {
+                expandBtn.classList.remove('hidden');
+            } else {
+                expandBtn.classList.add('hidden');
+            }
+        }
 
         updateTestButtonState(protocolInput);
         return jsonString;
@@ -267,22 +310,22 @@ import R1Banner from "@/components/ui/R1Banner.astro";
 
     testBtn?.addEventListener('click', () => {
         if (!testLog) return;
-        testLog.innerHTML = ''; log('INITIALIZING_TEST...');
+        testLog.innerHTML = ''; log('INITIALIZING TEST...');
         const ipsInput = (document.getElementById('ips') as HTMLInputElement).value;
         const portInput = (document.getElementById('port') as HTMLInputElement).value;
         const tokenInput = (document.getElementById('token') as HTMLInputElement).value;
         const protocolInput = (document.getElementById('protocol') as HTMLSelectElement).value;
 
-        if (!tokenInput) { log('ERROR: TOKEN_REQUIRED', 'error'); return; }
+        if (!tokenInput) { log('ERROR: TOKEN REQUIRED', 'error'); return; }
         const ips = ipsInput.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0);
         const host = ips.length > 0 ? ips[0] : 'localhost';
         const port = portInput || '18789';
         const url = `${protocolInput}://${host}:${port}`;
-        log(`1. CONNECTING_TO_${url}...`);
+        log(`1. CONNECTING TO ${url}...`);
 
         let ws: WebSocket;
         let isConnected = false;
-        try { ws = new WebSocket(url); } catch (e: any) { log(`WS_FAILED: ${e.message}`, 'error'); return; }
+        try { ws = new WebSocket(url); } catch (e: any) { log(`WS FAILED: ${e.message}`, 'error'); return; }
 
         const timeout = setTimeout(() => { if (!isConnected) { log('TIMEOUT: UNREACHABLE', 'error'); ws.close(); } }, 5000);
         ws.onopen = () => {
@@ -300,10 +343,10 @@ import R1Banner from "@/components/ui/R1Banner.astro";
             clearTimeout(timeout);
             try {
                 const data = JSON.parse(event.data);
-                if (data.type === 'res' && data.ok) { log('4. AUTH_SUCCESS', 'success'); ws.close(); }
+                if (data.type === 'res' && data.ok) { log('4. AUTH SUCCESS', 'success'); ws.close(); }
                 else if (data.type === 'res' && !data.ok) { log(`FAILED: ${JSON.stringify(data.error)}`, 'error'); ws.close(); }
-            } catch (e) { log('INVALID_RESPONSE', 'error'); }
+            } catch (e) { log('INVALID RESPONSE', 'error'); }
         };
-        ws.onerror = () => { clearTimeout(timeout); if (!isConnected) log('CONNECTION_FAILED', 'error'); };
+        ws.onerror = () => { clearTimeout(timeout); if (!isConnected) log('CONNECTION FAILED', 'error'); };
     });
 </script>
