@@ -16,8 +16,8 @@ const { title = "Section", description, full_screen = false, className = "", hid
   {!hideTitle && (
     <div class="mb-10 md:mb-16 pb-4 flex flex-col md:flex-row items-start md:items-end justify-between relative">
       <div class="z-10 relative bg-background pr-6">
-        <h2 class="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-foreground uppercase">
-          {title}
+        <h2 class="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-foreground">
+          &lt;{title} /&gt;
         </h2>
         {description && (
           <p class="text-muted-foreground text-sm md:text-base font-mono uppercase tracking-widest mt-2 max-w-2xl">

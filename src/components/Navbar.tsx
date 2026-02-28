@@ -38,10 +38,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Logo */}
         <a href="/" className="flex-shrink-0 z-50 relative group">
-          <div className={`pt-2 pb-1 grid place-items-center select-none leading-none transition-all duration-300 ease-in-out text-[10px] md:text-xs font-mono tracking-[0.2em] uppercase border ${
+          <div className={`pt-4 pb-1 flex items-end select-none leading-none transition-all duration-300 ease-in-out text-[10px] md:text-xs font-mono tracking-[0.2em] border min-h-[40px] ${
             scrolled 
-              ? 'bg-background scale-100 text-foreground border-foreground px-4 hover:bg-accent hover:border-accent hover:text-accent-foreground' 
-              : 'bg-foreground scale-110 text-background border-transparent px-3 md:px-4 hover:bg-accent hover:text-accent-foreground hover:border-accent'
+              ? 'bg-background scale-100 text-foreground border-foreground px-4 rounded-lg hover:bg-accent hover:border-accent hover:text-accent-foreground' 
+              : 'bg-foreground scale-110 text-background border-transparent px-3 md:px-4 rounded-none hover:bg-accent hover:text-accent-foreground hover:border-accent'
           }`}>
             {SITE_TITLE}
           </div>
@@ -91,7 +91,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
                 <a
                   href={href.startsWith('//') ? `https:${href}` : href}
                   target={isBuyMeCoffee ? '_blank' : '_self'}
-                  className={`transition-all ease-in-out px-3 py-1.5 rounded-none text-[10px] uppercase font-mono tracking-[0.2em] flex items-center justify-center ${
+                  className={`transition-all ease-in-out px-3 py-1.5 rounded-none text-[10px] font-mono tracking-[0.2em] flex items-center justify-center ${
                     isBuyMeCoffee
                       ? 'bg-accent text-accent-foreground font-bold border border-transparent hover:shadow-[0_0_15px_hsl(var(--accent)/0.3)]'
                       : `${isActive(href, subpath) ? 'border-b-2 border-accent text-foreground' : 'text-muted-foreground hover:text-accent border-b-2 border-transparent hover:border-accent/50'}`

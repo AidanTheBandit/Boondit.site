@@ -23,7 +23,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ slug, title, excerpt, date 
       <div className="absolute top-0 left-0 w-full h-1 flex scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top opacity-50">
         <div className="flex-1 bg-[hsl(var(--color-pink))]"></div>
         <div className="flex-1 bg-[hsl(var(--color-purple))]"></div>
-        <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+        <div className="flex-1 bg-[hsl(var(--color-gray))]"></div>
       </div>
       
       <CardContent className="p-6 md:p-8 flex-grow flex flex-col relative z-10 w-full h-full">
