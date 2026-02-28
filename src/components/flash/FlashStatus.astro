@@ -5,93 +5,45 @@
  */
 ---
 
-<article class="card">
-  <h2 class="card-title">Status</h2>
-  <div class="space-y-3">
-    <div class="status-row">
-      <span>WebUSB</span>
-      <span id="webusbStatus" class="status-pill">Checking...</span>
+<div class="bg-card/40 border border-border/50 rounded-2xl p-8 shadow-sm relative">
+  <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-tl-2xl"></div>
+  <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[hsl(var(--color-purple))]/50 rounded-br-2xl"></div>
+
+  <h2 class="text-xl font-bold mb-6 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider">
+    <div class="w-2 h-6 bg-[hsl(var(--color-pink))]"></div>
+    Status
+  </h2>
+
+  <div class="space-y-4 font-mono">
+    <div class="flex items-center justify-between text-xs">
+      <span class="text-muted-foreground uppercase tracking-widest">WEBUSB</span>
+      <span id="webusbStatus" class="px-2 py-0.5 rounded bg-secondary text-secondary-foreground border border-border/50 uppercase text-[10px]">CHECKING...</span>
     </div>
-    <div class="status-row">
-      <span>Web Serial</span>
-      <span id="webserialStatus" class="status-pill">Checking...</span>
+    <div class="flex items-center justify-between text-xs">
+      <span class="text-muted-foreground uppercase tracking-widest">WEB_SERIAL</span>
+      <span id="webserialStatus" class="px-2 py-0.5 rounded bg-secondary text-secondary-foreground border border-border/50 uppercase text-[10px]">CHECKING...</span>
     </div>
-    <div class="status-row">
-      <span>Bootloader</span>
-      <span id="bootloaderStatus" class="status-pill">Not connected</span>
+    <div class="flex items-center justify-between text-xs">
+      <span class="text-muted-foreground uppercase tracking-widest">BOOTLOADER</span>
+      <span id="bootloaderStatus" class="px-2 py-0.5 rounded bg-secondary text-secondary-foreground border border-border/50 uppercase text-[10px]">NOT_CONNECTED</span>
     </div>
-    <div class="status-row">
-      <span>Fastbootd</span>
-      <span id="fastbootdStatus" class="status-pill">Not connected</span>
+    <div class="flex items-center justify-between text-xs">
+      <span class="text-muted-foreground uppercase tracking-widest">FASTBOOTD</span>
+      <span id="fastbootdStatus" class="px-2 py-0.5 rounded bg-secondary text-secondary-foreground border border-border/50 uppercase text-[10px]">NOT_CONNECTED</span>
     </div>
   </div>
-</article>
+</div>
 
-<style>
-  .card {
-    position: relative;
-    background: rgba(31, 41, 55, 0.6);
-    backdrop-filter: blur(8px);
-    border-radius: 1rem;
-    padding: 2rem;
-    border: 1px solid rgba(75, 85, 99, 0.5);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .card::before,
-  .card::after {
-    content: '';
-    position: absolute;
-    width: 2rem;
-    height: 2rem;
-    pointer-events: none;
-  }
-  .card::before {
-    top: 0;
-    left: 0;
-    border-top: 2px solid hsl(var(--color-pink) / 0.5);
-    border-left: 2px solid hsl(var(--color-pink) / 0.5);
-    border-top-left-radius: 0.75rem;
-  }
-  .card::after {
-    bottom: 0;
-    right: 0;
-    border-bottom: 2px solid hsl(var(--color-purple) / 0.5);
-    border-right: 2px solid hsl(var(--color-purple) / 0.5);
-    border-bottom-right-radius: 0.75rem;
+<style is:global>
+  .is-ok {
+    background-color: hsl(var(--color-pink) / 0.1) !important;
+    color: hsl(var(--color-pink)) !important;
+    border-color: hsl(var(--color-pink) / 0.3) !important;
   }
 
-  .card-title {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
-  }
-
-  .status-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    color: var(--muted-foreground);
-  }
-
-  .status-pill {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-    background: rgba(148, 163, 184, 0.2);
-    color: var(--muted-foreground);
-  }
-
-  :global(.status-pill.is-ok) {
-    background: rgba(34, 197, 94, 0.2);
-    color: #86efac;
-  }
-
-  :global(.status-pill.is-error) {
-    background: rgba(248, 113, 113, 0.2);
-    color: #fecaca;
+  .is-error {
+    background-color: rgba(248, 113, 113, 0.1) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(248, 113, 113, 0.3) !important;
   }
 </style>

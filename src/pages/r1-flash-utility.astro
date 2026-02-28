@@ -7,159 +7,188 @@ import FlashLog from "@/components/flash/FlashLog.astro";
 ---
 
 <Layout title="R1 Flash Utility - Boondit">
-  <Section title="R1 Flash Utility" className="min-h-screen">
-    <div class="max-w-6xl mx-auto p-6 space-y-8">
-      <header class="text-center space-y-3">
-        <p class="text-muted-foreground text-lg">
-          Flash the latest Rabbit R1 stock firmware directly from your browser.
-        </p>
-        <div class="mt-4 mx-auto max-w-3xl relative group">
-          <div class="absolute -inset-[1px] bg-gradient-to-r from-[hsl(var(--color-pink))] via-[hsl(var(--color-purple))] to-[hsl(var(--color-gray))] rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity blur-sm"></div>
-          <div class="relative bg-red-500/10 border border-red-500/30 rounded-2xl p-4 max-w-3xl mx-auto">
-            <p class="text-red-200 text-sm">
-              Warning: Flashing firmware can erase data or brick your device if
-              interrupted. Wipe is always enabled. Proceed only if you accept the risk.
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Controls -->
-        <div class="lg:col-span-2 space-y-6">
+  <div class="mt-24 md:mt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 relative">
+    <Section title="R1 Flash Utility">
+      <div class="max-w-7xl mx-auto relative">
+        <!-- Header -->
+        <header class="text-center mb-12">
+          <p class="text-muted-foreground text-lg font-mono">Flash Rabbit R1 stock firmware directly from your browser</p>
           
-          <!-- Auto Flash Mode -->
-          <article class="card bg-gradient-auto">
-            <h2 class="card-title">Auto Flash</h2>
-            <p class="text-muted-foreground text-sm mb-4">
-              Automated workflow: Powers on device via BROM, downloads latest firmware, and flashes automatically.
-            </p>
-            <button id="autoFlash" class="btn-auto w-full">
-              Start Auto Flash
-            </button>
-          </article>
+          <!-- Warning Banner -->
+          <div class="mt-8 mx-auto max-w-3xl relative group">
+            <div class="absolute -inset-[1px] bg-gradient-to-r from-red-500/50 via-orange-500/50 to-red-500/50 rounded-2xl opacity-50 blur-sm"></div>
+            <div class="relative bg-card/80 backdrop-blur-sm border border-red-500/20 rounded-2xl p-4 shadow-sm flex items-center justify-center gap-3">
+                <span class="text-red-500 font-mono font-bold">⚠</span>
+                <p class="text-muted-foreground font-mono text-xs uppercase tracking-wide leading-relaxed">
+                  Proceed at your own risk: Flashing can erase data or brick your device. <strong>Wipe is always enabled.</strong>
+                </p>
+            </div>
+          </div>
+        </header>
 
-          <div class="divider">Manual Mode</div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <!-- Main Controls -->
+          <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Auto Flash Section -->
+            <div class="bg-card/40 border border-[hsl(var(--color-pink))]/30 rounded-2xl p-8 shadow-sm relative overflow-hidden group">
+              <div class="absolute -inset-[1px] bg-gradient-to-r from-[hsl(var(--color-pink))]/20 via-[hsl(var(--color-purple))]/20 to-[hsl(var(--color-pink))]/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-tl-2xl"></div>
+              <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[hsl(var(--color-purple))]/50 rounded-br-2xl"></div>
 
-          <!-- Manual Controls -->
-          <details class="card" open>
-            <summary class="card-title cursor-pointer">Manual Flash Steps</summary>
-            <div class="space-y-4 mt-4">
+              <div class="relative z-10">
+                <h2 class="text-2xl font-bold mb-4 flex items-center gap-3 font-mono uppercase tracking-wider text-white">
+                  <div class="w-3 h-8 bg-gradient-to-b from-[hsl(var(--color-pink))] to-[hsl(var(--color-purple))]"></div>
+                  Auto_Flash
+                </h2>
+                <p class="text-muted-foreground text-sm font-mono mb-8 uppercase tracking-wide leading-relaxed">
+                  Recommended: Automated workflow for BROM power-on, firmware fetch, and deployment.
+                </p>
+                <button
+                  id="autoFlash"
+                  class="w-full py-5 bg-gradient-to-r from-[hsl(var(--color-pink))] to-[hsl(var(--color-purple))] hover:scale-[1.01] text-white rounded-xl font-mono text-lg font-bold tracking-[0.2em] transition-all shadow-lg shadow-[hsl(var(--color-pink))]/20 uppercase"
+                >
+                  START_AUTO_FLASH
+                </button>
+              </div>
+            </div>
+
+            <div class="relative py-4 flex items-center">
+              <div class="flex-grow border-t border-border/30"></div>
+              <span class="flex-shrink mx-4 text-[10px] font-mono text-muted-foreground uppercase tracking-[0.3em]">Manual_Mode_Override</span>
+              <div class="flex-grow border-t border-border/30"></div>
+            </div>
+
+            <!-- Manual Steps -->
+            <div class="bg-card/40 border border-border/50 rounded-2xl p-8 shadow-sm relative">
+              <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-tl-2xl"></div>
               
-              <div>
-                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 0: Enter Fastboot (BROM)</h3>
-                <p class="text-xs text-muted-foreground mb-2">
-                  If device is powered off, send FASTBOOT command via BROM (Web Serial).
-                </p>
-                <button id="enterFastboot" class="btn-secondary w-full">
-                  Enter Fastboot Mode
-                </button>
+              <h2 class="text-xl font-bold mb-8 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider">
+                <div class="w-2 h-6 bg-[hsl(var(--color-purple))]"></div>
+                Manual_Steps
+              </h2>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Step 0 -->
+                <div class="p-4 rounded-xl bg-background/50 border border-border/40 hover:border-[hsl(var(--color-pink))]/30 transition-colors">
+                  <label class="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Step_00 // BROM</label>
+                  <p class="text-[10px] text-muted-foreground mb-4 font-mono uppercase">Send FASTBOOT command via BROM</p>
+                  <button id="enterFastboot" class="w-full py-2.5 bg-secondary/80 hover:bg-secondary text-secondary-foreground rounded-lg font-mono text-[11px] uppercase tracking-wider border border-border/50 transition-all">
+                    ENTER_FASTBOOT
+                  </button>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="p-4 rounded-xl bg-background/50 border border-border/40 hover:border-[hsl(var(--color-pink))]/30 transition-colors">
+                  <label class="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Step_01 // BOOTLOADER</label>
+                  <p class="text-[10px] text-muted-foreground mb-4 font-mono uppercase">Select Device (Bootloader)</p>
+                  <button id="connectBootloader" class="w-full py-2.5 bg-secondary/80 hover:bg-secondary text-secondary-foreground rounded-lg font-mono text-[11px] uppercase tracking-wider border border-border/50 transition-all">
+                    SELECT_DEVICE
+                  </button>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="p-4 rounded-xl bg-background/50 border border-border/40 hover:border-[hsl(var(--color-pink))]/30 transition-colors">
+                  <label class="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Step_02 // REBOOT</label>
+                  <p class="text-[10px] text-muted-foreground mb-4 font-mono uppercase">Switch device to fastbootd</p>
+                  <button id="rebootFastbootd" disabled class="w-full py-2.5 bg-secondary/80 hover:bg-secondary text-secondary-foreground rounded-lg font-mono text-[11px] uppercase tracking-wider border border-border/50 transition-all disabled:opacity-30">
+                    TO_FASTBOOTD
+                  </button>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="p-4 rounded-xl bg-background/50 border border-border/40 hover:border-[hsl(var(--color-pink))]/30 transition-colors">
+                  <label class="block text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Step_03 // CONNECT</label>
+                  <p class="text-[10px] text-muted-foreground mb-4 font-mono uppercase">Select Device (Fastbootd)</p>
+                  <button id="connectFastbootd" disabled class="w-full py-2.5 bg-secondary/80 hover:bg-secondary text-secondary-foreground rounded-lg font-mono text-[11px] uppercase tracking-wider border border-border/50 transition-all disabled:opacity-30">
+                    CONNECT_FASTBOOTD
+                  </button>
+                </div>
               </div>
 
-              <div>
-                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 1: Connect Bootloader</h3>
-                <p class="text-xs text-muted-foreground mb-2">
-                  Put device in bootloader fastboot mode and select it.
-                </p>
-                <button id="connectBootloader" class="btn-primary w-full">
-                  Select Device (Bootloader)
+              <!-- Step 4 -->
+              <div class="mt-8 p-6 rounded-xl bg-[hsl(var(--color-pink))]/5 border border-[hsl(var(--color-pink))]/20 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-[hsl(var(--color-pink))]/5 rounded-full blur-3xl group-hover:bg-[hsl(var(--color-pink))]/10 transition-all"></div>
+                <label class="block text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em] mb-4">Step_04 // DEPLOY_FIRMWARE</label>
+                <button id="flashStock" disabled class="w-full py-4 bg-[hsl(var(--color-pink))] hover:bg-[hsl(var(--color-pink))]/90 text-white rounded-xl font-mono text-sm font-bold tracking-[0.2em] transition-all shadow-lg shadow-[hsl(var(--color-pink))]/20 uppercase disabled:opacity-30 disabled:cursor-not-allowed">
+                  FLASH_STOCK_OS
                 </button>
               </div>
-
-              <div>
-                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 2: Switch to Fastbootd</h3>
-                <p class="text-xs text-muted-foreground mb-2">
-                  Reboot device into fastbootd mode.
-                </p>
-                <button id="rebootFastbootd" class="btn-secondary w-full" disabled>
-                  Reboot to Fastbootd
-                </button>
-              </div>
-
-              <div>
-                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 3: Connect Fastbootd</h3>
-                <p class="text-xs text-muted-foreground mb-2">
-                  Select device again once in fastbootd mode.
-                </p>
-                <button id="connectFastbootd" class="btn-primary w-full" disabled>
-                  Select Device (Fastbootd)
-                </button>
-              </div>
-
-              <div>
-                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 4: Flash Firmware</h3>
-                <p class="text-xs text-muted-foreground mb-2">
-                  Download and flash latest firmware. Wipe is always enabled.
-                </p>
-                <button id="flashStock" class="btn-accent w-full" disabled>
-                  Flash Stock OS
-                </button>
-              </div>
-
             </div>
-          </details>
 
-          <!-- MTK Bootloader Unlock -->
-          <details class="card">
-            <summary class="card-title cursor-pointer">MTK Bootloader Unlock (Experimental)</summary>
-            <div class="space-y-3 mt-4">
-              <p class="text-xs text-muted-foreground">
-                Web Serial implementation of MTKClient for unlocking MediaTek bootloaders.
-                Currently supports MT6765 and related chipsets via BROM exploitation.
-              </p>
-              <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
-                <p class="text-yellow-200 text-xs">
-                  Experimental: Requires BROM exploit payloads. May brick device if interrupted.
-                </p>
-              </div>
-              <button id="mtkUnlock" class="btn-secondary w-full" disabled>
-                Unlock Bootloader (MTK)
-              </button>
+            <!-- Experimental -->
+            <div class="bg-card/40 border border-border/50 rounded-2xl p-6 shadow-sm relative opacity-60 hover:opacity-100 transition-opacity">
+               <h3 class="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-3">EXPERIMENTAL_LABS</h3>
+               <div class="flex items-center justify-between gap-4">
+                  <p class="text-[10px] font-mono text-muted-foreground uppercase">MTK Bootloader Unlock (BROM Payload)</p>
+                  <button id="mtkUnlock" disabled class="px-4 py-2 bg-background border border-border/50 rounded-lg text-[10px] font-mono uppercase hover:bg-secondary transition-colors">UNLOCK_MTK</button>
+               </div>
             </div>
-          </details>
+          </div>
 
+          <!-- Sidebar -->
+          <aside class="space-y-8">
+            <FlashStatus />
+            <FlashProgress />
+            <FlashLog />
+          </aside>
         </div>
-
-        <!-- Sidebar: Status, Progress, Log -->
-        <aside class="space-y-6">
-          <FlashStatus />
-          <FlashProgress />
-          <FlashLog />
-        </aside>
       </div>
-    </div>
+    </Section>
+  </div>
 
-    <!-- Auto-Flash Modal -->
-    <div id="autoFlashModal" class="modal hidden">
-      <div class="modal-overlay"></div>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 id="modalStepTitle" class="text-xl font-bold text-white">Auto Flash Mode</h2>
-          <div class="text-sm text-muted-foreground">Step <span id="modalCurrentStep">1</span> of <span id="modalTotalSteps">4</span></div>
-        </div>
-        <div class="modal-body">
-          <p id="modalInstruction" class="text-muted-foreground mb-4">Preparing auto-flash...</p>
-          <div id="modalProgress" class="hidden">
-            <div class="progress-track mb-2">
-              <div id="modalProgressBar" class="progress-bar"></div>
-            </div>
-            <p id="modalProgressText" class="text-xs text-muted-foreground text-center">0%</p>
+  <!-- Auto-Flash Modal -->
+  <div id="autoFlashModal" class="fixed inset-0 z-[10000] bg-black/95 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="relative w-full max-w-lg bg-card border border-[hsl(var(--color-pink))]/30 rounded-2xl shadow-2xl overflow-hidden">
+      <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-tl-2xl"></div>
+      
+      <div class="p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 id="modalStepTitle" class="text-xl font-bold font-mono uppercase tracking-wider text-white">Auto_Flash</h2>
+          <div class="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+            Step <span id="modalCurrentStep">1</span> / <span id="modalTotalSteps">4</span>
           </div>
         </div>
-        <div class="modal-footer">
-          <button id="modalContinue" class="btn-primary">Continue</button>
-          <button id="modalCancel" class="btn-secondary">Cancel</button>
+
+        <div class="min-h-[100px] mb-8">
+          <p id="modalInstruction" class="text-muted-foreground font-mono text-sm uppercase leading-relaxed">Preparing auto-flash sequence...</p>
+          
+          <div id="modalProgress" class="hidden mt-6 space-y-3">
+            <div class="h-1.5 w-full bg-secondary/30 rounded-full overflow-hidden border border-border/20">
+              <div id="modalProgressBar" class="h-full w-0 bg-gradient-to-r from-[hsl(var(--color-pink))] to-[hsl(var(--color-purple))] transition-all"></div>
+            </div>
+            <p id="modalProgressText" class="text-[10px] font-mono text-muted-foreground text-center uppercase tracking-widest">0%</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <button id="modalContinue" class="flex-1 py-3 bg-[hsl(var(--color-pink))] hover:bg-[hsl(var(--color-pink))]/90 text-white rounded-xl font-mono text-xs font-bold uppercase tracking-widest transition-all">Continue</button>
+          <button id="modalCancel" class="flex-1 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl font-mono text-xs font-bold uppercase tracking-widest transition-all border border-border/50">Cancel</button>
         </div>
       </div>
     </div>
-  </Section>
+  </div>
 </Layout>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-pink) / 0.3);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--color-pink) / 0.5);
+  }
+</style>
 
 <script type="module">
   import { FastbootDevice, USER_ACTION_MAP, setDebugLevel } from "https://cdn.jsdelivr.net/npm/android-fastboot@1.1.3/dist/fastboot.mjs";
-
-  // Inline the essential logic here - import utilities from our library
-  // (Library files are for organization, actual logic needs to be browser-compatible)
 
   const bootloaderDevice = new FastbootDevice();
   const fastbootdDevice = new FastbootDevice();
@@ -206,11 +235,11 @@ import FlashLog from "@/components/flash/FlashLog.astro";
   const supportsWebUsb = "usb" in navigator;
   const supportsWebSerial = "serial" in navigator;
 
-  elements.webusbStatus.textContent = supportsWebUsb ? "Supported" : "Unavailable";
+  elements.webusbStatus.textContent = supportsWebUsb ? "SUPPORTED" : "UNAVAILABLE";
   elements.webusbStatus.classList.toggle("is-ok", supportsWebUsb);
   elements.webusbStatus.classList.toggle("is-error", !supportsWebUsb);
 
-  elements.webserialStatus.textContent = supportsWebSerial ? "Supported" : "Unavailable";
+  elements.webserialStatus.textContent = supportsWebSerial ? "SUPPORTED" : "UNAVAILABLE";
   elements.webserialStatus.classList.toggle("is-ok", supportsWebSerial);
   elements.webserialStatus.classList.toggle("is-error", !supportsWebSerial);
 
@@ -232,14 +261,14 @@ import FlashLog from "@/components/flash/FlashLog.astro";
 
   function setConnectionStatus() {
     elements.bootloaderStatus.textContent = state.bootloaderConnected
-      ? "Connected"
-      : "Not connected";
+      ? "CONNECTED"
+      : "NOT_CONNECTED";
     elements.bootloaderStatus.classList.toggle("is-ok", state.bootloaderConnected);
     elements.bootloaderStatus.classList.toggle("is-error", !state.bootloaderConnected);
 
     elements.fastbootdStatus.textContent = state.fastbootdConnected
-      ? "Connected"
-      : "Not connected";
+      ? "CONNECTED"
+      : "NOT_CONNECTED";
     elements.fastbootdStatus.classList.toggle("is-ok", state.fastbootdConnected);
     elements.fastbootdStatus.classList.toggle("is-error", !state.fastbootdConnected);
   }
@@ -255,7 +284,6 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     elements.mtkUnlock.disabled = true;
   }
 
-  // Mirror is required for CORS-free downloads (GitHub blocks browser fetch)
   const FIRMWARE_MIRROR_BASE = 
     (window.location.hostname.includes("github.dev") ||
      window.location.hostname.includes("githubpreview.dev") ||
@@ -283,7 +311,6 @@ import FlashLog from "@/components/flash/FlashLog.astro";
   }
 
   async function downloadFirmware(asset, onProgress) {
-    // Extract version from asset name (e.g., "rabbit_OS_v0.8.293.zip" -> "v0.8.293")
     const versionMatch = asset.name.match(/_(v[\d.]+)\.zip$/);
     const version = versionMatch ? versionMatch[1] : null;
     
@@ -297,7 +324,6 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     ].filter(c => c.url);
 
     let response;
-    let usedSource = "";
     
     for (const candidate of candidateUrls) {
       try {
@@ -308,7 +334,6 @@ import FlashLog from "@/components/flash/FlashLog.astro";
           cache: "no-store",
         });
         if (response.ok) {
-          usedSource = candidate.label;
           logStatus(`Downloading from ${candidate.label}`, "success");
           break;
         }
@@ -319,7 +344,7 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     }
 
     if (!response || !response.ok) {
-      throw new Error("Firmware download failed from all sources (Mirror, GitHub, and CORS proxies).");
+      throw new Error("Firmware download failed from all sources.");
     }
 
     const contentLength = Number(response.headers.get("content-length") || 0);
@@ -451,13 +476,13 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     setButtonStates();
     setProgress(elements.flashBar, elements.flashPct, 0);
     setProgress(elements.downloadBar, elements.downloadPct, 0);
-    elements.flashAction.textContent = "Preparing";
-    elements.flashItem.textContent = "Finding latest firmware";
+    elements.flashAction.textContent = "PREPARING";
+    elements.flashItem.textContent = "FINDING_LATEST_FIRMWARE";
 
     try {
       const asset = await fetchLatestFirmware();
       logStatus(`Latest firmware found: ${asset.name}`);
-      elements.flashAction.textContent = "Downloading";
+      elements.flashAction.textContent = "DOWNLOADING";
       elements.flashItem.textContent = asset.name;
 
       const firmwareFile = await downloadFirmware(asset, (progress) => {
@@ -465,15 +490,13 @@ import FlashLog from "@/components/flash/FlashLog.astro";
         const sizeMB = (progress.loaded / 1024 / 1024).toFixed(1);
         const totalMB = (progress.total / 1024 / 1024).toFixed(1);
         const speedMBps = (progress.speed / 1024 / 1024).toFixed(2);
-        const etaMin = Math.ceil(progress.eta / 60);
-        elements.flashItem.textContent = `${sizeMB}/${totalMB} MB @ ${speedMBps} MB/s (~${etaMin}m)`;
+        elements.flashItem.textContent = `${sizeMB}/${totalMB} MB @ ${speedMBps} MB/s`;
       });
 
       logStatus(`Firmware downloaded: ${(firmwareFile.size / 1024 / 1024).toFixed(1)} MB`);
-      elements.flashAction.textContent = "Flashing";
-      elements.flashItem.textContent = "Preparing flash...";
+      elements.flashAction.textContent = "FLASHING";
+      elements.flashItem.textContent = "PREPARING_FLASH";
 
-      // Reconnect callback with delay to avoid race conditions
       const reconnectCallback = async () => {
         logStatus("Device reconnecting - waiting for stability...", "info");
         await new Promise(resolve => setTimeout(resolve, 2500));
@@ -484,28 +507,21 @@ import FlashLog from "@/components/flash/FlashLog.astro";
         true,
         reconnectCallback,
         (action, item, progress) => {
-          const actionLabel = USER_ACTION_MAP[action] || action || "Working";
-          elements.flashAction.textContent = actionLabel;
-          elements.flashItem.textContent = item ? `Target: ${item}` : "Working";
+          const actionLabel = USER_ACTION_MAP[action] || action || "WORKING";
+          elements.flashAction.textContent = actionLabel.toUpperCase();
+          elements.flashItem.textContent = item ? `TARGET: ${item}` : "WORKING";
           setProgress(elements.flashBar, elements.flashPct, progress || 0);
         }
       );
 
       logStatus("Flash completed successfully!", "success");
-      elements.flashAction.textContent = "Completed";
-      elements.flashItem.textContent = "Device flashed";
+      elements.flashAction.textContent = "COMPLETED";
+      elements.flashItem.textContent = "DEVICE_FLASHED";
       setProgress(elements.flashBar, elements.flashPct, 1);
     } catch (error) {
-      // Check for device state race condition
-      if (error.message && error.message.includes("operation that changes the device state is in progress")) {
-        logStatus("Device reconnection race condition detected. Please wait a moment and try flashing again.", "error");
-        logStatus("Tip: Give the device 5-10 seconds to stabilize after connecting to fastbootd before flashing.", "info");
-      } else {
-        logStatus(`Flash failed: ${error.message || error}`, "error");
-      }
-      if (error.stack) console.error("Stack trace:", error.stack);
-      elements.flashAction.textContent = "Error";
-      elements.flashItem.textContent = "Flash failed";
+      logStatus(`Flash failed: ${error.message || error}`, "error");
+      elements.flashAction.textContent = "ERROR";
+      elements.flashItem.textContent = "FLASH_FAILED";
     } finally {
       state.busy = false;
       setButtonStates();
@@ -514,15 +530,16 @@ import FlashLog from "@/components/flash/FlashLog.astro";
 
   function showModal(step, title, instruction, showProgress = false) {
     elements.modalCurrentStep.textContent = step;
-    elements.modalTotalSteps.textContent = "4";
-    elements.modalStepTitle.textContent = title;
-    elements.modalInstruction.textContent = instruction;
+    elements.modalStepTitle.textContent = title.toUpperCase();
+    elements.modalInstruction.textContent = instruction.toUpperCase();
     elements.modalProgress.classList.toggle("hidden", !showProgress);
     elements.autoFlashModal.classList.remove("hidden");
+    elements.autoFlashModal.classList.add("flex");
   }
 
   function hideModal() {
     elements.autoFlashModal.classList.add("hidden");
+    elements.autoFlashModal.classList.remove("flex");
   }
 
   function waitForUserClick() {
@@ -546,46 +563,30 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     logStatus("Starting auto flash sequence...", "info");
 
     try {
-      // Step 1: BROM (optional)
-      showModal(1, "Enter Fastboot via BROM", "Connect your powered-off device. Click Continue to select the BROM serial port and send the FASTBOOT command.");
+      showModal(1, "Enter Fastboot via BROM", "Connect your powered-off device. Click Continue to select the BROM serial port.");
       await waitForUserClick();
-      logStatus("Step 1: Entering fastboot mode from BROM...", "info");
       try {
         await enterFastbootFromBrom();
         await new Promise(resolve => setTimeout(resolve, 1500));
-        logStatus("BROM fastboot command sent.", "success");
       } catch (error) {
         logStatus("BROM step skipped (device may already be in fastboot)", "info");
       }
 
-      // Step 2: Connect bootloader
-      showModal(2, "Connect Bootloader", "Device should now be in fastboot bootloader mode. Click Continue to select the USB device.");
+      showModal(2, "Connect Bootloader", "Device should now be in fastboot mode. Click Continue to select the USB device.");
       await waitForUserClick();
-      logStatus("Step 2: Connecting to bootloader...", "info");
       await connectBootloader();
-      if (!state.bootloaderConnected) {
-        throw new Error("Failed to connect to bootloader");
-      }
+      if (!state.bootloaderConnected) throw new Error("Failed to connect to bootloader");
 
-      // Step 3: Reboot to fastbootd
-      showModal(3, "Reboot to Fastbootd", "Rebooting device to fastbootd mode. The device will disconnect and reconnect. Click Continue when ready to select it again.");
-      logStatus("Step 3: Rebooting to fastbootd...", "info");
+      showModal(3, "Reboot to Fastbootd", "Rebooting to fastbootd. Click Continue when ready to select it again.");
       await rebootToFastbootd();
       await new Promise(resolve => setTimeout(resolve, 2000));
       await waitForUserClick();
-      logStatus("Step 3: Connecting to fastbootd...", "info");
       await connectFastbootd();
-      if (!state.fastbootdConnected) {
-        throw new Error("Failed to connect to fastbootd");
-      }
+      if (!state.fastbootdConnected) throw new Error("Failed to connect to fastbootd");
       
-      // Give device time to stabilize before flash
-      logStatus("Device connected. Waiting for stability...", "info");
       await new Promise(resolve => setTimeout(resolve, 3000));
 
-      // Step 4: Flash firmware
-      showModal(4, "Flash Firmware", "Downloading and flashing latest firmware. This may take 10-15 minutes. Do not disconnect the device.", true);
-      logStatus("Step 4: Flashing firmware...", "info");
+      showModal(4, "Flash Firmware", "Deploying firmware. This may take 10-15 minutes. Do not disconnect.", true);
       await flashStockOs();
 
       hideModal();
@@ -605,209 +606,8 @@ import FlashLog from "@/components/flash/FlashLog.astro";
   elements.rebootFastbootd.addEventListener("click", rebootToFastbootd);
   elements.connectFastbootd.addEventListener("click", connectFastbootd);
   elements.flashStock.addEventListener("click", flashStockOs);
-  elements.mtkUnlock.addEventListener("click", () => {
-    logStatus("MTK bootloader unlock is experimental and not yet implemented.", "error");
-  });
-
+  
   setButtonStates();
   setConnectionStatus();
   logStatus("R1 Flash Utility ready.");
 </script>
-
-<style>
-  .card {
-    position: relative;
-    background: rgba(31, 41, 55, 0.6);
-    backdrop-filter: blur(8px);
-    border-radius: 1rem;
-    padding: 2rem;
-    border: 1px solid rgba(75, 85, 99, 0.5);
-    transition: transform 0.2s;
-  }
-  .card::before,
-  .card::after {
-    content: '';
-    position: absolute;
-    width: 2rem;
-    height: 2rem;
-    pointer-events: none;
-  }
-  .card::before {
-    top: 0;
-    left: 0;
-    border-top: 2px solid hsl(var(--color-pink) / 0.5);
-    border-left: 2px solid hsl(var(--color-pink) / 0.5);
-    border-top-left-radius: 0.75rem;
-  }
-  .card::after {
-    bottom: 0;
-    right: 0;
-    border-bottom: 2px solid hsl(var(--color-purple) / 0.5);
-    border-right: 2px solid hsl(var(--color-purple) / 0.5);
-    border-bottom-right-radius: 0.75rem;
-  }
-
-  .card.bg-gradient-auto {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
-    border: 1px solid rgba(168, 85, 247, 0.3);
-  }
-
-  .card-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
-  }
-
-  details[open] .card-title::after {
-    content: " ▼";
-    font-size: 0.75rem;
-  }
-
-  details:not([open]) .card-title::after {
-    content: " ▶";
-    font-size: 0.75rem;
-  }
-
-  .divider {
-    text-align: center;
-    color: #64748b;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin: 1.5rem 0;
-    position: relative;
-  }
-
-  .divider::before,
-  .divider::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 45%;
-    height: 1px;
-    background: rgba(148, 163, 184, 0.3);
-  }
-
-  .divider::before {
-    left: 0;
-  }
-
-  .divider::after {
-    right: 0;
-  }
-
-  .btn-primary,
-  .btn-secondary,
-  .btn-accent,
-  .btn-auto {
-    font-weight: 600;
-    border-radius: 0.5rem;
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
-    transition: all 0.2s;
-    border: none;
-    cursor: pointer;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #fff;
-  }
-
-  .btn-secondary {
-    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-    color: #fff;
-  }
-
-  .btn-accent {
-    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-    color: #fff;
-  }
-
-  .btn-auto {
-    background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
-    color: #fff;
-    font-size: 1.125rem;
-    padding: 1.125rem 2rem;
-  }
-
-  .btn-primary:hover,
-  .btn-secondary:hover,
-  .btn-accent:hover,
-  .btn-auto:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .btn-primary:disabled,
-  .btn-secondary:disabled,
-  .btn-accent:disabled,
-  .btn-auto:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  /* Modal Styles */
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal.hidden {
-    display: none;
-  }
-
-  .modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(4px);
-  }
-
-  .modal-content {
-    position: relative;
-    background: linear-gradient(135deg, rgba(31, 41, 55, 0.95) 0%, rgba(17, 24, 39, 0.95) 100%);
-    border: 1px solid rgba(168, 85, 247, 0.3);
-    border-radius: 1rem;
-    padding: 2rem;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-header {
-    margin-bottom: 1.5rem;
-    text-align: center;
-    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
-    padding-bottom: 1rem;
-  }
-
-  .modal-body {
-    margin-bottom: 1.5rem;
-    min-height: 100px;
-  }
-
-  .modal-footer {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-  }
-
-  .modal-footer button {
-    flex: 1;
-    max-width: 200px;
-  }
-</style>
