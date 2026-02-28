@@ -4,292 +4,282 @@ import Section from "@/components/Section.astro";
 ---
 
 <Layout title="R1 OpenClaw QR Gen - Boondit">
-  <Section title="R1 OpenClaw QR Generator" className="min-h-screen">
-    <div class="max-w-7xl mx-auto p-6">
-      <header class="text-center mb-10">
-        
-        <div class="mt-4 mx-auto max-w-2xl relative group">
-          <div class="absolute -inset-[1px] bg-gradient-to-r from-[hsl(var(--color-pink))] via-[hsl(var(--color-purple))] to-[hsl(var(--color-gray))] rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity blur-sm"></div>
-          <div class="relative bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 max-w-2xl mx-auto backdrop-blur-sm">
-              <p class="text-yellow-200 font-bold flex items-center justify-center gap-2 mb-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
-                  SENSITIVE DATA
-              </p>
-              <p class="text-yellow-100/80 text-sm">
-                  The generated QR code contains personal information (your token) and should <strong>NOT</strong> be shared with others. Boondit.site will never upload any of this data your enter here. QR code generation happens locally in your browser.
-              </p>
+  <div class="mt-24 md:mt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 relative">
+    <Section title="OpenClaw QR Gen">
+      <div class="max-w-7xl mx-auto relative">
+        <!-- Header -->
+        <header class="text-center mb-12">
+          <p class="text-muted-foreground text-lg font-mono">Generate gateway configuration for OpenClaw on R1</p>
+          
+          <!-- Warning Banner -->
+          <div class="mt-8 mx-auto max-w-3xl relative group">
+            <div class="absolute -inset-[1px] bg-gradient-to-r from-yellow-500/50 via-orange-500/50 to-yellow-500/50 rounded-2xl opacity-50 blur-sm"></div>
+            <div class="relative bg-card/80 backdrop-blur-sm border border-yellow-500/20 rounded-2xl p-4 shadow-sm flex items-center justify-center gap-3">
+                <span class="text-yellow-500 font-mono font-bold">⚠</span>
+                <p class="text-muted-foreground font-mono text-sm uppercase tracking-wide">
+                  Sensitive data: Tokens are processed <span class="text-foreground font-bold">locally</span> and never uploaded
+                </p>
+            </div>
+          </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <!-- Configuration Section -->
+          <div class="bg-card/40 border border-border/50 rounded-2xl p-8 shadow-sm h-fit relative">
+            <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-tl-2xl"></div>
+            <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[hsl(var(--color-purple))]/50 rounded-br-2xl"></div>
+
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider">
+              <div class="w-2 h-6 bg-[hsl(var(--color-pink))]"></div>
+              Configuration
+            </h2>
+            
+            <form id="moltbotForm" class="space-y-6">
+              <div>
+                <label for="ips" class="flex justify-between text-sm font-semibold mb-2 text-foreground font-mono">
+                  <span>IP_ADDRESSES</span>
+                  <span class="text-muted-foreground text-xs tracking-widest">[CSV]</span>
+                </label>
+                <input
+                  type="text"
+                  id="ips"
+                  required
+                  class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm"
+                  placeholder="1.2.3.4, 5.6.7.8"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="port" class="flex justify-between text-sm font-semibold mb-2 text-foreground font-mono">
+                    <span>PORT</span>
+                    <span class="text-[hsl(var(--color-pink))] text-xs tracking-widest">[REQ]</span>
+                  </label>
+                  <input
+                    type="number"
+                    id="port"
+                    value="18789"
+                    required
+                    class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm"
+                  />
+                </div>
+                <div>
+                  <label for="protocol" class="flex justify-between text-sm font-semibold mb-2 text-foreground font-mono">
+                    <span>PROTOCOL</span>
+                    <span class="text-[hsl(var(--color-pink))] text-xs tracking-widest">[REQ]</span>
+                  </label>
+                  <select
+                    id="protocol"
+                    class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm appearance-none"
+                  >
+                    <option value="wss" selected>wss</option>
+                    <option value="ws">ws</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label for="token" class="flex justify-between text-sm font-semibold mb-2 text-foreground font-mono">
+                  <span>TOKEN</span>
+                  <span class="text-[hsl(var(--color-pink))] text-xs tracking-widest">[REQ]</span>
+                </label>
+                <input
+                  type="text"
+                  id="token"
+                  required
+                  class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm"
+                  placeholder="secret-token"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full py-4 bg-[hsl(var(--color-pink))] hover:bg-[hsl(var(--color-pink))]/90 text-white rounded-xl font-mono text-sm font-bold tracking-widest transition-all shadow-lg shadow-[hsl(var(--color-pink))]/20 uppercase"
+              >
+                Generate_QR
+              </button>
+            </form>
+
+            <!-- Test Connectivity Section -->
+            <div class="mt-10 pt-8 border-t border-border/30">
+              <h3 class="text-sm font-mono text-muted-foreground uppercase tracking-widest mb-4">Connection_Test</h3>
+              <div id="testLog" class="bg-black/50 border border-border/60 rounded-xl p-4 font-mono text-[11px] h-32 overflow-y-auto mb-4 custom-scrollbar flex flex-col gap-1">
+                  <span class="text-muted-foreground italic">READY_FOR_TEST...</span>
+              </div>
+              <button
+                id="testConnectionBtn"
+                type="button"
+                class="w-full py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl font-mono text-xs tracking-wider transition-all border border-border/50 shadow-sm flex items-center justify-center gap-2 uppercase"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span id="testConnectionLabel">Test_Connectivity</span>
+              </button>
+              <p id="testConnectionNote" class="text-[10px] text-yellow-500/80 mt-2 font-mono uppercase hidden">Test disabled for WS/local IPs</p>
+            </div>
+          </div>
+
+          <!-- Preview Section -->
+          <div class="bg-card/40 border border-border/50 rounded-2xl p-8 shadow-sm flex flex-col h-full relative">
+            <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[hsl(var(--color-purple))]/50 rounded-tr-2xl"></div>
+            <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-bl-2xl"></div>
+
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider">
+              <div class="w-2 h-6 bg-[hsl(var(--color-purple))]"></div>
+              Gateway QR
+            </h2>
+            
+            <div class="flex-grow flex flex-col items-center justify-center p-6 bg-background rounded-2xl border border-border/60 relative overflow-hidden" 
+                 id="qrCodeContainer"
+                 style="background-image: radial-gradient(circle at 2px 2px, rgba(150,150,150,0.1) 1px, transparent 0); background-size: 20px 20px;">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
+              <div class="absolute bottom-0 left-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl"></div>
+              
+              <p class="text-muted-foreground text-sm font-mono p-4 text-center">AWAITING_CONFIG<span class="animate-pulse">_</span></p>
+            </div>
+            
+            <div class="qr-footer text-xs text-muted-foreground mt-4 text-center"> 
+              <span id="molt-qr-watermark">OPENCLAW | BOONDIT.SITE</span>
+            </div>
+
+            <!-- JSON Preview -->
+            <div class="mt-8 pt-6 border-t border-border/30">
+              <label class="block text-sm font-mono text-muted-foreground uppercase tracking-widest mb-3">Payload.json</label>
+              <div class="relative bg-black/50 border border-border/60 rounded-xl overflow-hidden p-1">
+                <pre id="jsonPreview" class="w-full px-4 py-4 text-[hsl(var(--color-pink))] font-mono text-[11px] h-32 overflow-y-auto custom-scrollbar">{}</pre>
+              </div>
+              <div class="mt-4 flex gap-3">
+                <button
+                  id="downloadQrBtn"
+                  disabled
+                  class="flex-1 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl font-mono text-xs tracking-wider transition-all shadow-sm flex justify-center items-center gap-2 border border-border/50 uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  DL_QR
+                </button>
+                <button
+                  id="expandQrBtn"
+                  class="flex-1 py-3 bg-background hover:bg-secondary/30 text-foreground rounded-xl border border-border/50 font-mono text-xs tracking-wider transition-all shadow-sm flex justify-center items-center gap-2 uppercase hidden"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+                  EXPAND
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </header>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <!-- Configuration & Test -->
-        <div class="space-y-8">
-            <article class="card">
-                <h2 class="card-title">Configuration</h2>
-                <form id="moltbotForm" class="space-y-5">
-                    <div class="form-group">
-                        <label for="ips" class="form-label">
-                            IP Addresses <span class="text-muted-foreground font-normal normal-case ml-1">(comma separated)</span>
-                        </label>
-                        <input type="text" id="ips" class="form-input" placeholder="1.2.3.4, 5.6.7.8" required>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="form-group mb-0">
-                            <label for="port" class="form-label">Port</label>
-                            <input type="number" id="port" class="form-input" value="18789" required>
-                        </div>
-                        <div class="form-group mb-0">
-                            <label for="protocol" class="form-label">Protocol</label>
-                            <select id="protocol" class="form-select">
-                                <option value="wss" selected>wss</option>
-                                <option value="ws">ws</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="token" class="form-label">Token</label>
-                        <input type="text" id="token" class="form-input" placeholder="secret-token" required>
-                    </div>
-
-                    <button type="submit" class="btn-primary w-full shadow-lg shadow-blue-500/20">
-                        Generate QR Code
-                    </button>
-                </form>
-            </article>
-
-            <!-- Test Connection -->
-            <article class="card">
-                 <h2 class="card-title">Test Connection</h2>
-                 <div class="space-y-4">
-                        Verify connectivity to your OpenClaw instance.
-                    </p>
-                    
-                    <div id="testLog" class="bg-card/40 rounded-lg p-3 border border-border/60 min-h-[100px] font-mono text-[11px] overflow-y-auto max-h-[150px] flex flex-col gap-1">
-                        <span class="text-muted-foreground italic">Ready to test...</span>
-                    </div>
-
-                    <button id="testConnectionBtn" type="button" class="btn-secondary w-full text-sm py-2 flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        <span id="testConnectionLabel">Test Connectivity</span>
-                    </button>
-                    <p id="testConnectionNote" class="text-xs text-yellow-300 hidden">Test connection doesn't work for local IPs when using WS.</p>
-                 </div>
-            </article>
-        </div>
-
-        <!-- Preview -->
-        <article class="card h-full flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="card-title mb-0 border-none pb-0">QR Code</h2>
-                <button id="expandQrBtn" class="btn-secondary text-xs py-1.5 px-3 hidden flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
-                    Expand
-                </button>
-            </div>
-            
-              <div class="flex-1 min-h-[300px] flex flex-col items-center justify-center p-6 bg-card/40 rounded-xl border border-border/60 mb-4 relative overflow-hidden group"
-                   id="qrCodeContainer"
-                   style="background-image: radial-gradient(circle at 2px 2px, rgba(150,150,150,0.1) 1px, transparent 0); background-size: 20px 20px;">
-                  <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
-                  <div class="absolute bottom-0 left-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl"></div>
-                  <p class="text-muted-foreground text-sm font-medium">Generate a QR code to see it here</p>
-              </div>
-            <div class="qr-footer text-xs text-muted-foreground mt-2 text-center">
-                <span id="molt-qr-watermark">OpenClaw | boondit.site</span>
-            </div>
-            
-            <div class="w-full">
-                <h3 class="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">JSON Payload</h3>
-                <pre id="jsonPreview" class="json-preview !max-h-[120px]"></pre>
-                <div class="mt-3 flex gap-3">
-                    <button id="downloadQrBtn" class="btn-secondary text-sm py-2 px-3" disabled>Download QR</button>
-                </div>
-            </div>
-        </article>
-      </div>
-
-      <!-- Instructions & FAQ -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Instructions & FAQ Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- How to Use -->
-          <article class="card">
-            <h2 class="card-title">How to Use</h2>
+          <div class="bg-card/40 border border-border/50 rounded-2xl p-8 shadow-sm relative h-full">
+            <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-tl-2xl"></div>
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider text-foreground">
+              <div class="w-2 h-6 bg-[hsl(var(--color-pink))]"></div>
+              HOW_TO_USE
+            </h2>
             <div class="space-y-6">
                 <div class="flex gap-4">
-                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[hsl(var(--color-pink))]/10 text-[hsl(var(--color-pink))] flex items-center justify-center font-bold border border-border/30">1</div>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-[hsl(var(--color-pink))]/10 text-[hsl(var(--color-pink))] flex items-center justify-center font-mono font-bold border border-[hsl(var(--color-pink))]/20">01</div>
                     <div>
-                        <h3 class="font-semibold text-white mb-1">Scan QR Code</h3>
-                        <p class="text-muted-foreground text-sm">Scan the generated QR code with your Rabbit R1 device's camera.</p>
+                        <h3 class="font-bold text-foreground mb-1 font-mono text-sm uppercase">Scan QR Code</h3>
+                        <p class="text-muted-foreground text-xs leading-relaxed font-mono">Scan the generated QR code with your Rabbit R1 device's camera.</p>
                     </div>
                 </div>
 
                 <div class="flex gap-4">
-                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[hsl(var(--color-purple))]/10 text-[hsl(var(--color-purple))] flex items-center justify-center font-bold border border-border/30">2</div>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-[hsl(var(--color-purple))]/10 text-[hsl(var(--color-purple))] flex items-center justify-center font-mono font-bold border border-[hsl(var(--color-purple))]/20">02</div>
                     <div>
-                        <h3 class="font-semibold text-white mb-2">Approve in Web UI</h3>
-                        <p class="text-muted-foreground text-sm">Open <a id="nodesLink" href="http://IP:port/nodes" class="text-accent hover:text-accent/80 hover:underline">http://IP:port/nodes</a>, then click <strong>Approve</strong> next to <strong>Rabbit R1</strong>.</p>
+                        <h3 class="font-bold text-foreground mb-1 font-mono text-sm uppercase">Approve in Web UI</h3>
+                        <p class="text-muted-foreground text-xs leading-relaxed font-mono">Open <a id="nodesLink" href="http://IP:port/nodes" class="text-[hsl(var(--color-pink))] hover:underline">http://IP:port/nodes</a>, then click <strong>Approve</strong> next to <strong>Rabbit R1</strong>.</p>
                     </div>
                 </div>
             </div>
-          </article>
+          </div>
 
           <!-- FAQ / Troubleshooting -->
-          <article class="card">
-              <h2 class="card-title">FAQ / Troubleshooting</h2>
-              <div class="space-y-3">
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-bold text-white text-sm">Device stuck on "Gateway error"?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
-                            Check the following:
-                            <ul class="list-disc ml-4 mt-2 space-y-1">
-                                <li>Ensure <strong>Settings &gt; Gateway &gt; Bind</strong> is set to <strong>LAN</strong> (not Loopback).</li>
-                                <li>Ensure your firewall is allowing traffic on the specified port.</li>
-                                <li>If using localhost/127.0.0.1, the R1 cannot see it. Use your computer's LAN IP (e.g. 192.168.x.x).</li>
-                                <li>For non-local IPs, you <strong>MUST</strong> use <strong>WSS</strong> with a valid SSL certificate.</li>
-                                <li>If using cloudflared, ensure you use port <strong>443</strong>.</li>
-                                <li>Verify the token is exactly as copied.</li>
-                            </ul>
-                          </p>
-                      </div>
-                  </details>
+          <div class="bg-card/40 border border-border/50 rounded-2xl p-8 shadow-sm relative h-full">
+            <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[hsl(var(--color-purple))]/50 rounded-tr-2xl"></div>
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider text-foreground">
+              <div class="w-2 h-6 bg-[hsl(var(--color-purple))]"></div>
+              FAQ_TROUBLESHOOT
+            </h2>
+            <div class="space-y-3">
+                <details class="group bg-background/40 rounded-xl border border-border/50 overflow-hidden">
+                    <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-secondary/20 transition-colors select-none">
+                        <h3 class="font-bold text-foreground text-xs font-mono uppercase tracking-wide">Gateway Error?</h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                    </summary>
+                    <div class="px-4 pb-4 pt-0">
+                        <div class="text-muted-foreground text-[10px] leading-relaxed border-t border-border/30 pt-3 space-y-2 font-mono uppercase">
+                          <p>• Ensure Bind is set to LAN (not Loopback).</p>
+                          <p>• Check OS/Router firewalls for the specified port.</p>
+                          <p>• R1 cannot see 127.0.0.1; use LAN IP (192.168.x.x).</p>
+                          <p>• For non-local IPs, you MUST use WSS with SSL.</p>
+                        </div>
+                    </div>
+                </details>
 
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-bold text-white text-sm">Device stuck on "Gateway unreachable"?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
-                            This indicates a network-level connectivity issue:
-                            <ul class="list-disc ml-4 mt-2 space-y-1">
-                                <li><strong>Service Status:</strong> Ensure the OpenClaw service is actually running on your computer.</li>
-                                <li><strong>Firewall:</strong> Check that your OS firewall (Windows Defender/macOS Firewall) isn't blocking the port.</li>
-                                <li><strong>Port Forwarding:</strong> If connecting remotely, ensure ports are correctly forwarded on your router.</li>
-                            </ul>
-                          </p>
-                      </div>
-                  </details>
+                <details class="group bg-background/40 rounded-xl border border-border/50 overflow-hidden">
+                    <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-secondary/20 transition-colors select-none">
+                        <h3 class="font-bold text-foreground text-xs font-mono uppercase tracking-wide">Is this safe?</h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                    </summary>
+                    <div class="px-4 pb-4 pt-0">
+                        <p class="text-muted-foreground text-[10px] font-mono border-t border-border/30 pt-3 uppercase tracking-tighter">
+                          Use at your own risk. This project is open source and community-driven.
+                        </p>
+                    </div>
+                </details>
 
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">How do I setup OpenClaw?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
-                              Check out the documentation at <a href="https://docs.molt.bot/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">docs.molt.bot</a>
-                          </p>
-                      </div>
-                  </details>
-
-<details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                          <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                              <h3 class="font-semibold text-white text-sm">Is OpenClaw a rabbit product?</h3>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                          </summary>
-                          <div class="px-4 pb-4 pt-0">
-                              <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
-                              No. It is an open source project that can be found here: <a href="https://github.com/moltbot/moltbot" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">github.com/moltbot/moltbot</a>
-                          </p>
-                      </div>
-                  </details>
-
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Is OpenClaw safe?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Use at your own risk.</p>
-                      </div>
-                  </details>
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Is Tailscale supported?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">No. Please use a reverse proxy or another tunneling service like cloudflared for remote access.</p>
-                      </div>
-                  </details>
-
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Can I use WS (WebSocket)?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Only on your local network (e.g., 192.168.x.x IPs). Use WSS (Secure WebSocket) for anything remotely accessible or secured.</p>
-                      </div>
-                  </details>
-
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Can I share my OpenClaw?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-red-400/90 text-sm leading-relaxed font-medium border-t border-border/60 pt-3">NO. This is very unsafe. Your token grants access to your R1 device.</p>
-                      </div>
-                  </details>
-
-                   <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Is this the same as clawdbot?</h3>
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Yes, OpenClaw is the evolution of MoltBot/clawdbot.</p>
-                      </div>
-                  </details>
-
-                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">How do I remove/unlink my R1?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Go to the Web UI &gt; Nodes &gt; Rabbit R1 &gt; Revoke.</p>
-                      </div>
-                  </details>
-                  
-
-              </div>
-          </article>
+                <details class="group bg-background/40 rounded-xl border border-border/50 overflow-hidden">
+                    <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-secondary/20 transition-colors select-none">
+                        <h3 class="font-bold text-foreground text-xs font-mono uppercase tracking-wide">WSS vs WS?</h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                    </summary>
+                    <div class="px-4 pb-4 pt-0">
+                        <p class="text-muted-foreground text-[10px] font-mono border-t border-border/30 pt-3 leading-relaxed uppercase">
+                          WS is for local network only. WSS is required for remote access and is highly recommended for security.
+                        </p>
+                    </div>
+                </details>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </Section>
+    </Section>
+  </div>
 
   <!-- Fullscreen Modal -->
-  <div id="qrModal" class="fixed inset-0 z-[10000] bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+  <div id="qrModal" class="fixed inset-0 z-[10000] bg-black/95 backdrop-blur-md hidden items-center justify-center p-4">
       <div class="relative w-full max-w-2xl flex flex-col items-center">
-          <button id="closeModalBtn" class="absolute -top-12 right-0 text-white hover:text-muted-foreground/80 transition-colors p-2">
+          <button id="closeModalBtn" class="absolute -top-16 right-0 text-white hover:text-[hsl(var(--color-pink))] transition-colors p-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
-          <div id="modalQrContainer" class="bg-white p-8 rounded-xl shadow-2xl"></div>
-          <p class="text-white/70 mt-6 text-center">Scan this code with your device</p>
+          <div id="modalQrContainer" class="bg-white p-10 rounded-2xl shadow-2xl border-4 border-[hsl(var(--color-pink))]/20"></div>
+          <p class="text-[hsl(var(--color-pink))] mt-8 text-center font-mono font-bold uppercase tracking-widest animate-pulse">Scan_with_Rabbit_R1</p>
       </div>
   </div>
 </Layout>
 
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-pink) / 0.3);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--color-pink) / 0.5);
+  }
+</style>
+
 <script>
     import QRCodeStyling from "qr-code-styling";
-
-    // Define types
-    interface MoltBotPayload {
-        type: "clawdbot-gateway";
-        version: number;
-        ips: string[];
-        port: number;
-        token: string;
-        protocol: string;
-    }
 
     const form = document.getElementById('moltbotForm') as HTMLFormElement;
     const qrContainer = document.getElementById('qrCodeContainer');
@@ -319,25 +309,6 @@ import Section from "@/components/Section.astro";
             testNote.classList.toggle('hidden', !isWs);
         }
     };
-
-    // Clipboard Logic
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-clipboard-target');
-            if (targetId) {
-                const codeElement = document.querySelector(targetId);
-                if (codeElement && codeElement.textContent) {
-                    navigator.clipboard.writeText(codeElement.textContent).then(() => {
-                        const originalText = btn.textContent;
-                        btn.textContent = 'Copied!';
-                        setTimeout(() => {
-                            btn.textContent = originalText;
-                        }, 2000);
-                    });
-                }
-            }
-        });
-    });
 
     // Modal Logic
     const openModal = () => {
@@ -396,7 +367,6 @@ import Section from "@/components/Section.astro";
 
         const protocolInput = protocolSelect?.value ?? 'wss';
         
-        // Basic payload structure even with empty fields for preview
         const payload = {
             type: "clawdbot-gateway",
             version: 1,
@@ -409,49 +379,38 @@ import Section from "@/components/Section.astro";
         const jsonString = JSON.stringify(payload);
         currentPayload = jsonString;
 
-        // Update Text Preview
         if (jsonPreview) {
             jsonPreview.textContent = JSON.stringify(payload, null, 2);
         }
 
         // generate QR
-        qrContainer.innerHTML = '';
-        // use a styled wrapper like the creation generator preview
-        const wrapper = document.createElement('div');
-        wrapper.className = 'bg-white p-4 rounded-xl shadow-sm mb-6 flex items-center justify-center min-w-[250px] min-h-[250px] relative z-10 border border-border/20';
-        qrCode = new QRCodeStyling({
-            width: 250,
-            height: 250,
-            data: currentPayload,
-            dotsOptions: { color: "#000000", type: "rounded" },
-            backgroundOptions: { color: "#ffffff" }
-        });
-        qrCode.append(wrapper);
-        qrContainer.appendChild(wrapper);
+        if (qrContainer) {
+            qrContainer.innerHTML = '';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'bg-white p-4 rounded-xl shadow-sm mb-6 flex items-center justify-center min-w-[250px] min-h-[250px] relative z-10 border border-border/20';
+            qrCode = new QRCodeStyling({
+                width: 250,
+                height: 250,
+                data: currentPayload,
+                dotsOptions: { color: "#000000", type: "rounded" },
+                backgroundOptions: { color: "#ffffff" }
+            });
+            qrCode.append(wrapper);
+            qrContainer.appendChild(wrapper);
+        }
 
         // enable download and watermark
-        const dlBtn = document.getElementById('downloadQrBtn');
-        if (dlBtn) {
-            dlBtn.removeAttribute('disabled');
-            dlBtn.addEventListener('click', () => {
-                if (!qrCode) return;
-                try { qrCode.download({ name: 'openclaw-qr', extension: 'png' }); }
-                catch (e) {
-                    const svgEl = qrCode._el?.querySelector('svg');
-                    if (svgEl) {
-                        const serializer = new XMLSerializer();
-                        const svgStr = serializer.serializeToString(svgEl);
-                        const blob = new Blob([svgStr], { type: 'image/svg+xml' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url; a.download = 'openclaw-qr.svg'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-                    }
-                }
-            });
+        const dlBtn = document.getElementById('downloadQrBtn') as HTMLButtonElement;
+        if (dlBtn && tokenInput && ips.length > 0) {
+            dlBtn.disabled = false;
+            dlBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else if (dlBtn) {
+            dlBtn.disabled = true;
+            dlBtn.classList.add('opacity-50', 'cursor-not-allowed');
         }
 
         const watermark = document.getElementById('molt-qr-watermark');
-        if (watermark) watermark.textContent = `OpenClaw | boondit.site`;
+        if (watermark) watermark.textContent = `OPENCLAW | BOONDIT.SITE`;
 
         updateTestButtonState(protocolInput);
 
@@ -464,48 +423,29 @@ import Section from "@/components/Section.astro";
         const element = document.getElementById(id);
         if (element) {
             element.addEventListener('input', updatePayload);
-            element.addEventListener('change', updatePayload); // For select element
+            element.addEventListener('change', updatePayload);
         }
     });
 
+    const dlBtn = document.getElementById('downloadQrBtn');
+    if (dlBtn) {
+        dlBtn.addEventListener('click', () => {
+            if (!qrCode) return;
+            qrCode.download({ name: 'openclaw-qr', extension: 'png' });
+        });
+    }
+
     updatePayload();
 
-    // Initialize preview immediately
-    updatePayload();
-
-    // Form Logic
     form?.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        // Ensure payload is up to date
         const jsonString = updatePayload();
-
-        // Show expand button
         if (expandBtn) expandBtn.classList.remove('hidden');
-
-        // Generate QR
-        if (qrContainer) {
-            qrContainer.innerHTML = '';
-            
-            try {
-                qrCode = new QRCodeStyling({
-                    width: 300,
-                    height: 300,
-                    data: jsonString,
-                    dotsOptions: { color: "#000000", type: "rounded" },
-                    backgroundOptions: { color: "#ffffff" },
-                });
-                qrCode.append(qrContainer);
-            } catch (err) {
-               console.error(err);
-               qrContainer.innerHTML = '<p class="text-red-500">Error generating QR.</p>';
-            }
-        }
+        openModal();
     });
 
     // Test Connection Logic
     const testLog = document.getElementById('testLog');
-
     const log = (msg: string, type: 'info' | 'success' | 'error' | 'warning' = 'info') => {
         if (!testLog) return;
         const div = document.createElement('div');
@@ -513,9 +453,9 @@ import Section from "@/components/Section.astro";
             type === 'success' ? 'text-green-400' :
             type === 'error' ? 'text-red-400' :
             type === 'warning' ? 'text-yellow-400' :
-            'text-muted-foreground'
+            'text-[hsl(var(--color-pink))]'
         }`;
-        div.textContent = `> ${msg}`;
+        div.textContent = `> ${msg.toUpperCase()}`;
         testLog.appendChild(div);
         testLog.scrollTop = testLog.scrollHeight;
     };
@@ -523,7 +463,7 @@ import Section from "@/components/Section.astro";
     testBtn?.addEventListener('click', () => {
         if (!testLog) return;
         testLog.innerHTML = ''; 
-        log('Initializing test...');
+        log('INITIALIZING_TEST...');
 
         const ipsInput = (document.getElementById('ips') as HTMLInputElement).value;
         const portInput = (document.getElementById('port') as HTMLInputElement).value;
@@ -531,17 +471,16 @@ import Section from "@/components/Section.astro";
         const protocolInput = (document.getElementById('protocol') as HTMLSelectElement).value;
 
         if (!tokenInput) {
-            log('Error: Token is required.', 'error');
+            log('ERROR: TOKEN_REQUIRED', 'error');
             return;
         }
 
-        // Process IPs
         const ips = ipsInput.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0);
         const host = ips.length > 0 ? ips[0] : 'localhost';
         const port = portInput || '18789';
         
         const url = `${protocolInput}://${host}:${port}`;
-        log(`1. Connecting to ${url}...`);
+        log(`1. CONNECTING_TO_${url}...`);
 
         let ws: WebSocket;
         let isConnected = false;
@@ -550,287 +489,63 @@ import Section from "@/components/Section.astro";
         try {
             ws = new WebSocket(url);
         } catch (e: any) {
-            log(`Failed to create WebSocket: ${e.message}`, 'error');
-            if (window.location.protocol === 'https:' && protocolInput === 'ws') {
-                 log('Hint: Mixed Content (HTTPS -> WS) blocked. Use WSS.', 'warning');
-            }
+            log(`WS_CREATION_FAILED: ${e.message}`, 'error');
             return;
         }
 
         const timeout = setTimeout(() => {
             if (!isConnected) {
-                log('Connection timeout (5s). Gateway unreachable.', 'error');
-                log('Hint: Check Firewall, Port Forwarding, or start OpenClaw.', 'warning');
+                log('TIMEOUT: GATEWAY_UNREACHABLE', 'error');
                 ws.close();
             }
         }, 5000);
 
         ws.onopen = () => {
             isConnected = true;
-            log('2. Network Connected! (Gateway Reachable)', 'success');
-            log('3. Verifying Token...', 'info');
+            log('2. NETWORK_CONNECTED', 'success');
+            log('3. VERIFYING_TOKEN...', 'info');
             
-            // Allow time for server to send challenge if it wants, otherwise send our connect
             setTimeout(() => {
                 if (ws.readyState === WebSocket.OPEN) {
-                    sendConnect();
+                    handshakeSent = true;
+                    const connectReq = {
+                        type: "req",
+                        id: "test-" + Date.now(),
+                        method: "connect",
+                        params: {
+                            minProtocol: 3,
+                            maxProtocol: 3,
+                            client: { id: "web", version: "1.0.0", platform: "web", mode: "operator" },
+                            role: "operator",
+                            scopes: ["operator.read"], 
+                            auth: { token: tokenInput },
+                            device: { id: "boondit-tester", publicKey: "dummy", signature: "dummy", signedAt: Date.now(), nonce: "dummy" }
+                        }
+                    };
+                    ws.send(JSON.stringify(connectReq));
                 }
             }, 100);
         };
-
-        const sendConnect = () => {
-            handshakeSent = true;
-            const connectReq = {
-                type: "req",
-                id: "test-" + Date.now(),
-                method: "connect",
-                params: {
-                    minProtocol: 3,
-                    maxProtocol: 3,
-                    client: {
-                        id: "web",
-                        version: "1.0.0",
-                        platform: "web",
-                        mode: "operator"
-                    },
-                    role: "operator",
-                    scopes: ["operator.read"], 
-                    caps: [],
-                    commands: [],
-                    permissions: {},
-                    auth: { token: tokenInput },
-                    locale: "en-US",
-                    userAgent: "boondit-web/1.0.0",
-                    device: {
-                         id: "boondit-tester-" + Math.random().toString(36).substring(7),
-                         publicKey: "dummy", 
-                         signature: "dummy",
-                         signedAt: Date.now(),
-                         nonce: "dummy"
-                    }
-                }
-            };
-            ws.send(JSON.stringify(connectReq));
-        }
 
         ws.onmessage = (event) => {
             clearTimeout(timeout);
             try {
                 const data = JSON.parse(event.data);
-                
-                // If we get a challenge first, just send our connect frame
-                if (data.type === 'event' && data.event === 'connect.challenge') {
-                    // Server is alive and speaking protocol
-                    if (!handshakeSent) sendConnect();
-                    return;
-                }
-
-                if (data.type === 'res' && data.ok && data.payload?.type === 'hello-ok') {
-                    log('4. Token Accepted! (Authenticated)', 'success');
+                if (data.type === 'res' && data.ok) {
+                    log('4. AUTH_SUCCESS', 'success');
                     ws.close();
                 } else if (data.type === 'res' && !data.ok) {
-                    // Check for schema validation errors which imply we reached the gateway
-                    if (data.error && data.error.message && data.error.message.includes('invalid connect params')) {
-                        log('Gateway Connected! (Reachable)', 'success');
-                        log('Note: Full verification skipped. The Gateway is enforcing strict device identity (Signatures), which this web tool cannot generate without your private keys. However, your URL/Port are correct.', 'warning');
-                    } else if (data.error && (data.error.includes?.('auth') || data.error.code === 401)) {
-                         log('Authentication Failed: Invalid Token.', 'error');
-                    } else {
-                         log(`Handshake Rejected: ${JSON.stringify(data.error)}`, 'error');
-                    }
+                    log(`FAILED: ${JSON.stringify(data.error)}`, 'error');
                     ws.close();
-                } else {
-                     // Any other valid protocol message implies token was at least processed
-                     log('Response received (likely valid config).', 'info');
-                     ws.close();
                 }
-
             } catch (e) {
-                log('Invalid response format.', 'error');
+                log('INVALID_RESPONSE', 'error');
             }
         };
 
-        ws.onerror = (error) => {
+        ws.onerror = () => {
             clearTimeout(timeout);
-            if (!isConnected) {
-                log('Connection Failed (Network Error).', 'error');
-                if (window.location.protocol === 'https:' && protocolInput === 'ws') {
-                    log('Hint: Mixed Content (HTTPS -> WS) blocked.', 'warning');
-                } else {
-                    log('Hint: Is the IP/Port correct? Is OpenClaw running?', 'warning');
-                }
-            } else {
-                log('Socket error after connection.', 'error');
-            }
-        };
-
-        ws.onclose = (event) => {
-            clearTimeout(timeout);
-            if (isConnected && handshakeSent) {
-                // If we get specific protocol closure codes
-                if (event.code === 1008) {
-                    log('Gateway Connected! (Reachable)', 'success');
-                    log('Note: Connection closed by policy (Code 1008). This confirms you reached the Gateway, but it requires a signed device identity for full access.', 'warning');
-                } else if (event.code === 1006 || event.code === 1000) { 
-                     log('Connection closed by server.', 'warning');
-                     log('Hint: This usually means the Token is Invalid.', 'warning');
-                } else {
-                     log(`Closed (Code: ${event.code}).`, 'info');
-                }
-            }
+            if (!isConnected) log('CONNECTION_FAILED', 'error');
         };
     });
-
 </script>
-
-<style>
-  /* Reuse styles from creation gen for consistency */
-  .card {
-    position: relative;
-    background: rgba(31, 41, 55, 0.6);
-    backdrop-filter: blur(8px);
-    border-radius: 1rem;
-    padding: 2rem;
-    border: 1px solid rgba(75, 85, 99, 0.5);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .card::before,
-  .card::after {
-    content: '';
-    position: absolute;
-    width: 2rem;
-    height: 2rem;
-    pointer-events: none;
-  }
-  .card::before {
-    top: 0;
-    left: 0;
-    border-top: 2px solid hsl(var(--color-pink) / 0.5);
-    border-left: 2px solid hsl(var(--color-pink) / 0.5);
-    border-top-left-radius: 0.75rem;
-  }
-  .card::after {
-    bottom: 0;
-    right: 0;
-    border-bottom: 2px solid hsl(var(--color-purple) / 0.5);
-    border-right: 2px solid hsl(var(--color-purple) / 0.5);
-    border-bottom-right-radius: 0.75rem;
-  }
-  
-  .card:hover {
-     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .card-title {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #e2e8f0;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .form-input,
-  .form-select {
-    display: block;
-    width: 100%;
-    background: rgba(31, 41, 55, 0.8);
-    color: #fff;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(75, 85, 99, 0.6);
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    transition: all 0.2s;
-  }
-
-  .form-input:focus,
-  .form-select:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  }
-  
-  .form-input:hover,
-  .form-select:hover {
-    border-color: rgba(99, 102, 241, 0.5);
-  }
-
-  .form-select {
-    padding-right: 2.5rem;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-  }
-
-  .btn-primary, .btn-secondary {
-    font-weight: 600;
-    border-radius: 0.5rem;
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
-    transition: all 0.2s;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  }
-  
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .btn-secondary {
-    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-  }
-
-  .btn-secondary:hover {
-     background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
-     transform: translateY(-1px);
-  }
-
-    .btn-secondary:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-    }
-
-  .json-preview {
-    background: rgba(30, 41, 59, 0.8);
-    border: 1px solid rgba(75, 85, 99, 0.5);
-    color: #22d3ee;
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    font-size: 0.75rem;
-    overflow-x: auto;
-    font-family: "Courier New", monospace;
-    scrollbar-width: thin;
-    scrollbar-color: #4b5563 #1f2937;
-    max-height: 200px;
-  }
-</style>
