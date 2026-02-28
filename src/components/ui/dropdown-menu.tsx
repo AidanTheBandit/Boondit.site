@@ -43,11 +43,18 @@ const DropdownMenuInner = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
     <div
       ref={ref}
       className={cn(
-        "bg-background/90 backdrop-blur-2xl border-2 border-border/50 rounded shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden p-1.5 flex flex-col gap-1 relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/5 before:to-transparent before:pointer-events-none",
+        "bg-background/90 backdrop-blur-2xl border-2 border-border/50 rounded shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden p-1.5 flex flex-col gap-1 relative",
         className
       )}
       {...props}
-    />
+    >
+      <div className="absolute top-0 left-0 w-full h-[1px] flex opacity-30">
+        <div className="flex-1 bg-[hsl(var(--color-pink))]" />
+        <div className="flex-1 bg-[hsl(var(--color-purple))]" />
+        <div className="flex-1 bg-[hsl(var(--color-gray))]" />
+      </div>
+      {props.children}
+    </div>
   )
 )
 DropdownMenuInner.displayName = "DropdownMenuInner"

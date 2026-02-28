@@ -19,7 +19,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent/10 hover:text-accent-foreground",
         glam: "glam-card text-foreground hover:text-accent transition-colors duration-200",
         premium:
-          "bg-[#FFDD00] text-black hover:bg-[#FFDD00]/90 hover:text-black/80 font-bold border border-transparent shadow-[0_0_10px_rgba(255,221,0,0.3)]",
+          "bg-[#FFDD00] text-black hover:bg-[#FFDD00]/90 hover:text-black/80 font-bold border border-black/10",
       },
       size: {
         default: "h-10 px-4 py-2",

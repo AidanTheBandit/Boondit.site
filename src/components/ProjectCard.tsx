@@ -14,7 +14,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ title, period, link, descript
   return (
     <Card className="h-full flex flex-col group relative overflow-hidden bg-card/60 hover:bg-card border-border/50 hover:border-accent/40 shadow-sm hover:shadow-[0_4_20px_hsl(var(--accent)/0.1)] transition-all duration-300 rounded-xl">
       {/* Accent Top Bar */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[hsl(var(--color-pink))] via-[hsl(var(--color-purple))] to-[hsl(var(--color-gray))] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></div>
+      <div className="absolute top-0 left-0 w-full h-1 flex scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top opacity-50">
+        <div className="flex-1 bg-[hsl(var(--color-pink))]"></div>
+        <div className="flex-1 bg-[hsl(var(--color-purple))]"></div>
+        <div className="flex-1 bg-[hsl(var(--color-gray))]"></div>
+      </div>
 
       <CardContent className="p-6 md:p-8 flex-grow flex flex-col relative z-10 w-full h-full">
         {link ? (
