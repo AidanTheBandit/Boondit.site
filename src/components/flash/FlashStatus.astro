@@ -29,11 +29,35 @@
 
 <style>
   .card {
+    position: relative;
     background: rgba(31, 41, 55, 0.6);
     backdrop-filter: blur(8px);
     border-radius: 1rem;
     padding: 2rem;
     border: 1px solid rgba(75, 85, 99, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card::before,
+  .card::after {
+    content: '';
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    pointer-events: none;
+  }
+  .card::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid hsl(var(--color-pink) / 0.5);
+    border-left: 2px solid hsl(var(--color-pink) / 0.5);
+    border-top-left-radius: 0.75rem;
+  }
+  .card::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid hsl(var(--color-purple) / 0.5);
+    border-right: 2px solid hsl(var(--color-purple) / 0.5);
+    border-bottom-right-radius: 0.75rem;
   }
 
   .card-title {
@@ -50,7 +74,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 0.9rem;
-    color: #cbd5e1;
+    color: var(--muted-foreground);
   }
 
   .status-pill {
@@ -58,7 +82,7 @@
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
     background: rgba(148, 163, 184, 0.2);
-    color: #94a3b8;
+    color: var(--muted-foreground);
   }
 
   :global(.status-pill.is-ok) {

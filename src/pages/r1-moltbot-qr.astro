@@ -8,14 +8,17 @@ import Section from "@/components/Section.astro";
     <div class="max-w-7xl mx-auto p-6">
       <header class="text-center mb-10">
         
-        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 max-w-2xl mx-auto backdrop-blur-sm">
-            <p class="text-yellow-200 font-bold flex items-center justify-center gap-2 mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
-                SENSITIVE DATA
-            </p>
-            <p class="text-yellow-100/80 text-sm">
-                The generated QR code contains personal information (your token) and should <strong>NOT</strong> be shared with others. Boondit.site will never upload any of this data your enter here. QR code generation happens locally in your browser.
-            </p>
+        <div class="mt-4 mx-auto max-w-2xl relative group">
+          <div class="absolute -inset-[1px] bg-gradient-to-r from-[hsl(var(--color-pink))] via-[hsl(var(--color-purple))] to-[hsl(var(--color-gray))] rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity blur-sm"></div>
+          <div class="relative bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 max-w-2xl mx-auto backdrop-blur-sm">
+              <p class="text-yellow-200 font-bold flex items-center justify-center gap-2 mb-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                  SENSITIVE DATA
+              </p>
+              <p class="text-yellow-100/80 text-sm">
+                  The generated QR code contains personal information (your token) and should <strong>NOT</strong> be shared with others. Boondit.site will never upload any of this data your enter here. QR code generation happens locally in your browser.
+              </p>
+          </div>
         </div>
       </header>
 
@@ -27,7 +30,7 @@ import Section from "@/components/Section.astro";
                 <form id="moltbotForm" class="space-y-5">
                     <div class="form-group">
                         <label for="ips" class="form-label">
-                            IP Addresses <span class="text-gray-400 font-normal normal-case ml-1">(comma separated)</span>
+                            IP Addresses <span class="text-muted-foreground font-normal normal-case ml-1">(comma separated)</span>
                         </label>
                         <input type="text" id="ips" class="form-input" placeholder="1.2.3.4, 5.6.7.8" required>
                     </div>
@@ -64,8 +67,8 @@ import Section from "@/components/Section.astro";
                         Verify connectivity to your OpenClaw instance.
                     </p>
                     
-                    <div id="testLog" class="bg-black/30 rounded-lg p-3 border border-gray-700/50 min-h-[100px] font-mono text-[11px] overflow-y-auto max-h-[150px] flex flex-col gap-1">
-                        <span class="text-gray-500 italic">Ready to test...</span>
+                    <div id="testLog" class="bg-card/40 rounded-lg p-3 border border-border/60 min-h-[100px] font-mono text-[11px] overflow-y-auto max-h-[150px] flex flex-col gap-1">
+                        <span class="text-muted-foreground italic">Ready to test...</span>
                     </div>
 
                     <button id="testConnectionBtn" type="button" class="btn-secondary w-full text-sm py-2 flex items-center justify-center gap-2">
@@ -87,15 +90,19 @@ import Section from "@/components/Section.astro";
                 </button>
             </div>
             
-            <div class="flex-1 min-h-[300px] flex flex-col items-center justify-center p-6 bg-black/20 rounded-xl border border-white/5 mb-4 relative overflow-hidden group" id="qrCodeContainer">
-                 <p class="text-gray-400 text-sm font-medium">Generate a QR code to see it here</p>
-            </div>
+              <div class="flex-1 min-h-[300px] flex flex-col items-center justify-center p-6 bg-card/40 rounded-xl border border-border/60 mb-4 relative overflow-hidden group"
+                   id="qrCodeContainer"
+                   style="background-image: radial-gradient(circle at 2px 2px, rgba(150,150,150,0.1) 1px, transparent 0); background-size: 20px 20px;">
+                  <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
+                  <div class="absolute bottom-0 left-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl"></div>
+                  <p class="text-muted-foreground text-sm font-medium">Generate a QR code to see it here</p>
+              </div>
             <div class="qr-footer text-xs text-muted-foreground mt-2 text-center">
                 <span id="molt-qr-watermark">OpenClaw | boondit.site</span>
             </div>
             
             <div class="w-full">
-                <h3 class="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">JSON Payload</h3>
+                <h3 class="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">JSON Payload</h3>
                 <pre id="jsonPreview" class="json-preview !max-h-[120px]"></pre>
                 <div class="mt-3 flex gap-3">
                     <button id="downloadQrBtn" class="btn-secondary text-sm py-2 px-3" disabled>Download QR</button>
@@ -111,18 +118,18 @@ import Section from "@/components/Section.astro";
             <h2 class="card-title">How to Use</h2>
             <div class="space-y-6">
                 <div class="flex gap-4">
-                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold border border-blue-500/30">1</div>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[hsl(var(--color-pink))]/10 text-[hsl(var(--color-pink))] flex items-center justify-center font-bold border border-border/30">1</div>
                     <div>
                         <h3 class="font-semibold text-white mb-1">Scan QR Code</h3>
-                        <p class="text-gray-400 text-sm">Scan the generated QR code with your Rabbit R1 device's camera.</p>
+                        <p class="text-muted-foreground text-sm">Scan the generated QR code with your Rabbit R1 device's camera.</p>
                     </div>
                 </div>
 
                 <div class="flex gap-4">
-                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold border border-blue-500/30">2</div>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[hsl(var(--color-purple))]/10 text-[hsl(var(--color-purple))] flex items-center justify-center font-bold border border-border/30">2</div>
                     <div>
                         <h3 class="font-semibold text-white mb-2">Approve in Web UI</h3>
-                        <p class="text-gray-400 text-sm">Open <a id="nodesLink" href="http://IP:port/nodes" class="text-blue-400 hover:text-blue-300 hover:underline">http://IP:port/nodes</a>, then click <strong>Approve</strong> next to <strong>Rabbit R1</strong>.</p>
+                        <p class="text-muted-foreground text-sm">Open <a id="nodesLink" href="http://IP:port/nodes" class="text-accent hover:text-accent/80 hover:underline">http://IP:port/nodes</a>, then click <strong>Approve</strong> next to <strong>Rabbit R1</strong>.</p>
                     </div>
                 </div>
             </div>
@@ -132,13 +139,13 @@ import Section from "@/components/Section.astro";
           <article class="card">
               <h2 class="card-title">FAQ / Troubleshooting</h2>
               <div class="space-y-3">
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-bold text-white text-sm">Device stuck on "Gateway error"?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
                             Check the following:
                             <ul class="list-disc ml-4 mt-2 space-y-1">
                                 <li>Ensure <strong>Settings &gt; Gateway &gt; Bind</strong> is set to <strong>LAN</strong> (not Loopback).</li>
@@ -152,13 +159,13 @@ import Section from "@/components/Section.astro";
                       </div>
                   </details>
 
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-bold text-white text-sm">Device stuck on "Gateway unreachable"?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
                             This indicates a network-level connectivity issue:
                             <ul class="list-disc ml-4 mt-2 space-y-1">
                                 <li><strong>Service Status:</strong> Ensure the OpenClaw service is actually running on your computer.</li>
@@ -169,86 +176,86 @@ import Section from "@/components/Section.astro";
                       </div>
                   </details>
 
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">How do I setup OpenClaw?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
                               Check out the documentation at <a href="https://docs.molt.bot/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">docs.molt.bot</a>
                           </p>
                       </div>
                   </details>
 
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
-                          <h3 class="font-semibold text-white text-sm">Is OpenClaw a rabbit product?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+<details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                          <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
+                              <h3 class="font-semibold text-white text-sm">Is OpenClaw a rabbit product?</h3>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          </summary>
+                          <div class="px-4 pb-4 pt-0">
+                              <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">
                               No. It is an open source project that can be found here: <a href="https://github.com/moltbot/moltbot" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">github.com/moltbot/moltbot</a>
                           </p>
                       </div>
                   </details>
 
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">Is OpenClaw safe?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Use at your own risk.</p>
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Use at your own risk.</p>
                       </div>
                   </details>
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">Is Tailscale supported?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">No. Please use a reverse proxy or another tunneling service like cloudflared for remote access.</p>
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">No. Please use a reverse proxy or another tunneling service like cloudflared for remote access.</p>
                       </div>
                   </details>
 
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">Can I use WS (WebSocket)?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Only on your local network (e.g., 192.168.x.x IPs). Use WSS (Secure WebSocket) for anything remotely accessible or secured.</p>
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Only on your local network (e.g., 192.168.x.x IPs). Use WSS (Secure WebSocket) for anything remotely accessible or secured.</p>
                       </div>
                   </details>
 
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">Can I share my OpenClaw?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-red-400/90 text-sm leading-relaxed font-medium border-t border-white/5 pt-3">NO. This is very unsafe. Your token grants access to your R1 device.</p>
+                          <p class="text-red-400/90 text-sm leading-relaxed font-medium border-t border-border/60 pt-3">NO. This is very unsafe. Your token grants access to your R1 device.</p>
                       </div>
                   </details>
 
-                   <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                   <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">Is this the same as clawdbot?</h3>
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Yes, OpenClaw is the evolution of MoltBot/clawdbot.</p>
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Yes, OpenClaw is the evolution of MoltBot/clawdbot.</p>
                       </div>
                   </details>
 
-                  <details class="group bg-black/20 rounded-lg border border-white/5 overflow-hidden">
-                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors select-none">
+                  <details class="group bg-card/40 rounded-lg border border-border/60 overflow-hidden">
+                      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-card/50 transition-colors select-none">
                           <h3 class="font-semibold text-white text-sm">How do I remove/unlink my R1?</h3>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
                       </summary>
                       <div class="px-4 pb-4 pt-0">
-                          <p class="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-3">Go to the Web UI &gt; Nodes &gt; Rabbit R1 &gt; Revoke.</p>
+                          <p class="text-muted-foreground text-sm leading-relaxed border-t border-border/60 pt-3">Go to the Web UI &gt; Nodes &gt; Rabbit R1 &gt; Revoke.</p>
                       </div>
                   </details>
                   
@@ -262,7 +269,7 @@ import Section from "@/components/Section.astro";
   <!-- Fullscreen Modal -->
   <div id="qrModal" class="fixed inset-0 z-[10000] bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
       <div class="relative w-full max-w-2xl flex flex-col items-center">
-          <button id="closeModalBtn" class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors p-2">
+          <button id="closeModalBtn" class="absolute -top-12 right-0 text-white hover:text-muted-foreground/80 transition-colors p-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
           <div id="modalQrContainer" class="bg-white p-8 rounded-xl shadow-2xl"></div>
@@ -409,6 +416,9 @@ import Section from "@/components/Section.astro";
 
         // generate QR
         qrContainer.innerHTML = '';
+        // use a styled wrapper like the creation generator preview
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bg-white p-4 rounded-xl shadow-sm mb-6 flex items-center justify-center min-w-[250px] min-h-[250px] relative z-10 border border-border/20';
         qrCode = new QRCodeStyling({
             width: 250,
             height: 250,
@@ -416,7 +426,8 @@ import Section from "@/components/Section.astro";
             dotsOptions: { color: "#000000", type: "rounded" },
             backgroundOptions: { color: "#ffffff" }
         });
-        qrCode.append(qrContainer);
+        qrCode.append(wrapper);
+        qrContainer.appendChild(wrapper);
 
         // enable download and watermark
         const dlBtn = document.getElementById('downloadQrBtn');
@@ -502,7 +513,7 @@ import Section from "@/components/Section.astro";
             type === 'success' ? 'text-green-400' :
             type === 'error' ? 'text-red-400' :
             type === 'warning' ? 'text-yellow-400' :
-            'text-gray-300'
+            'text-muted-foreground'
         }`;
         div.textContent = `> ${msg}`;
         testLog.appendChild(div);
@@ -675,6 +686,7 @@ import Section from "@/components/Section.astro";
 <style>
   /* Reuse styles from creation gen for consistency */
   .card {
+    position: relative;
     background: rgba(31, 41, 55, 0.6);
     backdrop-filter: blur(8px);
     border-radius: 1rem;
@@ -682,6 +694,29 @@ import Section from "@/components/Section.astro";
     border: 1px solid rgba(75, 85, 99, 0.5);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card::before,
+  .card::after {
+    content: '';
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    pointer-events: none;
+  }
+  .card::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid hsl(var(--color-pink) / 0.5);
+    border-left: 2px solid hsl(var(--color-pink) / 0.5);
+    border-top-left-radius: 0.75rem;
+  }
+  .card::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid hsl(var(--color-purple) / 0.5);
+    border-right: 2px solid hsl(var(--color-purple) / 0.5);
+    border-bottom-right-radius: 0.75rem;
   }
   
   .card:hover {

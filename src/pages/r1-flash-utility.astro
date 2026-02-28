@@ -10,14 +10,17 @@ import FlashLog from "@/components/flash/FlashLog.astro";
   <Section title="R1 Flash Utility" className="min-h-screen">
     <div class="max-w-6xl mx-auto p-6 space-y-8">
       <header class="text-center space-y-3">
-        <p class="text-gray-400 text-lg">
+        <p class="text-muted-foreground text-lg">
           Flash the latest Rabbit R1 stock firmware directly from your browser.
         </p>
-        <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 max-w-3xl mx-auto">
-          <p class="text-red-200 text-sm">
-            Warning: Flashing firmware can erase data or brick your device if
-            interrupted. Wipe is always enabled. Proceed only if you accept the risk.
-          </p>
+        <div class="mt-4 mx-auto max-w-3xl relative group">
+          <div class="absolute -inset-[1px] bg-gradient-to-r from-[hsl(var(--color-pink))] via-[hsl(var(--color-purple))] to-[hsl(var(--color-gray))] rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity blur-sm"></div>
+          <div class="relative bg-red-500/10 border border-red-500/30 rounded-2xl p-4 max-w-3xl mx-auto">
+            <p class="text-red-200 text-sm">
+              Warning: Flashing firmware can erase data or brick your device if
+              interrupted. Wipe is always enabled. Proceed only if you accept the risk.
+            </p>
+          </div>
         </div>
       </header>
 
@@ -28,7 +31,7 @@ import FlashLog from "@/components/flash/FlashLog.astro";
           <!-- Auto Flash Mode -->
           <article class="card bg-gradient-auto">
             <h2 class="card-title">Auto Flash</h2>
-            <p class="text-gray-300 text-sm mb-4">
+            <p class="text-muted-foreground text-sm mb-4">
               Automated workflow: Powers on device via BROM, downloads latest firmware, and flashes automatically.
             </p>
             <button id="autoFlash" class="btn-auto w-full">
@@ -44,8 +47,8 @@ import FlashLog from "@/components/flash/FlashLog.astro";
             <div class="space-y-4 mt-4">
               
               <div>
-                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 0: Enter Fastboot (BROM)</h3>
-                <p class="text-xs text-gray-400 mb-2">
+                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 0: Enter Fastboot (BROM)</h3>
+                <p class="text-xs text-muted-foreground mb-2">
                   If device is powered off, send FASTBOOT command via BROM (Web Serial).
                 </p>
                 <button id="enterFastboot" class="btn-secondary w-full">
@@ -54,8 +57,8 @@ import FlashLog from "@/components/flash/FlashLog.astro";
               </div>
 
               <div>
-                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 1: Connect Bootloader</h3>
-                <p class="text-xs text-gray-400 mb-2">
+                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 1: Connect Bootloader</h3>
+                <p class="text-xs text-muted-foreground mb-2">
                   Put device in bootloader fastboot mode and select it.
                 </p>
                 <button id="connectBootloader" class="btn-primary w-full">
@@ -64,8 +67,8 @@ import FlashLog from "@/components/flash/FlashLog.astro";
               </div>
 
               <div>
-                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 2: Switch to Fastbootd</h3>
-                <p class="text-xs text-gray-400 mb-2">
+                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 2: Switch to Fastbootd</h3>
+                <p class="text-xs text-muted-foreground mb-2">
                   Reboot device into fastbootd mode.
                 </p>
                 <button id="rebootFastbootd" class="btn-secondary w-full" disabled>
@@ -74,8 +77,8 @@ import FlashLog from "@/components/flash/FlashLog.astro";
               </div>
 
               <div>
-                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 3: Connect Fastbootd</h3>
-                <p class="text-xs text-gray-400 mb-2">
+                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 3: Connect Fastbootd</h3>
+                <p class="text-xs text-muted-foreground mb-2">
                   Select device again once in fastbootd mode.
                 </p>
                 <button id="connectFastbootd" class="btn-primary w-full" disabled>
@@ -84,8 +87,8 @@ import FlashLog from "@/components/flash/FlashLog.astro";
               </div>
 
               <div>
-                <h3 class="text-sm font-semibold text-gray-300 mb-2">Step 4: Flash Firmware</h3>
-                <p class="text-xs text-gray-400 mb-2">
+                <h3 class="text-sm font-semibold text-muted-foreground mb-2">Step 4: Flash Firmware</h3>
+                <p class="text-xs text-muted-foreground mb-2">
                   Download and flash latest firmware. Wipe is always enabled.
                 </p>
                 <button id="flashStock" class="btn-accent w-full" disabled>
@@ -100,7 +103,7 @@ import FlashLog from "@/components/flash/FlashLog.astro";
           <details class="card">
             <summary class="card-title cursor-pointer">MTK Bootloader Unlock (Experimental)</summary>
             <div class="space-y-3 mt-4">
-              <p class="text-xs text-gray-400">
+              <p class="text-xs text-muted-foreground">
                 Web Serial implementation of MTKClient for unlocking MediaTek bootloaders.
                 Currently supports MT6765 and related chipsets via BROM exploitation.
               </p>
@@ -132,15 +135,15 @@ import FlashLog from "@/components/flash/FlashLog.astro";
       <div class="modal-content">
         <div class="modal-header">
           <h2 id="modalStepTitle" class="text-xl font-bold text-white">Auto Flash Mode</h2>
-          <div class="text-sm text-gray-400">Step <span id="modalCurrentStep">1</span> of <span id="modalTotalSteps">4</span></div>
+          <div class="text-sm text-muted-foreground">Step <span id="modalCurrentStep">1</span> of <span id="modalTotalSteps">4</span></div>
         </div>
         <div class="modal-body">
-          <p id="modalInstruction" class="text-gray-300 mb-4">Preparing auto-flash...</p>
+          <p id="modalInstruction" class="text-muted-foreground mb-4">Preparing auto-flash...</p>
           <div id="modalProgress" class="hidden">
             <div class="progress-track mb-2">
               <div id="modalProgressBar" class="progress-bar"></div>
             </div>
-            <p id="modalProgressText" class="text-xs text-gray-400 text-center">0%</p>
+            <p id="modalProgressText" class="text-xs text-muted-foreground text-center">0%</p>
           </div>
         </div>
         <div class="modal-footer">
@@ -613,12 +616,35 @@ import FlashLog from "@/components/flash/FlashLog.astro";
 
 <style>
   .card {
+    position: relative;
     background: rgba(31, 41, 55, 0.6);
     backdrop-filter: blur(8px);
     border-radius: 1rem;
     padding: 2rem;
     border: 1px solid rgba(75, 85, 99, 0.5);
     transition: transform 0.2s;
+  }
+  .card::before,
+  .card::after {
+    content: '';
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    pointer-events: none;
+  }
+  .card::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid hsl(var(--color-pink) / 0.5);
+    border-left: 2px solid hsl(var(--color-pink) / 0.5);
+    border-top-left-radius: 0.75rem;
+  }
+  .card::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid hsl(var(--color-purple) / 0.5);
+    border-right: 2px solid hsl(var(--color-purple) / 0.5);
+    border-bottom-right-radius: 0.75rem;
   }
 
   .card.bg-gradient-auto {
