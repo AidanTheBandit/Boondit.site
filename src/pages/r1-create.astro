@@ -4,8 +4,8 @@ import Section from "@/components/Section.astro";
 ---
 
 <Layout title="R1 Create SDK - Boondit">
-  <div class="mt-24 md:mt-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 relative">
-    <Section title="R1 Create SDK">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 relative">
+    <Section title="R1 Create SDK" description="Unofficial community JavaScript/TypeScript SDK for building R1 plugins">
       
       <div class="prose prose-zinc dark:prose-invert max-w-none 
         prose-headings:font-bold prose-headings:tracking-tight
@@ -17,7 +17,11 @@ import Section from "@/components/Section.astro";
         prose-pre:bg-card/50 prose-pre:border prose-pre:border-border/50 prose-pre:rounded-xl">
         
         <div class="bg-card/50 border border-border/50 rounded-2xl p-8 mb-12 text-center shadow-lg relative overflow-hidden group">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[hsl(var(--color-pink))] via-[hsl(var(--color-purple))] to-[hsl(var(--color-gray))] scale-x-100 origin-left"></div>
+          <div class="absolute top-0 left-0 w-full h-1 flex opacity-50 group-hover:opacity-100 transition-opacity">
+            <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+            <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+            <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+          </div>
           <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           
           <h2 class="text-3xl font-bold text-foreground m-0 mb-4 border-none pt-2">r1-create</h2>

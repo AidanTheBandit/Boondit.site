@@ -116,10 +116,10 @@ img,
   bottom: 0;
   background: linear-gradient(
     45deg,
-    hsl(var(--color-pink) / 0.6),
-    hsl(var(--color-purple) / 0.5),
-    hsl(var(--color-gray) / 0.4),
-    hsl(var(--color-pink) / 0.5)
+    hsl(var(--color-pink) / 0.8),
+    hsl(var(--color-purple) / 0.7),
+    hsl(var(--color-gray) / 0.6),
+    hsl(var(--color-pink) / 0.7)
   );
   background-size: 400% 400%;
   animation: gradientShift 4s ease-in-out infinite;
@@ -127,8 +127,27 @@ img,
   pointer-events: none;
   mix-blend-mode: overlay;
   opacity: 0;
-  /* Start hidden until mask is applied */
   transition: opacity 0.5s ease-in-out;
+  filter: drop-shadow(0 0 10px hsl(var(--color-pink) / 0.3));
+}
+
+.dark .hero-gradient-overlay {
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 20px hsl(var(--color-pink) / 0.5));
+}
+
+.hero-image-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle at center, hsl(var(--color-pink) / 0.2), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.hero-image-container.mask-applied::after {
+  opacity: 1;
 }
 
 @keyframes gradientShift {

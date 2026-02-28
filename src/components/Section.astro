@@ -1,11 +1,12 @@
 ---
 type Props = {
   title: string;
+  description?: string;
   full_screen?: boolean;
   className?: string;
   hideTitle?: boolean;
 };
-const { title = "Section", full_screen = false, className = "", hideTitle = false } = Astro.props;
+const { title = "Section", description, full_screen = false, className = "", hideTitle = false } = Astro.props;
 ---
 
 <section
@@ -18,6 +19,11 @@ const { title = "Section", full_screen = false, className = "", hideTitle = fals
         <h2 class="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-foreground uppercase">
           {title}
         </h2>
+        {description && (
+          <p class="text-muted-foreground text-sm md:text-base font-mono uppercase tracking-widest mt-2 max-w-2xl">
+            {description}
+          </p>
+        )}
       </div>
       
       {/* Decorative Line instead of border-bottom */}

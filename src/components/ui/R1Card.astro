@@ -1,0 +1,50 @@
+---
+interface Props {
+  title?: string;
+  className?: string;
+  accent?: 'pink' | 'purple' | 'gray';
+  corners?: 'all' | 'top-left' | 'bottom-right' | 'top-right' | 'bottom-left' | 'none';
+  headerBar?: boolean;
+}
+
+const { 
+  title, 
+  className = "", 
+  accent = 'pink',
+  corners = 'all',
+  headerBar = true
+} = Astro.props;
+
+const accentColor = accent === 'pink' ? 'var(--color-pink)' : accent === 'purple' ? 'var(--color-purple)' : 'var(--color-gray)';
+const accentClass = accent === 'pink' ? 'hsl(var(--color-pink))' : accent === 'purple' ? 'hsl(var(--color-purple))' : 'hsl(var(--color-gray))';
+
+const showTopLeft = corners === 'all' || corners === 'top-left';
+const showBottomRight = corners === 'all' || corners === 'bottom-right';
+const showTopRight = corners === 'top-right';
+const showBottomLeft = corners === 'bottom-left';
+---
+
+<div class={`bg-card/40 border border-border/50 rounded-2xl p-6 md:p-8 shadow-sm relative overflow-hidden group ${className}`}>
+  <!-- Decorative corner brackets -->
+  {showTopLeft && (
+    <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 rounded-tl-2xl opacity-50 group-hover:opacity-100 transition-opacity" style={`border-color: hsl(${accentColor} / 0.5)`}></div>
+  )}
+  {showBottomRight && (
+    <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 rounded-br-2xl opacity-50 group-hover:opacity-100 transition-opacity" style={`border-color: hsl(${accentColor === 'var(--color-pink)' ? 'var(--color-purple)' : 'var(--color-pink)'} / 0.5)`}></div>
+  )}
+  {showTopRight && (
+    <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 rounded-tr-2xl opacity-50 group-hover:opacity-100 transition-opacity" style={`border-color: hsl(${accentColor} / 0.5)`}></div>
+  )}
+  {showBottomLeft && (
+    <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 rounded-bl-2xl opacity-50 group-hover:opacity-100 transition-opacity" style={`border-color: hsl(${accentColor} / 0.5)`}></div>
+  )}
+
+  {title && (
+    <h2 class="text-xl font-bold mb-6 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider text-foreground">
+      {headerBar && <div class="w-2 h-6" style={`background-color: ${accentClass}`}></div>}
+      {title}
+    </h2>
+  )}
+  
+  <slot />
+</div>
