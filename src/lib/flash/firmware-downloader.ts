@@ -58,42 +58,70 @@ export async function fetchLatestFirmware(): Promise<FirmwareAsset> {
 
 /**
  * Download firmware zip with progress tracking
+ * Uses server proxy to bypass CORS restrictions from GitHub
  */
 export async function downloadFirmware(
   asset: FirmwareAsset,
   onProgress?: ProgressCallback
 ): Promise<File> {
-  const candidateUrls = [
-    { label: "Boondit Mirror", url: asset.mirrorUrl },
-    { label: "GitHub API", url: asset.apiUrl, headers: { Accept: "application/octet-stream" } },
-    { label: "GitHub Direct", url: asset.url },
-  ].filter(c => c.url);
+  // Extract version from asset name (e.g., "rabbit_OS_v1.0.0.zip" → "v1.0.0")
+  const versionMatch = asset.name.match(/_(v[\d.]+)\.zip$/);
+  const version = versionMatch ? versionMatch[1] : null;
+
+  // Build candidate URLs with priority order
+  const candidateUrls: Array<{ label: string; url: string }> = [];
+
+  // Priority 1: Local Boondit mirror if available
+  if (asset.mirrorUrl) {
+    candidateUrls.push({ label: "Boondit Mirror", url: asset.mirrorUrl });
+  }
+
+  // Priority 2: Server-side proxy (bypasses CORS, handles GitHub API)
+  if (version) {
+    candidateUrls.push({ 
+      label: "Boondit Proxy", 
+      url: `${getProxyBase()}/api/firmware/download?version=${encodeURIComponent(version)}`
+    });
+  }
+
+  // Priority 3: Proxy with direct GitHub URL (as fallback)
+  if (asset.url) {
+    candidateUrls.push({
+      label: "GitHub via Proxy",
+      url: `${getProxyBase()}/api/firmware/download?url=${encodeURIComponent(asset.url)}`
+    });
+  }
 
   let response: Response | undefined;
   let usedUrl = "";
 
   for (const candidate of candidateUrls) {
     try {
-      response = await fetch(candidate.url!, {
-        headers: candidate.headers || {},
+      console.log(`[Firmware] Trying ${candidate.label}...`);
+      response = await fetch(candidate.url, {
         redirect: "follow",
         cache: "no-store",
       });
+
       if (response.ok) {
         usedUrl = candidate.label;
+        console.log(`[Firmware] Using ${usedUrl}`);
         break;
       }
+
+      console.warn(`[Firmware] ${candidate.label} returned ${response.status}`);
+      response = undefined;
     } catch (error) {
-      console.error(`${candidate.label} failed:`, error);
+      console.error(`[Firmware] ${candidate.label} failed:`, error);
       response = undefined;
     }
   }
 
   if (!response || !response.ok) {
-    throw new Error("Firmware download failed from all sources.");
+    throw new Error(`Firmware download failed from all sources. Last: ${usedUrl || 'unknown'}`);
   }
 
-  console.log(`Downloading from: ${usedUrl}`);
+  console.log(`[Firmware] Downloading from: ${usedUrl}`);
 
   const contentLength = Number(response.headers.get("content-length") || 0);
   
@@ -124,7 +152,7 @@ export async function downloadFirmware(
         onProgress({
           loaded: received,
           total: contentLength,
-          percentage: received / contentLength,
+          percentage: (received / contentLength) * 100,
           speed,
           eta,
         });
@@ -134,4 +162,28 @@ export async function downloadFirmware(
 
   const blob = new Blob(chunks, { type: "application/zip" });
   return new File([blob], asset.name, { type: "application/zip" });
+}
+
+/**
+ * Get the base URL for proxy endpoints
+ * Handles localhost, GitHub Codespaces, and production env
+ */
+function getProxyBase(): string {
+  if (typeof window === 'undefined') return '';
+  
+  const hostname = window.location.hostname;
+  const protocol = window.location.protocol;
+  
+  // Codespaces or remote env
+  if (hostname.includes('github.dev') || hostname.includes('githubusercontent.com')) {
+    return `${protocol}//${hostname}`;
+  }
+  
+  // Local dev
+  if (hostname.includes('localhost')) {
+    return `http://localhost:3000`;
+  }
+  
+  // Production or deployed
+  return `${protocol}//${hostname}`;
 }

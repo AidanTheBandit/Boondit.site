@@ -7,6 +7,9 @@ import R1Banner from "@/components/ui/R1Banner.astro";
 import FlashStatus from "@/components/flash/FlashStatus.astro";
 import FlashProgress from "@/components/flash/FlashProgress.astro";
 import FlashLog from "@/components/flash/FlashLog.astro";
+
+// Import for client-side script
+const usesMTKUnlock = true;
 ---
 
 <Layout title="R1 Flash Utility - Boondit">
@@ -88,15 +91,54 @@ import FlashLog from "@/components/flash/FlashLog.astro";
               </div>
             </R1Card>
 
-            <!-- Experimental -->
-            <div class="opacity-60 hover:opacity-100 transition-opacity">
-              <R1Card title="LABS" accent="gray" corners="none" headerBar={false}>
-                 <div class="flex items-center justify-between gap-4">
-                    <p class="text-[9px] font-mono text-muted-foreground uppercase">MTK Bootloader Unlock (BROM Payload)</p>
-                    <button id="mtkUnlock" disabled class="px-4 py-2 bg-background border border-border/50 rounded-lg text-[9px] font-mono uppercase hover:bg-secondary transition-colors">UNLOCK_MTK</button>
-                 </div>
-              </R1Card>
-            </div>
+            <!-- MTK Bootloader Unlock (r1_escape method) -->
+            <R1Card title="MTK_Unlock" accent="purple">
+              <p class="text-muted-foreground text-xs font-mono mb-4 uppercase tracking-wide leading-relaxed">
+                Unlock bootloader via WebUSB using the r1_escape method: kamakiri2 exploit → FRP modification → fastboot unlock.
+              </p>
+              
+              <div class="bg-card/50 border border-purple-500/20 rounded-lg p-4 mb-4 text-xs font-mono space-y-3">
+                <div>
+                  <p class="font-bold mb-2 text-purple-400">1. Enter BROM Mode:</p>
+                  <ol class="list-decimal list-inside text-muted-foreground space-y-1">
+                    <li>Power off R1 completely (hold power ~10 seconds)</li>
+                    <li>Connect USB cable to computer <strong>while device is off</strong></li>
+                    <li>Hold power button for 3-5 seconds — do not let go yet</li>
+                    <li>"MT65xx Preloader" appears in the WebUSB picker</li>
+                  </ol>
+                </div>
+                <div>
+                  <p class="font-bold mb-2 text-purple-400">2. What This Does:</p>
+                  <ol class="list-decimal list-inside text-muted-foreground space-y-1">
+                    <li>Kamakiri2 exploit bypasses BROM security (CDC overflow)</li>
+                    <li>Uploads Download Agent for flash access</li>
+                    <li>Reads FRP partition, sets unlock flag byte</li>
+                    <li>Reboots to fastboot — then click CONNECT_BOOTLOADER above</li>
+                  </ol>
+                </div>
+                <div class="pt-2 border-t border-purple-500/10">
+                  <p class="text-yellow-400 font-bold">⚠️ REQUIREMENTS:</p>
+                  <ul class="list-disc list-inside text-muted-foreground space-y-1">
+                    <li>Chrome or Edge 61+ (WebUSB required)</li>
+                    <li>Do NOT disconnect USB during the process</li>
+                    <li><strong>macOS</strong>: Run <code class="bg-card px-1 rounded">sudo kextunload -b com.apple.driver.usb.cdc.acm</code> first</li>
+                    <li><strong>Linux</strong>: Create udev rules for MediaTek (0e8d)</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <button 
+                id="mtkUnlock" 
+                class="w-full py-4 bg-[hsl(var(--color-purple))] hover:opacity-90 text-white rounded-xl font-mono text-sm font-bold tracking-[0.2em] transition-all shadow-lg shadow-[hsl(var(--color-purple))]/20 uppercase relative overflow-hidden group/btn disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div class="absolute top-0 left-0 w-full h-1 flex opacity-50 group-hover/btn:opacity-100 transition-opacity">
+                  <div class="flex-1 bg-white/20"></div>
+                  <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+                  <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+                </div>
+                UNLOCK_BOOTLOADER
+              </button>
+            </R1Card>
           </div>
 
           <!-- Status/Sidebar Column -->
@@ -151,6 +193,7 @@ import FlashLog from "@/components/flash/FlashLog.astro";
 
 <script type="module">
   import { FastbootDevice, USER_ACTION_MAP, setDebugLevel } from "https://cdn.jsdelivr.net/npm/android-fastboot@1.1.3/dist/fastboot.mjs";
+  import { unlockBootloaderWebUSB } from "../lib/flash/mtk-unlock.js";
 
   // Tab Logic for Mobile
   const tabControls = document.getElementById('tab-controls');
@@ -271,7 +314,7 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     if (elements.rebootFastbootd) elements.rebootFastbootd.disabled = busy || !bootloaderConnected;
     if (elements.connectFastbootd) elements.connectFastbootd.disabled = busy;
     if (elements.flashStock) elements.flashStock.disabled = busy || !fastbootdConnected;
-    if (elements.mtkUnlock) elements.mtkUnlock.disabled = true;
+    if (elements.mtkUnlock) elements.mtkUnlock.disabled = busy || !supportsWebUsb;
   }
 
   const FIRMWARE_MIRROR_BASE = "https://boondit.site/firmware";
@@ -407,11 +450,72 @@ import FlashLog from "@/components/flash/FlashLog.astro";
     finally { state.busy = false; setButtonStates(); }
   }
 
+  async function mtkUnlockHandler() {
+    if (!supportsWebUsb) {
+      logStatus("WebUSB not supported. Use Chrome/Edge 61+", "error");
+      return;
+    }
+
+    state.busy = true;
+    setButtonStates();
+    logStatus("Starting MTK bootloader unlock (r1_escape method)...", "info");
+    logStatus("Select 'MT65xx Preloader' in the WebUSB picker...", "info");
+    
+    try {
+      const result = await unlockBootloaderWebUSB((progress) => {
+        // Map progress phases to log types
+        const type = progress.phase?.toLowerCase().includes("error") ? "error" 
+                   : progress.phase?.toLowerCase().includes("done") ? "success" 
+                   : "info";
+        logStatus(`[${progress.phase}] ${progress.step}`, type);
+      });
+      
+      if (result?.frpModified) {
+        logStatus("FRP partition modified — unlock flag set!", "success");
+      }
+      if (result?.rebootedToFastboot) {
+        logStatus("Device rebooting to fastboot mode...", "success");
+        logStatus("When device appears, click CONNECT_BOOTLOADER above", "info");
+        logStatus("Then run: fastboot flashing unlock", "info");
+      } else {
+        logStatus("Bootloader unlock process completed!", "success");
+      }
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : String(error);
+      
+      // Multi-line error messages (e.g. driver-claim guidance) — log each line
+      const lines = errMsg.split("\n").filter(l => l.trim().length > 0);
+      logStatus(`MTK unlock failed: ${lines[0]}`, "error");
+      for (let i = 1; i < lines.length; i++) {
+        logStatus(lines[i], "info");
+      }
+      
+      // Provide helpful guidance for common errors
+      if (errMsg.includes("No device selected") || errMsg.includes("NotFoundError")) {
+        logStatus("💡 Make sure R1 is in BROM mode (powered off + USB + hold power)", "info");
+      } else if (errMsg.includes("claim") || errMsg.includes("SecurityError")) {
+        logStatus("💡 A kernel driver is holding the USB device", "info");
+        logStatus("💡 macOS: sudo kextunload -b com.apple.driver.usb.cdc.acm", "info");
+        logStatus("💡 Linux: echo -n 'DEVICE' | sudo tee /sys/bus/usb/drivers/cdc_acm/unbind", "info");
+      } else if (errMsg.includes("handshake") || errMsg.includes("timeout")) {
+        logStatus("💡 Try a different USB cable or port. Short cables work best.", "info");
+      } else if (errMsg.includes("payload") || errMsg.includes("fetch")) {
+        logStatus("💡 Payload files may be missing — check browser console (F12)", "info");
+      } else if (errMsg.includes("hw_code") || errMsg.includes("0x788")) {
+        logStatus("💡 Device not recognized as Rabbit R1 (MT6771). Is this the right device?", "info");
+      }
+    } finally {
+      state.busy = false;
+      setButtonStates();
+    }
+  }
+
   elements.autoFlash?.addEventListener("click", autoFlash);
   elements.enterFastboot?.addEventListener("click", enterFastbootFromBrom);
   elements.connectBootloader?.addEventListener("click", connectBootloader);
   elements.rebootFastbootd?.addEventListener("click", rebootToFastbootd);
   elements.connectFastbootd?.addEventListener("click", connectFastbootd);
   elements.flashStock?.addEventListener("click", flashStockOs);
+  elements.mtkUnlock?.addEventListener("click", mtkUnlockHandler);
   setButtonStates(); setConnectionStatus();
 </script>
