@@ -83,7 +83,13 @@ code {
   scrollbar-color: var(--border) var(--background);
 }
 
-img,
+img {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  /* images should not interrupt text selection when dragged over */
+  -webkit-user-drag: none;
+}
+
 .no-selection {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
