@@ -24,6 +24,9 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                     <span class="text-muted-foreground">List</span>
                   </label>
                   <input type="text" id="ips" required value="192.168.1.100" class="w-full bg-background border border-border/60 rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-xs" placeholder="1.2.3.4, 5.6.7.8" />
+                  <p id="tailscaleWarning" class="mt-2 text-red-400 text-[10px] font-mono uppercase tracking-widest hidden">
+                    ⚠️ R1 does not support Tailscale IPs (100.x.y.z)
+                  </p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -236,10 +239,17 @@ import R1Banner from "@/components/ui/R1Banner.astro";
         const portInput = (document.getElementById('port') as HTMLInputElement).value;
         const tokenInput = (document.getElementById('token') as HTMLInputElement).value;
         const protocolSelect = document.getElementById('protocol') as HTMLSelectElement;
+        const warningEl = document.getElementById('tailscaleWarning');
         const ipsInput = ipsInputEl?.value ?? '';
 
         const ips = ipsInput.split(',').map(ip => ip.trim()).filter(ip => ip.length > 0);
         if (ips.some(ip => ip.startsWith('192.')) && protocolSelect?.value !== 'ws') protocolSelect.value = 'ws';
+
+        // show warning if any ip begins with 100.
+        const hasTailscale = ips.some(ip => ip.startsWith('100.'));
+        if (warningEl) {
+            warningEl.classList.toggle('hidden', !hasTailscale);
+        }
 
         const protocolInput = protocolSelect?.value ?? 'wss';
         const payload = {
@@ -266,10 +276,14 @@ import R1Banner from "@/components/ui/R1Banner.astro";
         }
 
         const dlBtn = document.getElementById('downloadQrBtn') as HTMLButtonElement;
-        if (dlBtn) dlBtn.disabled = !(tokenInput && ips.length > 0);
+        if (dlBtn) {
+            dlBtn.disabled = !(tokenInput && ips.length > 0);
+            // optionally also disable if tailscale ip present
+            if (hasTailscale) dlBtn.disabled = true;
+        }
         
         if (expandBtn) {
-            if (tokenInput && ips.length > 0) {
+            if (tokenInput && ips.length > 0 && !hasTailscale) {
                 expandBtn.classList.remove('hidden');
             } else {
                 expandBtn.classList.add('hidden');
