@@ -96,27 +96,33 @@ export async function downloadFirmware(
   let usedUrl = "";
 
   for (const candidate of candidateUrls) {
-    try {
-      console.log(`[Firmware] Trying ${candidate.label}...`);
-      response = await fetch(candidate.url, {
-        redirect: "follow",
-        cache: "no-store",
-      });
+      try {
+        console.log(`[Firmware] Trying ${candidate.label}...`);
+        response = await fetch(candidate.url, {
+          redirect: "follow",
+          cache: "no-store",
+        });
 
-      if (response.ok) {
-        usedUrl = candidate.label;
-        console.log(`[Firmware] Using ${usedUrl}`);
-        break;
+        if (response.ok) {
+          usedUrl = candidate.label;
+          console.log(`[Firmware] Using ${usedUrl}`);
+          break;
+        }
+
+        // attempt to parse JSON error body for better diagnostics
+        let detail = `${response.status}`;
+        try {
+          const body = await response.json();
+          if (body && body.error) detail += ` (${body.error})`;
+        } catch (_) { /* ignore */ }
+
+        console.warn(`[Firmware] ${candidate.label} returned ${detail}`);
+        response = undefined;
+      } catch (error) {
+        console.error(`[Firmware] ${candidate.label} failed:`, error);
+        response = undefined;
       }
-
-      console.warn(`[Firmware] ${candidate.label} returned ${response.status}`);
-      response = undefined;
-    } catch (error) {
-      console.error(`[Firmware] ${candidate.label} failed:`, error);
-      response = undefined;
     }
-  }
-
   if (!response || !response.ok) {
     throw new Error(`Firmware download failed from all sources. Last: ${usedUrl || 'unknown'}`);
   }
