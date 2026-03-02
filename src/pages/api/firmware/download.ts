@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 /**
  * Server-side proxy for downloading Rabbit R1 firmware
  * Bypasses CORS restrictions by downloading on the server and streaming to client
@@ -117,6 +119,7 @@ export const GET: APIRoute = async ({ request, url }) => {
     headers.set('Content-Type', 'application/zip');
     headers.set('Content-Disposition', `attachment; filename="${filename}"`);
     headers.set('Cache-Control', 'public, max-age=3600');
+    headers.set('Access-Control-Allow-Origin', '*');
     
     // Preserve content length if available
     const contentLength = downloadResponse.headers.get('content-length');

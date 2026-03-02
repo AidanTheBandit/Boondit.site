@@ -183,6 +183,15 @@ const usesMTKUnlock = true;
       </div>
     </div>
   </div>
+
+  <!-- Error/Suggestion Modal -->
+  <div id="errorModal" class="fixed inset-0 z-[11000] bg-black/75 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="relative w-full max-w-md bg-card border border-[hsl(var(--color-pink))]/30 rounded-2xl shadow-2xl p-6">
+      <h2 id="errorModalTitle" class="text-xl font-bold font-mono uppercase tracking-wider text-white mb-4">Error</h2>
+      <div id="errorModalBody" class="text-sm font-mono text-muted-foreground mb-6 whitespace-pre-wrap"></div>
+      <button id="errorModalClose" class="py-2 px-4 bg-[hsl(var(--color-pink))] text-white rounded-lg font-mono text-xs uppercase tracking-wider">Close</button>
+    </div>
+  </div>
 </Layout>
 
 <style>
@@ -258,6 +267,11 @@ const usesMTKUnlock = true;
     modalProgressText: document.getElementById("modalProgressText"),
     modalContinue: document.getElementById("modalContinue"),
     modalCancel: document.getElementById("modalCancel"),
+    errorModal: document.getElementById("errorModal"),
+    errorModalTitle: document.getElementById("errorModalTitle"),
+    errorModalBody: document.getElementById("errorModalBody"),
+    errorModalClose: document.getElementById("errorModalClose"),
+    copyLogBtn: document.getElementById("copyLog"),
   };
 
   setDebugLevel(1);
@@ -331,7 +345,11 @@ const usesMTKUnlock = true;
   async function downloadFirmware(asset, onProgress) {
     const versionMatch = asset.name.match(/_(v[\d.]+)\.zip$/);
     const version = versionMatch ? versionMatch[1] : null;
-    const candidateUrls = [{ label: "Boondit Mirror", url: asset.mirrorUrl }, { label: "Boondit Proxy", url: version ? `${window.location.origin}/api/firmware/download?version=${version}` : null }, { label: "GitHub Direct", url: asset.url }].filter(c => c.url);
+    const candidateUrls = [
+      { label: "Boondit Mirror", url: asset.mirrorUrl },
+      { label: "Proxy (version)", url: version ? `${window.location.origin}/api/firmware/download?version=${version}` : null },
+      { label: "Proxy (direct)", url: asset.url ? `${window.location.origin}/api/firmware/download?url=${encodeURIComponent(asset.url)}` : null }
+    ].filter(c => c.url);
 
     let response;
     for (const candidate of candidateUrls) {
@@ -413,7 +431,14 @@ const usesMTKUnlock = true;
         setProgress(elements.flashBar, elements.flashPct, progress || 0);
       });
       logStatus("Flash successful!", "success");
-    } catch (error) { logStatus(`Flash failed: ${error.message}`, "error"); }
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logStatus(`Flash failed: ${msg}`, "error");
+      // popup suggestion when firmware download/proxy errors occur
+      if (msg.includes("Firmware download failed") || msg.includes("Proxy")) {
+        showErrorModal("Download Error", `Unable to download firmware.\n${msg}\n\nSuggestions:\n• Check your network or try a different browser.\n• Manually download from GitHub and flash via fastboot.\n• If proxy returns 400, make sure the server is running or inspect console.`);
+      }
+    }
     finally { state.busy = false; setButtonStates(); }
   }
 
@@ -426,6 +451,30 @@ const usesMTKUnlock = true;
   }
 
   function hideModal() { if (elements.autoFlashModal) { elements.autoFlashModal.classList.add("hidden"); elements.autoFlashModal.classList.remove("flex"); } }
+
+  // Generic error/suggestion modal
+  function showErrorModal(title, message) {
+    if (!elements.errorModal) return;
+    elements.errorModalTitle.textContent = title.toUpperCase();
+    elements.errorModalBody.textContent = Array.isArray(message) ? message.join("\n") : message;
+    elements.errorModal.classList.remove("hidden");
+    elements.errorModal.classList.add("flex");
+  }
+
+  function hideErrorModal() {
+    if (!elements.errorModal) return;
+    elements.errorModal.classList.add("hidden");
+    elements.errorModal.classList.remove("flex");
+  }
+
+  // wire up close button and copy-log
+  elements.errorModalClose?.addEventListener("click", hideErrorModal);
+  elements.copyLogBtn?.addEventListener("click", () => {
+    if (elements.statusLog) {
+      navigator.clipboard.writeText(elements.statusLog.textContent || "");
+      logStatus("Log copied to clipboard", "info");
+    }
+  });
 
   async function autoFlash() {
     state.busy = true; setButtonStates();

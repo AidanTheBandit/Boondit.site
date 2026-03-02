@@ -9,9 +9,12 @@
   <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[hsl(var(--color-pink))]/50 rounded-tl-2xl"></div>
   <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[hsl(var(--color-purple))]/50 rounded-br-2xl"></div>
 
-  <h2 class="text-xl font-bold mb-6 flex items-center gap-3 border-b border-border/30 pb-4 font-mono uppercase tracking-wider">
-    <div class="w-2 h-6 bg-[hsl(var(--color-pink))]"></div>
-    System_Log
+  <h2 class="text-xl font-bold mb-6 flex items-center justify-between border-b border-border/30 pb-4 font-mono uppercase tracking-wider">
+    <div class="flex items-center gap-3">
+      <div class="w-2 h-6 bg-[hsl(var(--color-pink))]"></div>
+      System_Log
+    </div>
+    <button id="copyLog" class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 bg-[hsl(var(--color-pink))] text-white rounded-md hover:bg-[hsl(var(--color-pink))]/90">COPY</button>
   </h2>
 
   <div id="statusLog" class="flex-grow bg-slate-950 border border-border/60 rounded-xl p-4 font-mono text-[10px] overflow-y-auto custom-scrollbar flex flex-col gap-1">
@@ -25,6 +28,8 @@
     line-height: 1.4;
     word-break: break-all;
     text-transform: uppercase;
+    user-select: text;
+    white-space: pre-wrap;
   }
 
   .log-success {
