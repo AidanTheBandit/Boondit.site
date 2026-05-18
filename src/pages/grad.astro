@@ -1,0 +1,77 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import { SITE_TITLE } from "@/consts";
+---
+
+<html lang="en" class="dark !overflow-x-hidden">
+  <head>
+    <BaseHead title="Congratulations, Graduate | Boondit" description="Celebrate with a coffee" />
+    <meta name="robots" content="noindex, nofollow" />
+    <script is:inline>
+      const theme = localStorage?.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      if (theme === 'light') document.documentElement.classList.remove('dark');
+      else document.documentElement.classList.add('dark');
+    </script>
+  </head>
+
+  <body class="bg-background text-foreground min-h-screen flex flex-col items-center justify-center px-6 tracking-wide !overflow-x-hidden">
+
+    <!-- subtle grid bg from main site -->
+    <div class="fixed inset-0 z-[-1] pointer-events-none"
+      style="background-image: linear-gradient(rgba(100,100,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(100,100,255,0.03) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(circle at center, black 40%, transparent 100%); -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);">
+    </div>
+
+    <div class="max-w-lg w-full text-center space-y-8">
+
+      <!-- year badge -->
+      <div class="inline-block">
+        <span class="text-xs uppercase tracking-[0.3em] text-muted-foreground border border-border px-4 py-1.5 rounded-sm">
+          Class of 2026
+        </span>
+      </div>
+
+      <!-- heading -->
+      <div class="space-y-3">
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight">
+          Aidan's graduating.
+        </h1>
+        <p class="text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
+          And honestly? A coffee would be the cherry on top.
+        </p>
+      </div>
+
+      <!-- divider -->
+      <div class="w-24 h-px bg-border/60 mx-auto"></div>
+
+      <!-- the button -->
+      <div class="space-y-4">
+        <a
+          href="https://buymeacoffee.com/boondit"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 px-10 py-4 text-base font-medium uppercase tracking-widest border border-border bg-background text-foreground hover:bg-foreground hover:text-background transition-all duration-300 rounded-sm group"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 8h1a4 4 0 1 1 0 8h-1"/>
+            <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+            <line x1="6" x2="6" y1="2" y2="4"/>
+            <line x1="10" x2="10" y1="2" y2="4"/>
+            <line x1="14" x2="14" y1="2" y2="4"/>
+          </svg>
+          Buy Me a Coffee
+        </a>
+        <p class="text-sm text-muted-foreground font-light">
+          No pressure. Seriously. But also... coffee.
+        </p>
+      </div>
+
+      <!-- footer -->
+      <div class="pt-8 text-xs text-muted-foreground/60 space-y-1">
+        <p>
+          <a href="https://boondit.site" class="hover:text-foreground transition-colors duration-200">boondit.site</a>
+        </p>
+      </div>
+
+    </div>
+  </body>
+</html>
