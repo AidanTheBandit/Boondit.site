@@ -1,0 +1,243 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+---
+
+<html lang="en" class="dark !overflow-x-hidden">
+  <head>
+    <BaseHead title="Class of 2026 | Boondit" description="Support Aidan's next chapter" />
+    <meta name="robots" content="noindex, nofollow" />
+    <script is:inline>
+      const theme = localStorage?.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      if (theme === 'light') document.documentElement.classList.remove('dark');
+      else document.documentElement.classList.add('dark');
+    </script>
+  </head>
+
+  <body class="bg-background text-foreground tracking-wide !overflow-x-hidden">
+    <header class="fixed top-0 w-screen z-[9999]"><Navbar client:load currentPath={Astro.url.pathname} /></header>
+
+    <!-- Top color bar like the hero -->
+    <div class="fixed top-0 left-0 w-full h-1.5 flex z-[10000]">
+      <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+      <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+      <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+    </div>
+
+    <main class="min-h-screen relative">
+
+      <!-- Grid background from main site -->
+      <div class="fixed inset-0 z-[-1] pointer-events-none"
+        style="background-image: linear-gradient(rgba(100,100,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(100,100,255,0.03) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(circle at center, black 40%, transparent 100%); -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);">
+      </div>
+
+      <!-- Hero Section -->
+      <section class="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-24 md:pt-28 pb-12 relative">
+
+        <div class="max-w-xl w-full text-center space-y-10 relative z-10">
+
+          <!-- Year badge with animated border -->
+          <div class="reveal">
+            <span class="relative text-xs uppercase tracking-[0.3em] text-muted-foreground border border-border px-5 py-2 rounded-sm inline-block overflow-hidden">
+              <span class="absolute inset-0 bg-gradient-to-r from-[hsl(var(--color-pink))]/10 via-[hsl(var(--color-purple))]/10 to-[hsl(var(--color-pink))]/10 animate-[shimmer_3s_ease-in-out_infinite]"></span>
+              <span class="relative">Class of 2026</span>
+            </span>
+          </div>
+
+          <!-- Main heading -->
+          <div class="space-y-4 reveal">
+            <h1 class="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tighter text-foreground">
+              I made it<span class="text-primary">.</span>
+            </h1>
+            <div class="flex h-1.5 w-24 mx-auto rounded-full overflow-hidden">
+              <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+              <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+              <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+            </div>
+          </div>
+
+          <!-- Story -->
+          <div class="space-y-5 reveal">
+            <p class="text-base md:text-lg text-muted-foreground font-light leading-relaxed">
+              I'm graduating high school. The late nights, the projects, the people who kept me going -- it all led here.
+            </p>
+            <p class="text-base md:text-lg text-muted-foreground font-light leading-relaxed">
+              Now I'm heading into what's next. If you'd like to support my future -- my projects, my education, my plans -- I'd appreciate it more than you know.
+            </p>
+          </div>
+
+          <!-- Divider -->
+          <div class="flex items-center justify-center gap-4 reveal">
+            <div class="h-px w-12 bg-border/50"></div>
+            <span class="w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse"></span>
+            <div class="h-px w-12 bg-border/50"></div>
+          </div>
+
+          <!-- Supporter counter -->
+          <div class="reveal" id="supporter-counter">
+            <div class="glam-card rounded-sm p-6 max-w-xs mx-auto">
+              <div class="flex items-center justify-center gap-2 mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 8h1a4 4 0 1 1 0 8h-1"/>
+                  <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+                  <line x1="6" x2="6" y1="2" y2="4"/>
+                  <line x1="10" x2="10" y1="2" y2="4"/>
+                  <line x1="14" x2="14" y1="2" y2="4"/>
+                </svg>
+                <span class="text-xs uppercase tracking-widest text-muted-foreground">Raised so far</span>
+              </div>
+              <div class="text-3xl md:text-4xl font-bold tracking-tight text-foreground" id="total-raised">
+                $0
+              </div>
+              <div class="mt-3 w-full h-2 rounded-full bg-secondary overflow-hidden">
+                <div class="h-full rounded-full bg-gradient-to-r from-[hsl(var(--color-pink))] to-[hsl(var(--color-purple))] transition-all duration-1000 ease-out" id="progress-bar" style="width: 0%"></div>
+              </div>
+              <p class="text-xs text-muted-foreground/60 mt-2" id="supporter-count">0 supporters</p>
+            </div>
+          </div>
+
+          <!-- The ask -->
+          <div class="space-y-6 reveal">
+            <p class="text-lg md:text-xl text-foreground font-medium leading-relaxed">
+              Help fund what comes next.
+            </p>
+
+            <div class="flex justify-center">
+              <a
+                href="https://buymeacoffee.com/boondit"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-3 px-12 py-4 text-sm font-medium uppercase tracking-[0.2em] border border-border bg-background text-foreground hover:bg-foreground hover:text-background transition-all duration-500 rounded-sm group relative overflow-hidden"
+                id="coffee-btn"
+              >
+                <!-- Hover sweep effect -->
+                <span class="absolute inset-0 bg-gradient-to-r from-[hsl(var(--color-pink))]/20 via-[hsl(var(--color-purple))]/20 to-transparent -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 relative group-hover:rotate-12 group-hover:scale-110 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 8h1a4 4 0 1 1 0 8h-1"/>
+                  <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+                  <line x1="6" x2="6" y1="2" y2="4"/>
+                  <line x1="10" x2="10" y1="2" y2="4"/>
+                  <line x1="14" x2="14" y1="2" y2="4"/>
+                </svg>
+                <span class="relative">Support My Next Chapter</span>
+              </a>
+            </div>
+
+            <p class="text-sm text-muted-foreground/70 font-light">
+              Every coffee helps. Seriously.
+            </p>
+          </div>
+
+          <!-- Bottom decoration -->
+          <div class="flex items-center justify-center gap-4 pt-4 reveal">
+            <div class="flex gap-1 h-2">
+              <div class="w-6 h-full bg-[hsl(var(--color-pink))]/40 rounded-sm"></div>
+              <div class="w-6 h-full bg-[hsl(var(--color-purple))]/40 rounded-sm"></div>
+              <div class="w-6 h-full bg-[hsl(var(--color-gray))]/40 rounded-sm"></div>
+            </div>
+          </div>
+
+        </div>
+
+
+      </section>
+
+
+
+    </main>
+
+    <footer class="w-screen bottom-0 overflow-x-hidden"><Footer client:load /></footer>
+
+    <style>
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+
+      @keyframes countUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      #total-raised {
+        animation: countUp 0.8s ease-out forwards;
+      }
+    </style>
+
+    <script is:inline>
+      function applyTheme() {
+        const theme = localStorage?.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        if (theme === 'light') document.documentElement.classList.remove('dark');
+        else document.documentElement.classList.add('dark');
+      }
+      applyTheme();
+
+      // Scroll reveal
+      function initScrollReveal() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      }
+
+      // Fetch supporter data from our API
+      async function loadSupporterData() {
+        try {
+          const res = await fetch('/api/bmc-stats');
+          if (!res.ok) return;
+          const data = await res.json();
+
+          const totalEl = document.getElementById('total-raised');
+          const progressEl = document.getElementById('progress-bar');
+          const countEl = document.getElementById('supporter-count');
+
+          if (totalEl && data.total !== undefined) {
+            // Animate the number counting up
+            const target = data.total;
+            const duration = 1500;
+            const start = performance.now();
+
+            function animate(now) {
+              const elapsed = now - start;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+              const current = eased * target;
+              totalEl.textContent = '$' + current.toFixed(0);
+              if (progress < 1) requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+          }
+
+          if (countEl && data.supporters !== undefined) {
+            countEl.textContent = data.supporters + (data.supporters === 1 ? ' supporter' : ' supporters');
+          }
+
+          // Animate progress bar (just visual flair, no fixed goal)
+          if (progressEl) {
+            // Use a logarithmic scale for visual effect since there's no goal
+            const pct = Math.min(100, Math.max(5, Math.sqrt(data.total || 0) * 5));
+            setTimeout(() => { progressEl.style.width = pct + '%'; }, 300);
+          }
+        } catch (e) {
+          // Silently fail - the counter just stays at $0
+          console.log('BMC stats unavailable');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initScrollReveal();
+        loadSupporterData();
+      });
+      document.addEventListener('astro:page-load', () => {
+        initScrollReveal();
+        loadSupporterData();
+      });
+    </script>
+  </body>
+</html>
