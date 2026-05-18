@@ -38,13 +38,13 @@ code {
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--accent-foreground);
+  background: hsl(270 60% 60%);
+  color: hsl(0 0% 100%);
 }
 
 ::-moz-selection {
-  background: var(--accent);
-  color: var(--accent-foreground);
+  background: hsl(270 60% 60%);
+  color: hsl(0 0% 100%);
 }
 
 ::-webkit-scrollbar {
