@@ -35,9 +35,6 @@ import Footer from "@/components/Footer";
       <!-- Hero Section -->
       <section class="min-h-screen flex flex-col items-center justify-center px-6 pt-24 md:pt-28 pb-12 relative">
 
-        <!-- Floating confetti particles -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none" id="confetti-container"></div>
-
         <div class="max-w-xl w-full text-center space-y-10 relative z-10">
 
           <!-- Year badge with animated border -->
@@ -166,25 +163,7 @@ import Footer from "@/components/Footer";
         to { opacity: 1; transform: translateY(0); }
       }
 
-      .confetti-piece {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 2px;
-        animation: confettiFall linear forwards;
-        pointer-events: none;
-      }
 
-      @keyframes confettiFall {
-        0% {
-          transform: translateY(-10vh) rotate(0deg);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(110vh) rotate(720deg);
-          opacity: 0;
-        }
-      }
     </style>
 
     <script is:inline>
@@ -208,38 +187,11 @@ import Footer from "@/components/Footer";
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
       }
 
-      // Confetti
-      function spawnConfetti() {
-        const container = document.getElementById('confetti-container');
-        if (!container) return;
-        const colors = [
-          'hsl(330, 100%, 50%)',
-          'hsl(270, 60%, 60%)',
-          'hsl(0, 0%, 20%)',
-          'hsl(330, 100%, 70%)',
-          'hsl(270, 60%, 80%)',
-        ];
-        for (let i = 0; i < 30; i++) {
-          const piece = document.createElement('div');
-          piece.className = 'confetti-piece';
-          piece.style.left = Math.random() * 100 + '%';
-          piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-          piece.style.animationDuration = (4 + Math.random() * 6) + 's';
-          piece.style.animationDelay = Math.random() * 5 + 's';
-          piece.style.width = (4 + Math.random() * 6) + 'px';
-          piece.style.height = (4 + Math.random() * 6) + 'px';
-          piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-          container.appendChild(piece);
-        }
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
         initScrollReveal();
-        spawnConfetti();
       });
       document.addEventListener('astro:page-load', () => {
         initScrollReveal();
-        spawnConfetti();
       });
     </script>
   </body>
