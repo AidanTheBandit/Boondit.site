@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 
 <html lang="en" class="dark !overflow-x-hidden">
   <head>
-    <BaseHead title="Congratulations, Graduate | Boondit" description="Celebrate with a coffee" />
+    <BaseHead title="Class of 2026 | Boondit" description="Support Aidan's next chapter" />
     <meta name="robots" content="noindex, nofollow" />
     <script is:inline>
       const theme = localStorage?.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
@@ -18,71 +18,174 @@ import Footer from "@/components/Footer";
   <body class="bg-background text-foreground tracking-wide !overflow-x-hidden">
     <header class="fixed top-0 w-screen z-[9999]"><Navbar client:load currentPath={Astro.url.pathname} /></header>
 
-    <main class="min-h-screen flex flex-col items-center justify-center px-6 pt-20 md:pt-24 lg:pt-20 pb-24">
+    <!-- Top color bar like the hero -->
+    <div class="fixed top-0 left-0 w-full h-1.5 flex z-[10000]">
+      <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+      <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+      <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+    </div>
 
-      <!-- subtle grid bg -->
+    <main class="min-h-screen relative">
+
+      <!-- Grid background from main site -->
       <div class="fixed inset-0 z-[-1] pointer-events-none"
         style="background-image: linear-gradient(rgba(100,100,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(100,100,255,0.03) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(circle at center, black 40%, transparent 100%); -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);">
       </div>
 
-      <div class="max-w-lg w-full text-center space-y-8">
+      <!-- Hero Section -->
+      <section class="min-h-screen flex flex-col items-center justify-center px-6 pt-24 md:pt-28 pb-12 relative">
 
-        <!-- year badge -->
-        <div class="inline-block reveal">
-          <span class="text-xs uppercase tracking-[0.3em] text-muted-foreground border border-border px-4 py-1.5 rounded-sm">
-            Class of 2026
-          </span>
+        <!-- Floating confetti particles -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none" id="confetti-container"></div>
+
+        <div class="max-w-xl w-full text-center space-y-10 relative z-10">
+
+          <!-- Year badge with animated border -->
+          <div class="inline-block reveal" id="badge">
+            <span class="relative text-xs uppercase tracking-[0.3em] text-muted-foreground border border-border px-5 py-2 rounded-sm inline-block overflow-hidden">
+              <span class="absolute inset-0 bg-gradient-to-r from-[hsl(var(--color-pink))]/10 via-[hsl(var(--color-purple))]/10 to-[hsl(var(--color-pink))]/10 animate-[shimmer_3s_ease-in-out_infinite]"></span>
+              <span class="relative">Class of 2026</span>
+            </span>
+          </div>
+
+          <!-- Main heading -->
+          <div class="space-y-4 reveal">
+            <h1 class="text-5xl md:text-7xl font-bold leading-[0.95] tracking-tighter text-foreground">
+              I made it<span class="text-primary">.</span>
+            </h1>
+            <div class="flex h-1.5 w-24 mx-auto rounded-full overflow-hidden">
+              <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+              <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+              <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+            </div>
+          </div>
+
+          <!-- Story -->
+          <div class="space-y-5 reveal">
+            <p class="text-base md:text-lg text-muted-foreground font-light leading-relaxed max-w-md mx-auto">
+              Twelve years of school. Countable late nights became uncountable. One very patient family. And now -- it's done.
+            </p>
+            <p class="text-base md:text-lg text-muted-foreground font-light leading-relaxed max-w-md mx-auto">
+              Next up: building things that matter. But first, a small celebration.
+            </p>
+          </div>
+
+          <!-- Divider -->
+          <div class="flex items-center justify-center gap-4 reveal">
+            <div class="h-px w-12 bg-border/50"></div>
+            <span class="w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse"></span>
+            <div class="h-px w-12 bg-border/50"></div>
+          </div>
+
+          <!-- The ask -->
+          <div class="space-y-6 reveal">
+            <p class="text-lg md:text-xl text-foreground font-medium leading-relaxed max-w-md mx-auto">
+              If you'd like to help fuel what comes next, I'd be genuinely grateful.
+            </p>
+
+            <a
+              href="https://buymeacoffee.com/boondit"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-3 px-12 py-4 text-sm font-medium uppercase tracking-[0.2em] border border-border bg-background text-foreground hover:bg-foreground hover:text-background transition-all duration-500 rounded-sm group relative overflow-hidden"
+              id="coffee-btn"
+            >
+              <!-- Hover sweep effect -->
+              <span class="absolute inset-0 bg-gradient-to-r from-[hsl(var(--color-pink))]/20 via-[hsl(var(--color-purple))]/20 to-transparent -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out"></span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 relative group-hover:rotate-12 group-hover:scale-110 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 8h1a4 4 0 1 1 0 8h-1"/>
+                <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
+                <line x1="6" x2="6" y1="2" y2="4"/>
+                <line x1="10" x2="10" y1="2" y2="4"/>
+                <line x1="14" x2="14" y1="2" y2="4"/>
+              </svg>
+              <span class="relative">Support My Next Chapter</span>
+            </a>
+
+            <p class="text-sm text-muted-foreground/70 font-light">
+              Every coffee helps. Seriously.
+            </p>
+          </div>
+
+          <!-- Bottom decoration -->
+          <div class="flex items-center justify-center gap-4 pt-4 reveal">
+            <div class="flex gap-1 h-2">
+              <div class="w-6 h-full bg-[hsl(var(--color-pink))]/40 rounded-sm"></div>
+              <div class="w-6 h-full bg-[hsl(var(--color-purple))]/40 rounded-sm"></div>
+              <div class="w-6 h-full bg-[hsl(var(--color-gray))]/40 rounded-sm"></div>
+            </div>
+          </div>
+
         </div>
 
-        <!-- heading -->
-        <div class="space-y-3 reveal">
-          <h1 class="text-4xl md:text-5xl font-bold leading-tight">
-            I made it.
-          </h1>
-          <p class="text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
-            18 years, countless late nights, and one very patient family later -- I'm officially done with high school.
+        <!-- Scroll hint -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50 animate-bounce">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Thank you section -->
+      <section class="px-6 py-20 md:py-32 relative">
+        <div class="max-w-xl mx-auto text-center space-y-6 reveal">
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tighter text-foreground">
+            Thank you<span class="text-primary">.</span>
+          </h2>
+          <div class="flex h-1 w-16 mx-auto rounded-full overflow-hidden">
+            <div class="flex-1 bg-[hsl(var(--color-pink))]"></div>
+            <div class="flex-1 bg-[hsl(var(--color-purple))]"></div>
+            <div class="flex-1 bg-[hsl(var(--color-gray))]"></div>
+          </div>
+          <p class="text-base md:text-lg text-muted-foreground font-light leading-relaxed max-w-md mx-auto">
+            To everyone who's been part of this journey -- family, friends, teachers, the people who believed in me before I believed in myself. This one's for you too.
+          </p>
+          <p class="text-sm text-muted-foreground/60 font-light pt-4">
+            -- Aidan
           </p>
         </div>
+      </section>
 
-        <!-- divider -->
-        <div class="w-24 h-px bg-border/60 mx-auto reveal"></div>
-
-        <!-- message -->
-        <div class="space-y-4 reveal">
-          <p class="text-base md:text-lg text-muted-foreground font-light leading-relaxed">
-            If you're here, you probably care about me at least a little bit. And honestly, that means the world.
-          </p>
-          <p class="text-base md:text-lg text-muted-foreground font-light leading-relaxed">
-            If you'd like to celebrate with me, a coffee goes a long way. And if not -- that's cool too. Thanks for being here either way.
-          </p>
-        </div>
-
-        <!-- divider -->
-        <div class="w-24 h-px bg-border/60 mx-auto reveal"></div>
-
-        <!-- the button -->
-        <div class="space-y-4 reveal">
-          <a
-            href="https://buymeacoffee.com/boondit"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 px-10 py-4 text-base font-medium uppercase tracking-widest border border-border bg-background text-foreground hover:bg-foreground hover:text-background transition-all duration-300 rounded-sm group"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 8h1a4 4 0 1 1 0 8h-1"/>
-              <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/>
-              <line x1="6" x2="6" y1="2" y2="4"/>
-              <line x1="10" x2="10" y1="2" y2="4"/>
-              <line x1="14" x2="14" y1="2" y2="4"/>
-            </svg>
-            Buy Me a Coffee
-          </a>
-        </div>
-
-      </div>
     </main>
 
     <footer class="w-screen bottom-0 overflow-x-hidden"><Footer client:load /></footer>
+
+    <style>
+      @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+        50% { transform: translateY(-30px) rotate(180deg); opacity: 1; }
+      }
+
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        animation: confettiFall linear forwards;
+        pointer-events: none;
+      }
+
+      @keyframes confettiFall {
+        0% {
+          transform: translateY(-10vh) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+    </style>
 
     <script is:inline>
       function applyTheme() {
@@ -92,6 +195,7 @@ import Footer from "@/components/Footer";
       }
       applyTheme();
 
+      // Scroll reveal
       function initScrollReveal() {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -103,8 +207,40 @@ import Footer from "@/components/Footer";
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
       }
-      document.addEventListener('DOMContentLoaded', () => initScrollReveal());
-      document.addEventListener('astro:page-load', () => initScrollReveal());
+
+      // Confetti
+      function spawnConfetti() {
+        const container = document.getElementById('confetti-container');
+        if (!container) return;
+        const colors = [
+          'hsl(330, 100%, 50%)',
+          'hsl(270, 60%, 60%)',
+          'hsl(0, 0%, 20%)',
+          'hsl(330, 100%, 70%)',
+          'hsl(270, 60%, 80%)',
+        ];
+        for (let i = 0; i < 30; i++) {
+          const piece = document.createElement('div');
+          piece.className = 'confetti-piece';
+          piece.style.left = Math.random() * 100 + '%';
+          piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.animationDuration = (4 + Math.random() * 6) + 's';
+          piece.style.animationDelay = Math.random() * 5 + 's';
+          piece.style.width = (4 + Math.random() * 6) + 'px';
+          piece.style.height = (4 + Math.random() * 6) + 'px';
+          piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          container.appendChild(piece);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initScrollReveal();
+        spawnConfetti();
+      });
+      document.addEventListener('astro:page-load', () => {
+        initScrollReveal();
+        spawnConfetti();
+      });
     </script>
   </body>
 </html>
