@@ -11,8 +11,9 @@ import R1Banner from "@/components/ui/R1Banner.astro";
       
       <div class="max-w-7xl mx-auto relative">
         <R1Banner type="info" className="max-w-xl !mt-0 mb-12">
-          Publish your creation to the 
-          <a href="https://creations.boondit.site/" target="_blank" class="font-bold text-foreground hover:text-[hsl(var(--color-purple))] transition-colors underline decoration-[hsl(var(--color-purple))]/50 underline-offset-4">Boondit Store</a>
+          Fill in the details, then
+          <span class="font-bold text-foreground">Export to Store</span> to publish your creation to the
+          <a href="https://creations.boondit.site/" target="_blank" class="font-bold text-foreground hover:text-[hsl(var(--color-purple))] transition-colors underline decoration-[hsl(var(--color-purple))]/50 underline-offset-4">Boondit Store</a>. You'll be asked to sign in if needed — your details carry over.
         </R1Banner>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -113,6 +114,11 @@ import R1Banner from "@/components/ui/R1Banner.astro";
                 </div>
               </div>
               
+              <button id="export-btn" class="w-full mb-3 py-3 bg-[hsl(var(--color-pink))] hover:bg-[hsl(var(--color-pink))]/90 text-white rounded-xl font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex justify-center items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Export to Store</span>
+              </button>
+
               <div class="grid grid-cols-2 gap-3">
                  <button id="download-btn" class="py-2.5 bg-secondary/50 hover:bg-secondary text-foreground rounded-xl font-mono text-[10px] tracking-widest transition-all border border-border/50 uppercase disabled:opacity-30" disabled>
                     Save JSON
@@ -179,7 +185,12 @@ import R1Banner from "@/components/ui/R1Banner.astro";
     const qrContainer = document.getElementById("qr-code");
     const downloadBtn = document.getElementById("download-btn");
     const downloadQrBtn = document.getElementById("download-qr-btn");
+    const exportBtn = document.getElementById("export-btn");
     const expandBtn = document.getElementById("expand-qr-btn");
+
+    // Where the creations store lives. Override via <body data-store-url> if needed.
+    const STORE_URL =
+      document.body?.dataset?.storeUrl || "https://creations.boondit.site";
     const importFile = document.getElementById("import-file");
     const copyBtn = document.getElementById("copy-btn");
     
@@ -270,12 +281,15 @@ import R1Banner from "@/components/ui/R1Banner.astro";
 
       const jsonStr = JSON.stringify(data, null, 2);
       jsonOutput.value = jsonStr;
+      // Keep the latest structured payload around for the export action.
+      currentData = data;
       if (previewTitle) previewTitle.textContent = title || "UNTITLED";
       if (previewUrl) previewUrl.textContent = urlValue || "waiting-for-url";
 
       if (urlValue && title && themeColor && description) {
         downloadBtn.disabled = false;
         if (downloadQrBtn) downloadQrBtn.disabled = false;
+        if (exportBtn) exportBtn.disabled = false;
         if (expandBtn) expandBtn.classList.remove('hidden');
         generateQR(jsonStr);
         const watermark = document.getElementById('qr-watermark');
@@ -283,12 +297,36 @@ import R1Banner from "@/components/ui/R1Banner.astro";
       } else {
         downloadBtn.disabled = true;
         if (downloadQrBtn) downloadQrBtn.disabled = true;
+        if (exportBtn) exportBtn.disabled = true;
         if (expandBtn) expandBtn.classList.add('hidden');
         qrContainer.innerHTML = '<p class="text-muted-foreground text-[10px] font-mono p-4 text-center uppercase">Waiting for details<span class="animate-pulse">_</span></p>';
       }
     }
 
     let generatedDataUrl = null;
+    let currentData = null;
+
+    // Build the prefilled creations-store URL. The payload is base64url-encoded
+    // JSON so it survives the OAuth login round-trip (the store decodes it and
+    // prefills the new-creation form).
+    function buildExportUrl(data) {
+      const json = JSON.stringify({
+        title: data.title || "",
+        url: data.url || "",
+        description: data.description || "",
+        themeColor: data.themeColor || "",
+        author: data.author || "",
+        iconUrl: data.iconUrl || "",
+        screenshotUrl: data.screenshotUrl || "",
+      });
+      // UTF-8 safe base64url.
+      const b64 = btoa(unescape(encodeURIComponent(json)))
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+      return `${STORE_URL.replace(/\/$/, "")}/dashboard/new?prefill=${b64}`;
+    }
+
     async function buildWatermarkedQR(dataStr) {
       const themeColor = (document.getElementById('themeColor')?.value || '#000000').toUpperCase();
       const canvas = document.createElement('canvas');
@@ -353,6 +391,12 @@ import R1Banner from "@/components/ui/R1Banner.astro";
       a.href = generatedDataUrl;
       a.download = (document.getElementById('title')?.value || 'creation') + '-qr.png';
       a.click();
+    });
+
+    exportBtn?.addEventListener('click', () => {
+      if (exportBtn.disabled || !currentData) return;
+      // Open the store in a new tab so the generator state isn't lost.
+      window.open(buildExportUrl(currentData), '_blank', 'noopener');
     });
 
     importFile.addEventListener("change", (e) => {
