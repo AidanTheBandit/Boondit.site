@@ -13,9 +13,14 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
     <a href="/" class="flex-shrink-0 z-50 relative">
       <div
         id="logo"
-        class="pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base border border-transparent"
+        class="pt-2 pb-1 flex items-center justify-center select-none scale-110 hover:opacity-80 px-2 md:px-3 transition-all ease-in-out border border-transparent"
       >
-        {SITE_TITLE}
+        <img
+          id="logo-img"
+          src="/boondit logo white.png"
+          alt="Boondit"
+          class="h-8 md:h-9 object-contain transition-all ease-in-out"
+        />
       </div>
     </a>
 
@@ -260,10 +265,12 @@ import { SITE_TITLE, NAV_LINKS as links } from "@/consts";
 
     if (window.scrollY > 100) {
       logo.className =
-        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-foreground bg-background scale-100 hover:text-background text-foreground px-3 md:px-4 transition-all ease-in-out text-sm md:text-base rounded-md border border-foreground/10 shadow-sm";
+        "pt-2 pb-1 flex items-center justify-center select-none scale-100 hover:opacity-80 px-2 md:px-3 transition-all ease-in-out rounded-md border border-white/10 shadow-sm";
+      document.getElementById("logo-img")?.setAttribute("src", "/boondit logo black.png");
     } else {
       logo.className =
-        "pt-2 pb-1 !grid !place-items-center select-none leading-none hover:bg-background bg-foreground scale-110 hover:text-foreground text-background px-3 md:px-4 transition-all ease-in-out text-sm md:text-base border border-transparent";
+        "pt-2 pb-1 flex items-center justify-center select-none scale-110 hover:opacity-80 px-2 md:px-3 transition-all ease-in-out border border-transparent";
+      document.getElementById("logo-img")?.setAttribute("src", "/boondit logo white.png");
     }
   });
 </script>

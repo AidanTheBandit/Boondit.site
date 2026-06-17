@@ -14,6 +14,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [scrolled, setScrolled] = React.useState(false)
+  const [isDark, setIsDark] = React.useState(true)
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +24,19 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
     handleScroll() // Check initial state
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  React.useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains('dark'))
+    }
+    checkTheme()
+    const observer = new MutationObserver(checkTheme)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+
+  // Use black logo when in light mode OR when scrolled with solid light background
+  const useBlackLogo = !isDark
 
   // Lock body scroll when mobile menu is open
   React.useEffect(() => {
@@ -48,13 +62,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath = '' }) => {
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Logo */}
           <a href="/" className="flex-shrink-0 z-50 relative group">
-            <div className={`pt-4 pb-1 flex items-end select-none leading-none transition-all duration-300 ease-in-out text-[10px] md:text-xs font-mono tracking-[0.2em] border min-h-[40px] ${
-              scrolled 
-                ? 'bg-background scale-100 text-foreground border-foreground px-4 rounded-lg hover:bg-accent hover:border-accent hover:text-accent-foreground' 
-                : 'bg-foreground scale-110 text-background border-transparent px-3 md:px-4 rounded-none hover:bg-accent hover:text-accent-foreground hover:border-accent'
-            }`}>
-              {SITE_TITLE}
-            </div>
+            <img
+              src={useBlackLogo ? "/boondit logo black.png" : "/boondit logo white.png"}
+              alt="Boondit"
+              className="h-8 md:h-10 w-auto transition-all duration-300"
+            />
           </a>
 
           {/* Desktop Navigation */}
