@@ -1,83 +1,67 @@
-<h1 align="center">Boondit</h1>
-<h2 align="center">MYYYYYY BLOGGGGGG</h2>
+# boondit.site
 
-<p align="center">
-    <img alt="hero" width="450" src="public/image.png" />
-</p>
+Personal site. Astro, static output, no framework integrations — the whole thing is HTML plus one canvas.
 
-## 🌟 Features
+## run
 
-> **token-template** features intro:
-
-- **Minimalist Design** – Black-and-white terminal-inspired aesthetics with custom fonts.
-- **Astro + Tailwind CSS** – Built using Astro and styled with Tailwind CSS for easy customization.
-- **Content Support** – Write blog posts or documentation in Markdown (MD) and MDX.
-- **Static and Fast** – Fully static content optimized for performance.
-
-## 💻 Installation
-
-> [!TIP]
-> Remember to update [`src/consts.ts`](https://github.com/AidanTheBandit/boondit-site/blob/main/src/consts.ts)
-
-###### terminal
-
-```bash
-# Clone the repository
-git clone https://github.com/AidanTheBandit/boondit-site.git my-portfolio
-cd my-portfolio
-
-# Install dependencies
+```sh
 npm install
-
-# Run the development server
-npm run dev
+npm run dev      # localhost:4321
+npm run build    # -> dist/
+npm run preview  # serve dist/
 ```
 
-## 📷 Screenshots
+## what's where
 
-> Here's a working and expected screenshot of **token-template**
+```
+src/
+  data/projects.ts    the work index: one entry per project, sorted by `start`
+  data/marks.ts       the icon set. one SVG path group per project, 40x40 viewBox
+  data/stack.ts       the stack list on /projects
+  content/posts/      blog posts as markdown
+  components/Rays.astro      the dithered light field
+  components/Mark.astro      renders a mark from marks.ts
+  layouts/Base.astro         page shell, nav, footer
+  pages/
+    index.astro              home: portrait, tagline, grid of doors
+    projects/index.astro     work list + stack
+    projects/[slug].astro    one page per project
+    blog/index.astro         post list
+    blog/[slug].astro        post
+    tools.astro              R1 tools + creations
+    r1-generator.astro       creation generator (info.json + QR)
+  styles/global.css          all of it
+public/
+  portrait.png        1-bit dithered portrait (ink on paper)
+  favicon.svg
+```
 
-| Landing Page                    |
-| ------------------------------- |
-| ![Demo](/public/screenshot.png) |
+## adding a project
 
+1. add an entry to `src/data/projects.ts` — `id`, `name`, `mark`, `kicker`, `years`, `start`, `desc`, `links`
+2. if it needs a new icon, add one to `src/data/marks.ts` keyed by the same name, drawn in a 40x40 box at 1.6px stroke
+3. rebuild. the page appears at `/projects/<id>/` and sorts itself into the work list by `start`
+
+## adding a post
+
+Drop a markdown file in `src/content/posts/` with frontmatter:
+
+```md
 ---
+title: "..."
+date: 2026-02-05
+desc: "one line"
+---
+```
 
-## 💻 Contributing
+## design rules
 
-> [!TIP]  
-> We welcome contributions to improve **token-template**! If you have suggestions, bug fixes, or new feature ideas, follow these steps:
+- three colours only: `#ff0080` pink, `#995cd6` purple, `#333333` charcoal, on `#0a0a0a`
+- no smooth gradients anywhere. the light field is quantised through an 8x8 Bayer matrix
+- copy states what a thing is and does. no reflection, no personality asides
+- one gesture per icon on hover, transform/opacity only
+- `prefers-reduced-motion` disables all of it, including the canvas (single static frame)
 
-1. **Fork the Repository**  
-   Click the **Fork** button at the top-right of the repo page.
+## deploy
 
-2. **Clone Your Fork**  
-   Clone the repo locally:
-
-   ```bash
-   git clone https://github.com/ArnavK-09/token-template.git
-   ```
-
-3. **Create a Branch**  
-   Create a new branch for your changes:
-
-   ```bash
-   git checkout -b your-feature-branch
-   ```
-
-4. **Make Changes**  
-   Implement your changes (bug fixes, features, etc.).
-
-5. **Commit and Push**  
-   Commit your changes and push the branch:
-
-   ```bash
-   git commit -m "feat(scope): description"
-   git push origin your-feature-branch
-   ```
-
-6. **Open a Pull Request**  
-   Open a PR with a detailed description of your changes.
-
-7. **Collaborate and Merge**  
-   The maintainers will review your PR, request changes if needed, and merge it once approved.
+`dist/` is a static directory. it currently runs on the LAN preview host via `boondit-site-preview.service`; the apex (`boondit.site`) is still on Vercel. not wired to a remote yet.

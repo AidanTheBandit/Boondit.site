@@ -1,424 +1,340 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import Section from "@/components/Section.astro";
-import R1Card from "@/components/ui/R1Card.astro";
-import R1Banner from "@/components/ui/R1Banner.astro";
+import Base from '../layouts/Base.astro';
 ---
 
-<Layout title="R1 Component Generator - Boondit">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 relative">
-    <Section title="R1 Generator" description="Generate metadata & deploy packages for creations">
-      
-      <div class="max-w-7xl mx-auto relative">
-        <R1Banner type="info" className="max-w-xl !mt-0 mb-12">
-          Fill in the details, then
-          <span class="font-bold text-foreground">Export to Store</span> to publish your creation to the
-          <a href="https://creations.boondit.site/" target="_blank" class="font-bold text-foreground hover:text-[hsl(var(--color-purple))] transition-colors underline decoration-[hsl(var(--color-purple))]/50 underline-offset-4">Boondit Store</a>. You'll be asked to sign in if needed — your details carry over.
-        </R1Banner>
+<Base title="R1 creation generator — Boondit" desc="Build the info.json and QR code for a Rabbit R1 creation." path="/r1-generator">
+  <main class="page">
+    <a class="back" href="/tools/" aria-label="Back to tools">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+      tools
+    </a>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <!-- Form Section -->
-          <div class="lg:col-span-7">
-            <R1Card title="Metadata Details" accent="pink">
-              <form id="creation-form" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <!-- Title -->
-                  <div>
-                    <label for="title" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>Plugin Name</span>
-                      <span class="text-[hsl(var(--color-pink))]">Required</span>
-                    </label>
-                    <input type="text" id="title" name="title" required value="Barkle" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2.5 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm" placeholder="Barkle" />
-                  </div>
-                  
-                  <!-- Theme Color -->
-                  <div>
-                    <label for="themeColor" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>Theme Color</span>
-                      <span class="text-[hsl(var(--color-pink))]">Required</span>
-                    </label>
-                    <div class="flex gap-2">
-                      <div class="relative w-10 h-10 rounded-lg overflow-hidden border border-border/60 shrink-0 shadow-sm cursor-pointer">
-                        <input type="color" id="themeColorPicker" value="#fe5000" class="absolute -inset-2 w-14 h-14 cursor-pointer bg-transparent border-0" />
-                      </div>
-                      <input type="text" id="themeColor" name="themeColor" required value="#FE5000" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none uppercase font-mono text-sm" />
-                    </div>
-                  </div>
-                </div>
+    <div class="gen">
+      <!-- form -->
+      <form class="panel form" id="creation-form" autocomplete="off">
+        <h1>creation generator<span style="color:var(--pink)">.</span></h1>
 
-                <!-- URL -->
-                <div>
-                  <label for="url" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                    <span>Website URL</span>
-                    <span class="text-[hsl(var(--color-pink))]">Required</span>
-                  </label>
-                  <input type="url" id="url" name="url" required value="https://boondit.site" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2.5 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none font-mono text-sm" placeholder="https://boondit.site" />
-                </div>
+        <label>plugin name <b>*</b>
+          <input id="title" name="title" required placeholder="my creation">
+        </label>
 
-                <!-- Description -->
-                <div>
-                  <label for="description" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                    <span>Description</span>
-                    <span class="text-[hsl(var(--color-pink))]">Required</span>
-                  </label>
-                  <textarea id="description" name="description" required rows="2" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2.5 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-pink))]/20 focus:border-[hsl(var(--color-pink))] transition-all outline-none resize-none font-mono text-xs" placeholder="Describe your creation...">A community plugin for Rabbit R1.</textarea>
-                </div>
+        <label>theme colour <b>*</b>
+          <span class="colour">
+            <input id="themeColor" name="themeColor" required value="#FF0080" maxlength="7">
+            <input id="themeColorPicker" type="color" value="#FF0080">
+          </span>
+        </label>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label for="author" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>Author</span>
-                      <span class="text-muted-foreground">Optional</span>
-                    </label>
-                    <input type="text" id="author" name="author" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-purple))]/20 focus:border-[hsl(var(--color-purple))] transition-all outline-none font-mono text-xs" placeholder="@username" />
-                  </div>
-                  <div>
-                    <label for="iconUrl" class="flex justify-between text-[10px] font-bold mb-2 text-foreground font-mono uppercase tracking-widest">
-                      <span>Icon URL</span>
-                      <span class="text-muted-foreground">Optional</span>
-                    </label>
-                    <input type="url" id="iconUrl" name="iconUrl" class="w-full bg-background border border-border/60 rounded-xl px-4 py-2 text-foreground focus:ring-2 focus:ring-[hsl(var(--color-purple))]/20 focus:border-[hsl(var(--color-purple))] transition-all outline-none font-mono text-xs" placeholder="https://..." />
-                  </div>
-                </div>
+        <label>website url <b>*</b>
+          <input id="url" name="url" required placeholder="https://">
+        </label>
 
-                <!-- Output Box -->
-                <div class="mt-8 pt-6 border-t border-border/30">
-                  <div class="flex justify-between items-center mb-3">
-                    <label class="block text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-[0.2em]">Generated Data</label>
-                    <button type="button" id="copy-btn" class="text-[10px] px-3 py-1.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-md font-mono transition-colors border border-border/50 shadow-sm flex items-center gap-2 uppercase tracking-widest">
-                      <span>Copy JSON</span>
-                    </button>
-                  </div>
-                  <div class="relative bg-slate-950 border border-border/60 rounded-xl overflow-hidden group p-1">
-                    <textarea id="json-output" readonly rows="6" class="w-full bg-transparent px-4 py-4 text-[hsl(var(--color-pink))] font-mono text-[10px] focus:outline-none resize-none custom-scrollbar" placeholder="JSON will appear here..."></textarea>
-                  </div>
-                </div>
-              </form>
-            </R1Card>
-          </div>
+        <label>description <b>*</b>
+          <textarea id="description" name="description" rows="3" required>A community plugin for Rabbit R1.</textarea>
+        </label>
 
-          <!-- Preview & Actions -->
-          <div class="lg:col-span-5 space-y-8">
-            <R1Card title="Scan to Install" accent="purple">
-              <div class="flex flex-col items-center justify-center p-6 bg-background/50 rounded-2xl border border-border/40 relative overflow-hidden mb-6" style="background-image: radial-gradient(circle at 2px 2px, rgba(150,150,150,0.05) 1px, transparent 0); background-size: 20px 20px;">
-                <div id="qr-code" class="bg-white p-4 rounded-xl shadow-sm mb-4 flex items-center justify-center min-w-[200px] min-h-[200px] relative z-10 border border-border/20">
-                  <p class="text-gray-400 text-[10px] font-mono p-4 text-center">Waiting for details<span class="animate-pulse">_</span></p>
-                </div>
-                <div class="qr-footer text-[10px] text-muted-foreground mt-2 text-center uppercase tracking-widest"> 
-                  <span id="qr-watermark">UNTITLED | BOONDIT.SITE</span>
-                </div>
-                
-                <div class="text-center w-full max-w-xs mt-4">
-                  <p class="text-xs font-bold text-foreground mb-1 font-mono uppercase tracking-widest truncate" id="preview-title">UNTITLED</p>
-                  <p class="text-[10px] text-muted-foreground font-mono truncate opacity-60" id="preview-url">waiting-for-url</p>
-                </div>
-              </div>
-              
-              <button id="export-btn" class="w-full mb-3 py-3 bg-[hsl(var(--color-pink))] hover:bg-[hsl(var(--color-pink))]/90 text-white rounded-xl font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex justify-center items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                <span>Export to Store</span>
-              </button>
+        <div class="row">
+          <label>author
+            <input id="author" name="author" placeholder="optional">
+          </label>
+          <label>icon url
+            <input id="iconUrl" name="iconUrl" placeholder="optional">
+          </label>
+        </div>
 
-              <div class="grid grid-cols-2 gap-3">
-                 <button id="download-btn" class="py-2.5 bg-secondary/50 hover:bg-secondary text-foreground rounded-xl font-mono text-[10px] tracking-widest transition-all border border-border/50 uppercase disabled:opacity-30" disabled>
-                    Save JSON
-                  </button>
-                  <button id="download-qr-btn" class="py-2.5 bg-secondary/50 hover:bg-secondary text-foreground rounded-xl font-mono text-[10px] tracking-widest transition-all border border-border/50 uppercase disabled:opacity-30" disabled>
-                    Save Image
-                  </button>
-                  <button id="expand-qr-btn" class="py-2.5 bg-background hover:bg-secondary/30 text-foreground rounded-xl w-full border border-border/50 font-mono text-[10px] tracking-widest transition-all uppercase flex justify-center items-center gap-2 hidden">
-                    Fullscreen
-                  </button>
-                  <div class="relative col-span-2">
-                    <input type="file" id="import-file" accept=".json" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10" />
-                    <button type="button" class="py-2.5 bg-background/50 hover:bg-secondary/30 text-foreground rounded-xl w-full border border-border/50 font-mono text-[10px] tracking-widest transition-all uppercase flex justify-center items-center gap-2">
-                      Import File
-                    </button>
-                  </div>
-              </div>
-            </R1Card>
+        <div class="actions">
+          <label class="file">import json<input id="import-file" type="file" accept="application/json"></label>
+          <button type="button" id="copy-btn" class="ghost">copy json</button>
+        </div>
+      </form>
 
-            <R1Card title="Quick Guide" accent="gray" corners="none" className="opacity-80">
-              <ul class="space-y-3 font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                <li class="flex gap-3"><span class="text-[hsl(var(--color-pink))]">01</span> Fill in the plugin details</li>
-                <li class="flex gap-3"><span class="text-[hsl(var(--color-pink))]">02</span> Scan the QR with Rabbit R1 camera</li>
-                <li class="flex gap-3"><span class="text-[hsl(var(--color-pink))]">03</span> Deploy and test your creation</li>
-              </ul>
-            </R1Card>
+      <!-- preview -->
+      <section class="panel preview">
+        <div class="qr-wrap">
+          <div id="qr-code"><p class="waiting">waiting for details<span>_</span></p></div>
+          <div class="qr-meta">
+            <span id="preview-title">UNTITLED</span>
+            <span id="preview-url">waiting-for-url</span>
           </div>
         </div>
-      </div>
-    </Section>
-  </div>
 
-  <div id="qrModal" class="fixed inset-0 z-[10000] bg-black/95 backdrop-blur-md hidden items-center justify-center p-4">
-      <div class="relative w-full max-w-2xl flex flex-col items-center">
-          <button id="closeModalBtn" class="absolute -top-16 right-0 text-white hover:text-[hsl(var(--color-pink))] transition-colors p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-          <div id="modalQrContainer" class="bg-white p-10 rounded-2xl shadow-2xl border-4 border-[hsl(var(--color-pink))]/20"></div>
-          <p class="text-[hsl(var(--color-pink))] mt-8 text-center font-mono font-bold uppercase tracking-widest animate-pulse">Scan with Rabbit R1</p>
-      </div>
-  </div>
-</Layout>
+        <textarea id="json-output" readonly spellcheck="false" aria-label="Generated JSON"></textarea>
 
-<style>
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--color-pink) / 0.3);
-    border-radius: 10px;
-  }
-</style>
+        <div class="actions wrap">
+          <button type="button" id="export-btn" class="primary" disabled>export to store</button>
+          <button type="button" id="download-qr-btn" class="ghost" disabled>save image</button>
+          <button type="button" id="download-btn" class="ghost" disabled>save json</button>
+          <button type="button" id="expand-qr-btn" class="ghost hidden">fullscreen</button>
+        </div>
+      </section>
+    </div>
 
-<script is:inline>
-  let qrCode = null;
+    <!-- fullscreen qr -->
+    <div id="qrModal" class="modal hidden">
+      <div id="modalQrContainer" class="modal-inner"></div>
+      <button type="button" id="closeModalBtn" class="modal-close">close esc</button>
+    </div>
+  </main>
 
-  function initGenerator() {
-    const form = document.getElementById("creation-form");
-    const jsonOutput = document.getElementById("json-output");
-    const qrContainer = document.getElementById("qr-code");
-    const downloadBtn = document.getElementById("download-btn");
-    const downloadQrBtn = document.getElementById("download-qr-btn");
-    const exportBtn = document.getElementById("export-btn");
-    const expandBtn = document.getElementById("expand-qr-btn");
+  <script is:inline src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js"></script>
+  <script>
+    const STORE_URL = 'https://creations.boondit.com';
 
-    // Where the creations store lives. Override via <body data-store-url> if needed.
-    const STORE_URL =
-      document.body?.dataset?.storeUrl || "https://creations.boondit.site";
-    const importFile = document.getElementById("import-file");
-    const copyBtn = document.getElementById("copy-btn");
-    
-    const previewTitle = document.getElementById("preview-title");
-    const previewUrl = document.getElementById("preview-url");
-    
-    const themeColorText = document.getElementById("themeColor");
-    const themeColorPicker = document.getElementById("themeColorPicker");
+    let currentData: any = null;
+    let generatedDataUrl: string | null = null;
+    let qrCode: any = null;
 
-    const modal = document.getElementById('qrModal');
-    const modalQrContainer = document.getElementById('modalQrContainer');
-    const closeModalBtn = document.getElementById('closeModalBtn');
+    function initGenerator() {
+      const form = document.getElementById('creation-form') as HTMLFormElement | null;
+      const jsonOutput = document.getElementById('json-output') as HTMLTextAreaElement | null;
+      const qrContainer = document.getElementById('qr-code');
+      if (!form || !jsonOutput || !qrContainer) return;
+      if ((form as any).dataset.wired === '1') return;      // survives view transitions
+      (form as any).dataset.wired = '1';
 
-    if (typeof QRCodeStyling === 'undefined') {
-      setTimeout(initGenerator, 200);
-      return;
-    }
+      const QR = (window as any).QRCodeStyling;
+      if (!QR) { setTimeout(initGenerator, 200); return; }
 
-    if (!form || !jsonOutput || !qrContainer) return;
+      const $ = (id: string) => document.getElementById(id) as HTMLInputElement | null;
+      const title = $('title')!, url = $('url')!, desc = $('description')!;
+      const themeColor = $('themeColor')!, picker = $('themeColorPicker')!;
+      const iconUrl = $('iconUrl')!, author = $('author')!;
+      const downloadBtn = $('download-btn')!, downloadQrBtn = $('download-qr-btn')!;
+      const exportBtn = $('export-btn')!, expandBtn = $('expand-qr-btn')!;
+      const copyBtn = $('copy-btn')!, importFile = $('import-file')!;
+      const previewTitle = document.getElementById('preview-title')!;
+      const previewUrl = document.getElementById('preview-url')!;
 
-    // Modal Logic
-    const openModal = () => {
-        if (!jsonOutput.value || !modal || !modalQrContainer) return;
-        const themeColor = themeColorText.value || "#000000";
-        
-        modalQrContainer.innerHTML = '';
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+      const modal = document.getElementById('qrModal')!;
+      const modalInner = document.getElementById('modalQrContainer')!;
+      const closeBtn = document.getElementById('closeModalBtn')!;
 
-        const modalQrCode = new QRCodeStyling({
-            width: 500,
-            height: 500,
-            data: jsonOutput.value,
-            dotsOptions: { color: themeColor, type: "rounded" },
-            backgroundOptions: { color: "#ffffff" },
-        });
-        modalQrCode.append(modalQrContainer);
-    };
+      const clean = (v: string | null) => (v ?? '').replace(/[\n\r]/g, ' ').trim();
 
-    const closeModal = () => {
-        if (!modal) return;
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    };
+      function payload() {
+        const data = {
+          title: clean(title.value),
+          url: clean(url.value),
+          description: clean(desc.value),
+          iconUrl: clean(iconUrl.value),
+          themeColor: clean(themeColor.value),
+          author: clean(author.value),
+          screenshotUrl: '',
+        };
+        currentData = data;
+        jsonOutput!.value = JSON.stringify(data, null, 2);
+        previewTitle.textContent = data.title || 'UNTITLED';
+        previewUrl.textContent = data.url || 'waiting-for-url';
 
-    expandBtn?.addEventListener('click', openModal);
-    closeModalBtn?.addEventListener('click', closeModal);
-    modal?.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !modal?.classList.contains('hidden')) closeModal();
-    });
+        const ready = !!(data.title && data.url && data.themeColor && data.description);
+        (downloadBtn as any).disabled = !ready;
+        (downloadQrBtn as any).disabled = !ready;
+        (exportBtn as any).disabled = !ready;
+        expandBtn.classList.toggle('hidden', !ready);
 
-    themeColorPicker.addEventListener('input', (e) => {
-      themeColorText.value = e.target.value.toUpperCase();
-      generateJSON();
-    });
-
-    themeColorText.addEventListener('input', (e) => {
-      let val = e.target.value;
-      if (val.match(/^#[0-9a-fA-F]{6}$/)) {
-        themeColorPicker.value = val;
+        if (ready) drawWatermarkedQR(jsonOutput!.value); else waiting();
+        return data;
       }
-    });
 
-    function sanitizeInput(value) {
-      if (!value) return "";
-      return value.replace(/[\n\r]/g, " ").replace(/"/g, '\\"');
-    }
-
-    function generateJSON() {
-      const formData = new FormData(form);
-      const title = sanitizeInput(formData.get("title"));
-      const urlValue = sanitizeInput(formData.get("url"));
-      const themeColor = sanitizeInput(formData.get("themeColor"));
-      const description = sanitizeInput(formData.get("description"));
-      
-      const data = {
-        title: title,
-        url: urlValue,
-        description: description,
-        iconUrl: sanitizeInput(formData.get("iconUrl")),
-        themeColor: themeColor,
-        author: sanitizeInput(formData.get("author")),
-        screenshotUrl: ""
-      };
-
-      const jsonStr = JSON.stringify(data, null, 2);
-      jsonOutput.value = jsonStr;
-      // Keep the latest structured payload around for the export action.
-      currentData = data;
-      if (previewTitle) previewTitle.textContent = title || "UNTITLED";
-      if (previewUrl) previewUrl.textContent = urlValue || "waiting-for-url";
-
-      if (urlValue && title && themeColor && description) {
-        downloadBtn.disabled = false;
-        if (downloadQrBtn) downloadQrBtn.disabled = false;
-        if (exportBtn) exportBtn.disabled = false;
-        if (expandBtn) expandBtn.classList.remove('hidden');
-        generateQR(jsonStr);
-        const watermark = document.getElementById('qr-watermark');
-        if (watermark) watermark.textContent = `${title.toUpperCase() || 'UNTITLED'} | BOONDIT.SITE`;
-      } else {
-        downloadBtn.disabled = true;
-        if (downloadQrBtn) downloadQrBtn.disabled = true;
-        if (exportBtn) exportBtn.disabled = true;
-        if (expandBtn) expandBtn.classList.add('hidden');
-        qrContainer.innerHTML = '<p class="text-muted-foreground text-[10px] font-mono p-4 text-center uppercase">Waiting for details<span class="animate-pulse">_</span></p>';
+      function waiting() {
+        qrContainer!.innerHTML = '<p class="waiting">waiting for details<span>_</span></p>';
+        generatedDataUrl = null;
       }
-    }
 
-    let generatedDataUrl = null;
-    let currentData = null;
+      async function drawWatermarkedQR(dataStr: string) {
+        const colour = (themeColor.value || '#000000').toUpperCase();
+        const canvas = document.createElement('canvas');
+        canvas.width = 340; canvas.height = 380;
+        const ctx = canvas.getContext('2d')!;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Build the prefilled creations-store URL. The payload is base64url-encoded
-    // JSON so it survives the OAuth login round-trip (the store decodes it and
-    // prefills the new-creation form).
-    function buildExportUrl(data) {
-      const json = JSON.stringify({
-        title: data.title || "",
-        url: data.url || "",
-        description: data.description || "",
-        themeColor: data.themeColor || "",
-        author: data.author || "",
-        iconUrl: data.iconUrl || "",
-        screenshotUrl: data.screenshotUrl || "",
-      });
-      // UTF-8 safe base64url.
-      const b64 = btoa(unescape(encodeURIComponent(json)))
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=+$/, "");
-      return `${STORE_URL.replace(/\/$/, "")}/dashboard/new?prefill=${b64}`;
-    }
-
-    async function buildWatermarkedQR(dataStr) {
-      const themeColor = (document.getElementById('themeColor')?.value || '#000000').toUpperCase();
-      const canvas = document.createElement('canvas');
-      canvas.width = 340;
-      canvas.height = 380;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (window.QRCodeStyling) {
-        const tmp = new QRCodeStyling({
-          width: 300,
-          height: 300,
-          data: dataStr,
-          margin: 10,
+        qrCode = new QR({
+          width: 300, height: 300, data: dataStr, margin: 10,
           qrOptions: { errorCorrectionLevel: 'H' },
-          dotsOptions: { color: themeColor, type: "rounded" },
+          dotsOptions: { color: colour, type: 'rounded' },
           backgroundOptions: { color: '#ffffff' },
         });
 
-        const blob = await tmp.getRawData('png');
+        const blob = await qrCode.getRawData('png');
         const img = new Image();
         img.src = URL.createObjectURL(blob);
-        await new Promise(r => img.onload = r);
+        await new Promise<void>((r) => (img.onload = () => r()));
         ctx.drawImage(img, 20, 20, 300, 300);
-        
+
         ctx.fillStyle = '#666666';
         ctx.font = 'bold 14px Arial';
         ctx.textAlign = 'center';
-        const title = (document.getElementById('title')?.value || '').toUpperCase();
-        ctx.fillText(title ? `${title} | BOONDIT.SITE` : 'BOONDIT.SITE', canvas.width / 2, 355);
+        const t = (title.value || '').toUpperCase();
+        ctx.fillText(t ? `${t} | BOONDIT.SITE` : 'BOONDIT.SITE', canvas.width / 2, 355);
 
-        qrContainer.innerHTML = '';
-        qrContainer.appendChild(canvas);
+        qrContainer!.innerHTML = '';
+        qrContainer!.appendChild(canvas);
         generatedDataUrl = canvas.toDataURL('image/png');
       }
-    }
 
-    function generateQR(data) {
-      buildWatermarkedQR(data);
-    }
+      function exportUrl(data: any) {
+        const json = JSON.stringify({
+          title: data.title, url: data.url, description: data.description,
+          themeColor: data.themeColor, author: data.author,
+          iconUrl: data.iconUrl, screenshotUrl: data.screenshotUrl,
+        });
+        const b64 = btoa(unescape(encodeURIComponent(json)))
+          .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        return `${STORE_URL}/dashboard/new?prefill=${b64}`;
+      }
 
-    form.addEventListener("input", generateJSON);
-    copyBtn.addEventListener("click", () => {
-      jsonOutput.select();
-      document.execCommand("copy");
-      const old = copyBtn.innerHTML;
-      copyBtn.innerHTML = "<span>JSON Copied!</span>";
-      setTimeout(() => copyBtn.innerHTML = old, 2000);
-    });
+      form.addEventListener('input', payload);
 
-    downloadBtn.addEventListener("click", () => {
-      const blob = new Blob([jsonOutput.value], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = "info.json"; a.click();
-    });
+      picker.addEventListener('input', () => {
+        themeColor.value = picker.value.toUpperCase();
+        payload();
+      });
+      themeColor.addEventListener('input', () => {
+        if (/^#[0-9a-fA-F]{6}$/.test(themeColor.value)) picker.value = themeColor.value;
+      });
 
-    downloadQrBtn.addEventListener('click', () => {
-      if (!generatedDataUrl) return;
-      const a = document.createElement('a');
-      a.href = generatedDataUrl;
-      a.download = (document.getElementById('title')?.value || 'creation') + '-qr.png';
-      a.click();
-    });
+      copyBtn.addEventListener('click', async () => {
+        jsonOutput.select();
+        try { await navigator.clipboard.writeText(jsonOutput.value); } catch { document.execCommand('copy'); }
+        const old = copyBtn.textContent;
+        copyBtn.textContent = 'copied';
+        setTimeout(() => (copyBtn.textContent = old), 1600);
+      });
 
-    exportBtn?.addEventListener('click', () => {
-      if (exportBtn.disabled || !currentData) return;
-      // Open the store in a new tab so the generator state isn't lost.
-      window.open(buildExportUrl(currentData), '_blank', 'noopener');
-    });
+      downloadBtn.addEventListener('click', () => {
+        const blob = new Blob([jsonOutput.value], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'info.json';
+        a.click();
+      });
 
-    importFile.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const json = JSON.parse(e.target.result);
-          const map = { title: "title", description: "description", iconUrl: "iconUrl", themeColor: "themeColor", author: "author", url: "url" };
-          for (const [k, v] of Object.entries(map)) {
-            if (json[k] !== undefined) document.getElementById(v).value = json[k];
-          }
-          generateJSON();
-        } catch (err) { alert("Invalid JSON"); }
+      downloadQrBtn.addEventListener('click', () => {
+        if (!generatedDataUrl) return;
+        const a = document.createElement('a');
+        a.href = generatedDataUrl;
+        a.download = `${title.value || 'creation'}-qr.png`;
+        a.click();
+      });
+
+      exportBtn.addEventListener('click', () => {
+        if (!currentData) return;
+        window.open(exportUrl(currentData), '_blank', 'noopener');
+      });
+
+      importFile.addEventListener('change', () => {
+        const file = importFile.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const json = JSON.parse(String(e.target?.result));
+            const map: Record<string, HTMLInputElement> = {
+              title, description: desc, iconUrl, themeColor, author, url,
+            };
+            for (const [k, el] of Object.entries(map)) if (json[k] !== undefined) el.value = json[k];
+            payload();
+          } catch { alert('Invalid JSON'); }
+        };
+        reader.readAsText(file);
+      });
+
+      // fullscreen
+      const openModal = () => {
+        if (!jsonOutput.value) return;
+        modalInner.innerHTML = '';
+        modal.classList.remove('hidden');
+        new QR({
+          width: 500, height: 500, data: jsonOutput.value,
+          dotsOptions: { color: themeColor.value || '#000000', type: 'rounded' },
+          backgroundOptions: { color: '#ffffff' },
+        }).append(modalInner);
       };
-      reader.readAsText(file);
-    });
-    
-    generateJSON();
-  }
+      const closeModal = () => modal.classList.add('hidden');
+      expandBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  document.addEventListener("DOMContentLoaded", initGenerator);
-  document.addEventListener("astro:page-load", initGenerator);
-</script>
+      payload();
+    }
+
+    document.addEventListener('astro:page-load', initGenerator);
+    if (document.readyState !== 'loading') initGenerator();
+    else document.addEventListener('DOMContentLoaded', initGenerator);
+  </script>
+
+  <style>
+    .gen {
+      flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr;
+      background: rgba(10, 10, 10, .93);
+    }
+    .panel { padding: 34px 40px 44px; overflow-y: auto; }
+    .preview { border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 18px; padding-top: 46px; }
+
+    .form h1 { font-size: clamp(26px, 3vw, 40px); letter-spacing: -.045em; font-weight: 800; line-height: 1; margin-bottom: 24px; }
+
+    label { display: block; margin-bottom: 14px; font-family: var(--mono); font-size: 9.5px;
+            letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+    label b { color: var(--pink); font-weight: 400; }
+    input, textarea {
+      width: 100%; margin-top: 7px; padding: 10px 11px;
+      background: #0f0f0f; border: 1px solid var(--line); color: var(--ink);
+      font-family: var(--mono); font-size: 12px; letter-spacing: .02em;
+      resize: vertical; transition: border-color .2s;
+    }
+    input:focus, textarea:focus { outline: 0; border-color: var(--pink); }
+    .colour { display: flex; gap: 8px; align-items: stretch; }
+    .colour input[type="color"] { width: 44px; padding: 4px; cursor: pointer; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .actions {
+      display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+      gap: 10px; margin-top: 18px;
+    }
+    .actions.wrap { margin-top: auto; }
+    button, .file {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 14px; border: 1px solid var(--line);
+      font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--dim); cursor: pointer; transition: .2s var(--ease); background: none;
+    }
+    button:hover:not(:disabled), .file:hover { color: var(--ink); border-color: #3a3a3a; }
+    button:disabled { opacity: .35; cursor: not-allowed; }
+    .primary { border-color: var(--pink); color: var(--ink); background: rgba(255, 0, 128, .09); }
+    .primary:hover:not(:disabled) { background: var(--pink); color: #0a0a0a; }
+    .file { position: relative; }
+    .file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+    .qr-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; align-self: center; }
+    #qr-code canvas, #qr-code img { width: 100%; max-width: 340px; height: auto; image-rendering: pixelated; }
+    #qr-code {
+      width: 340px; height: 380px; max-width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px dashed var(--line);
+    }
+    #qr-code canvas, #qr-code img { border: 0; }
+    .qr-meta { width: 100%; max-width: 340px; display: flex; justify-content: space-between; gap: 14px;
+               font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+    .waiting { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+               color: var(--faint); margin: 0; }
+    .waiting span { animation: blink 1.4s steps(2, end) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    #json-output { flex: 0 0 auto; height: 190px; font-size: 11px; line-height: 1.6; color: #b9b5ad; }
+
+    .modal { position: fixed; inset: 0; z-index: 60; background: rgba(5, 5, 5, .94);
+             display: flex; align-items: center; justify-content: center; }
+    .modal.hidden, .hidden { display: none; }
+    .modal-inner { background: #fff; padding: 16px; }
+    .modal-close { position: absolute; top: 20px; right: 24px; }
+
+    @media (max-width: 900px) {
+      .gen { grid-template-columns: 1fr; }
+      .preview { border-left: 0; border-top: 1px solid var(--line); }
+      .panel { padding: 22px 18px 30px; }
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</Base>

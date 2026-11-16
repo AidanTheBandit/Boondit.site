@@ -1,29 +1,18 @@
-# build output
-dist/
-# generated types
-.astro/
-
 # dependencies
 node_modules/
-package-log.json
 
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# build output
+dis[t]/
+.astro/
 
-
-# environment variables
+# env + secrets
 .env
-.env.production
+.env.*
+!.env.example
 
-# macOS-specific files
+# os / editor
 .DS_Store
+*.log
 
-# jetbrains setting folder
-.idea/
-package-lock.json
-
-# firmware files (too large for git, served from GitHub Action mirror)
-public/firmware/*.zip
+# working screenshots
+shot-*.png

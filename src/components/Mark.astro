@@ -1,0 +1,23 @@
+---
+import { marks } from '../data/marks';
+
+interface Props {
+  id: string;
+  class?: string;
+  style?: string;
+  vtn?: string;   // view-transition-name for the shared-element morph
+}
+
+const { id, class: cls = '', style, vtn } = Astro.props;
+const inner = marks[id] ?? marks.avunite;
+const nameStyle = vtn ? `view-transition-name: ${vtn}` : '';
+const merged = [style, nameStyle].filter(Boolean).join('; ');
+---
+
+<svg
+  class={cls}
+  viewBox="0 0 40 40"
+  aria-hidden="true"
+  style={merged || undefined}
+  set:html={inner}
+/>

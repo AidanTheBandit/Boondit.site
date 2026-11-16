@@ -1,31 +1,27 @@
 ---
-import { getCollection } from "astro:content";
-import BlogPostCard from "@/components/BlogPostCard";
-import Section from "@/components/Section.astro";
-import Layout from "@/layouts/Layout.astro";
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
 
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = (await getCollection('posts')).sort((a, b) => +b.data.date - +a.data.date);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---
 
-<Layout title="SYSTEM_LOGS">
-  <div class="mt-24 md:mt-32">
-    <Section title="SYSTEM_LOGS">
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {
-          posts.map((post) => (
-            <div class="h-full transform hover:-translate-y-2 transition-transform duration-300">
-              <BlogPostCard
-                slug={post.id}
-                title={post.data.title}
-                excerpt={post.data.description}
-                date={post.data.pubDate}
-              />
-            </div>
-          ))
-        }
-      </div>
-    </Section>
-  </div>
-</Layout>
+<Base title="Blog — Boondit" desc="Things I've written down." path="/blog">
+  <main class="page">
+    <div class="logs">
+      <h1>Blog<span style="color:var(--pink)">.</span></h1>
+      {posts.map((post) => (
+        <a class="post" href={`/blog/${post.id}/`}>
+          <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
+          <div>
+            <h2>{post.data.title}</h2>
+            {post.data.desc && <p>{post.data.desc}</p>}
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      ))}
+    </div>
+  </main>
+</Base>
