@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 
 // static output, no framework integrations: the whole site is html + one canvas
 export default defineConfig({
-  site: 'https://boondit.site',
+  site: 'https://boondit.com',
   output: 'static',
   trailingSlash: 'always',
   build: { inlineStylesheets: 'auto' },
