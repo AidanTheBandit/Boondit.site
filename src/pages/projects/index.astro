@@ -1,31 +1,58 @@
 ---
-import { getCollection } from "astro:content";
-import ProjectCard from "@/components/ProjectCard";
-import Section from "@/components/Section.astro";
-import Layout from "@/layouts/Layout.astro";
-
-const projects = (await getCollection("projects")).sort(
-  (a, b) => (a.data.sortOrder || 0) - (b.data.sortOrder || 0),
-);
+import Base from '../../layouts/Base.astro';
+import { byNewest } from '../../data/projects';
+import { stack } from '../../data/stack';
 ---
 
-<Layout title="PROJECT_DIR">
-  <div class="mt-24 md:mt-32">
-    <Section title="ACTIVE_PROJECTS">
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12">
-        {
-          projects.map((project, index) => (
-            <div class={`h-full transform hover:-translate-y-2 transition-transform duration-500 delay-${(index % 4) * 100}`}>
-              <ProjectCard
-                title={project.data.title}
-                link={project.data.link}
-                period={project.data.period}
-                description={project.data.description}
-              />
-            </div>
-          ))
-        }
-      </div>
-    </Section>
-  </div>
-</Layout>
+<Base title="Work — Boondit" desc="Everything I've shipped." path="/projects">
+  <main class="page">
+    <div class="logs">
+      <h1>Work<span style="color:var(--pink)">.</span></h1>
+      {byNewest.map((p) => (
+        <a class="post" href={`/projects/${p.id}/`}>
+          <time>{p.years}</time>
+          <div>
+            <h2>{p.name}</h2>
+            <p>{p.desc}</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      ))}
+
+      <section class="stack">
+        <h2>stack</h2>
+        <ul>
+          {stack.map((t) => (
+            <li>
+              <b>{t.name}</b>
+              {t.where && <span>{t.where}</span>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .stack { padding: 34px 0 10px; }
+  .stack h2 {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--dim); font-weight: 400; margin-bottom: 14px;
+  }
+  .stack ul {
+    list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 28px;
+  }
+  .stack li {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    padding: 8px 0; border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .04em;
+  }
+  .stack b { font-weight: 400; color: var(--ink); }
+  .stack span { color: var(--dim); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; }
+
+  @media (max-width: 900px) {
+    .stack ul { grid-template-columns: 1fr 1fr; }
+  }
+</style>

@@ -1,87 +1,30 @@
 ---
-import { getCollection } from "astro:content";
-import Hero from "@/components/Hero.astro";
-import Breadcrumb from "@/components/Breadcrumb";
-import Section from "@/components/Section.astro";
-import BlogPostCard from "@/components/BlogPostCard";
-import ProjectCard from "@/components/ProjectCard";
-import Layout from "@/layouts/Layout.astro";
-import { KNOWN_TECH, ABOUT_ME } from "@/consts";
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-
-const allProjects = (await getCollection("projects")).sort(
-  (a, b) => (a.data.sortOrder || 0) - (b.data.sortOrder || 0),
-);
-
-// Show latest 4 projects on home
-const projects = allProjects.slice(0, 4);
+import Base from '../layouts/Base.astro';
+import Mark from '../components/Mark.astro';
+import { projects } from '../data/projects';
 ---
 
-<Layout title="Boondit">
-  <Hero />
-  <div class="w-full max-w-4xl mx-auto h-px bg-border/50 my-10 md:my-20"></div>
-
-  <Section title="My Posts" className="reveal">
-    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 reveal-stagger">
-      {
-        posts.map((post) => (
-          <BlogPostCard
-            slug={post.id}
-            title={post.data.title}
-            excerpt={post.data.description}
-            date={post.data.pubDate}
-          />
-        ))
-      }
-    </div>
-  </Section>
-
-  <div class="w-full max-w-4xl mx-auto h-px bg-border/50 my-10 md:my-20 reveal"></div>
-
-  <Section title="Projects" className="reveal">
-    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 reveal-stagger">
-      {
-        projects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            period={project.data.period}
-            link={project.data.link}
-            description={project.data.description}
-          />
-        ))
-      }
-    </div>
-    <div class="w-full text-center mt-12 mb-6 reveal">
-      <a
-        href="/projects"
-        class="inline-flex items-center justify-center px-8 py-3 border border-border bg-background text-sm uppercase tracking-widest font-medium text-foreground hover:bg-foreground hover:text-background transition-all duration-300"
-      >
-        View all projects →
-      </a>
-    </div>
-  </Section>
-
-  <div class="w-full max-w-4xl mx-auto h-px bg-border/50 my-10 md:my-20"></div>
-
-  <Section title="Technologies I Know" full_screen={false} className="reveal">
-    <div class="w-full grid place-items-center mb-10">
-      <div
-        class="w-full gap-3 md:gap-4 flex flex-wrap px-3 max-w-4xl text-sm md:text-lg justify-center reveal-stagger"
-      >
-        {KNOWN_TECH.map((x) => <Breadcrumb title={x} />)}
+<Base>
+  <main id="home">
+    <div class="intro">
+      <div class="portrait">
+        <img src="/portrait.png" alt="Dithered portrait of Boondit" width="720" height="720" />
+      </div>
+      <div class="lede">
+        <h1>Boondit<span>.</span></h1>
+        <p>i make-a the code</p>
       </div>
     </div>
-  </Section>
 
-  <Section title="About Me" className="reveal">
-    <div class="w-full grid place-items-center mb-20">
-      <div
-        class="max-w-3xl text-base md:text-lg lg:text-xl text-muted-foreground text-center justify-evenly px-4 leading-relaxed font-light reveal"
-      >
-        <p>{ABOUT_ME}</p>
-      </div>
+    <div class="grid">
+      {projects.map((p) => (
+        <a class="door" href={`/projects/${p.id}/`} aria-label={p.name}>
+          <span class="ic">
+            <Mark id={p.mark} vtn={`mark-${p.id}`} />
+          </span>
+          <span class="lbl">{p.name}</span>
+        </a>
+      ))}
     </div>
-  </Section>
-</Layout>
+  </main>
+</Base>

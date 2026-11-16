@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import Mark from '../../components/Mark.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.id },
+    props: { project: p, index: i, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+const { project, index, next } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<Base title={`${project.name} — Boondit`} desc={project.desc} foot={false}>
+  <main class="page">
+    <a class="back" href="/" aria-label="Back to work">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+      back
+    </a>
+
+    <header class="phead">
+      <div class="picon">
+        <Mark id={project.mark} vtn={`mark-${project.id}`} />
+      </div>
+      <div class="ptext">
+        <div class="kicker">{project.kicker} · {project.years}</div>
+        <h2>{project.name}</h2>
+        <p>{project.desc}</p>
+        <div class="plinks">
+          {project.links.map(([label, href]) => (
+            <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener' : undefined}>
+              <i></i>{label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    {project.tools && (
+      <div class="tools">
+        {project.tools.map(([name, href]) => (
+          <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener' : undefined}>
+            {name}<span>open</span>
+          </a>
+        ))}
+      </div>
+    )}
+
+    <div class="pfoot">
+      <span class="idx">{pad(index + 1)} / {pad(projects.length)}</span>
+      <a class="nextp" href={`/projects/${next.id}/`}>
+        next <b>{next.name}</b>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </main>
+</Base>

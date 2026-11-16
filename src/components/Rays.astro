@@ -1,0 +1,138 @@
+---
+// Dithered light field: two corner sources, fanned into broad overlapping lobes,
+// quantised through an 8x8 Bayer matrix in three tiers of the brand palette.
+// The field is baked once; motion is a slow bilinear drift plus a long breathe,
+// so the pattern morphs gradually instead of flickering between phases.
+---
+
+<canvas id="rays" transition:persist aria-hidden="true"></canvas>
+
+<script>
+  const cv = document.getElementById('rays') as HTMLCanvasElement | null;
+  if (cv && !cv.dataset.ready) {
+    cv.dataset.ready = '1';
+
+    const ctx = cv.getContext('2d', { alpha: true })!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const BAYER = [
+        0, 32,  8, 40,  2, 34, 10, 42,
+       48, 16, 56, 24, 50, 18, 58, 26,
+       12, 44,  4, 36, 14, 46,  6, 38,
+       60, 28, 52, 20, 62, 30, 54, 22,
+        3, 35, 11, 43,  1, 33,  9, 41,
+       51, 19, 59, 27, 49, 17, 57, 25,
+       15, 47,  7, 39, 13, 45,  5, 37,
+       63, 31, 55, 23, 61, 29, 53, 21,
+    ].map((v) => v / 64 + 0.5 / 64);
+
+    let W = 0, H = 0, FMAX = 1, CEIL = 0.60;
+    let field = new Float32Array(0);
+    let img: ImageData | null = null;
+    let raf = 0, last = 0, t0 = performance.now();
+
+    function build() {
+      // finer dots and a lower ceiling on small screens, where 3px cells read heavier
+      const small = innerWidth < 700;
+      const PIX = small ? 3 : 5;
+      CEIL = small ? 0.45 : 0.60;
+      W = Math.ceil(innerWidth / PIX);
+      H = Math.ceil(innerHeight / PIX);
+      cv!.width = W;
+      cv!.height = H;
+      cv!.style.width = innerWidth + 'px';
+      cv!.style.height = innerHeight + 'px';
+      field = new Float32Array(W * H);
+      img = ctx.createImageData(W, H);
+      FMAX = 0.0001;
+
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          const nx = x / W, ny = 1 - y / H;              // ny = 0 at the bottom edge
+          const dBL = Math.hypot(nx, ny);
+          const dBR = Math.hypot(1 - nx, ny);
+
+          // two corner sources, tight to the corners
+          const glow = Math.exp(-dBL * dBL * 10.0) * 0.95 + Math.exp(-dBR * dBR * 10.0) * 0.80;
+
+          // wide lobes that overlap rather than spokes that gap
+          const lobeBL = Math.pow(Math.abs(Math.sin(Math.atan2(ny, nx) * 2.2 + 0.35)), 1.2);
+          const lobeBR = Math.pow(Math.abs(Math.sin(Math.atan2(ny, 1 - nx) * 2.7 + 0.9)), 1.2);
+          const rays = 0.72 + 0.28 * (0.95 * lobeBL * Math.exp(-dBL * 0.7) +
+                                      0.85 * lobeBR * Math.exp(-dBR * 0.7));
+
+          const lift = 0.16 + 0.84 * Math.pow(ny, 2.0);   // climb the walls, don't wash the floor
+          const v = glow * rays * lift;
+
+          field[y * W + x] = v;
+          if (v > FMAX) FMAX = v;
+        }
+      }
+    }
+
+    // bilinear sample of the baked field, so drift is sub-pixel smooth
+    function sample(x: number, y: number) {
+      const x0 = Math.floor(x), y0 = Math.floor(y);
+      const fx = x - x0, fy = y - y0;
+      const x1 = Math.min(W - 1, x0 + 1), y1 = Math.min(H - 1, y0 + 1);
+      const c = Math.max(0, Math.min(W - 1, x0)), r = Math.max(0, Math.min(H - 1, y0));
+      const a = field[r * W + c], b = field[r * W + x1];
+      const d = field[y1 * W + c], e = field[y1 * W + x1];
+      return (a * (1 - fx) + b * fx) * (1 - fy) + (d * (1 - fx) + e * fx) * fy;
+    }
+
+    function frame(now: number) {
+      if (now - last < 90) { raf = requestAnimationFrame(frame); return; }   // ~11fps
+      last = now;
+
+      // viewport changed but no resize event landed (rotation, emulation, devtools)
+      if (cv!.clientWidth !== Math.round(innerWidth) || cv!.clientHeight !== Math.round(innerHeight)) {
+        build();
+      }
+
+      const t = (now - t0) / 1000;
+      // slow, overlapping cycles: nothing steps, nothing flickers
+      const driftX = 12 * Math.sin(t * 0.140);          // ~45s a cycle
+      const driftY = 6 * Math.sin(t * 0.098 + 1.1);     // ~64s, deliberately out of phase
+      const breathe = 0.86 + 0.14 * Math.sin(t * 0.285); // ~22s
+      const d = img!.data;
+
+      for (let y = 0; y < H; y++) {
+        const sy = y + driftY;
+        const by = (y & 7) * 8;
+        for (let x = 0; x < W; x++) {
+          let v = sample(x + driftX, sy) / FMAX * breathe;
+          if (v > 1) v = 1;
+          v = Math.pow(v, 1.9) * CEIL;                   // density ceiling: the core stays dithered
+
+          const i = (y * W + x) * 4;
+          if (v > BAYER[by + (x & 7)]) {
+            const a = 0.62 + 0.38 * (v / CEIL);
+            if (v > CEIL * 0.70)      { d[i] = 255; d[i + 1] = 0;  d[i + 2] = 128; d[i + 3] = 205 * a; } // pink
+            else if (v > CEIL * 0.40) { d[i] = 153; d[i + 1] = 92; d[i + 2] = 214; d[i + 3] = 170 * a; } // purple
+            else                      { d[i] = 51;  d[i + 1] = 51; d[i + 2] = 51;  d[i + 3] = 130 * a; } // charcoal
+          } else {
+            d[i + 3] = 0;
+          }
+        }
+      }
+      ctx.putImageData(img!, 0, 0);
+      cv!.dataset.f = String((+(cv!.dataset.f ?? 0)) + 1);
+      if (!reduce) raf = requestAnimationFrame(frame);
+    }
+
+    build();
+    frame(performance.now() + 100);                 // first paint, synchronously
+    if (!reduce) raf = requestAnimationFrame(frame);
+
+    addEventListener('resize', () => {
+      build();
+      if (reduce) frame(performance.now() + 100);
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+      else if (!reduce && !raf) { t0 = performance.now(); raf = requestAnimationFrame(frame); }
+    });
+  }
+</script>

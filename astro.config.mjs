@@ -1,20 +1,15 @@
-// @ts-check
-import { defineConfig } from "astro/config";
-import mdx from "@astrojs/mdx";
-import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
-import react from "@astrojs/react";
+import { defineConfig } from 'astro/config';
 
-
-// https://astro.build/config
+// static output, no framework integrations: the whole site is html + one canvas
 export default defineConfig({
-  site: "https://boondit.site",
-  integrations: [mdx(), sitemap(), tailwind(), react()],
-
-  markdown: {
-    shikiConfig: {
-      theme: "github-dark-high-contrast",
-    },
+  site: 'https://boondit.site',
+  output: 'static',
+  trailingSlash: 'always',
+  build: { inlineStylesheets: 'auto' },
+  // old URLs from the previous build keep working
+  redirects: {
+    '/r1-create': '/tools/',
+    '/r1-flash-utility': '/tools/',
+    '/rabbit': '/projects/rabbit/',
   },
-
 });

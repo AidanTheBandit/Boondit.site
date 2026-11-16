@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+---
+
+<Base title={`${post.data.title} — Boondit`} desc={post.data.desc ?? ''} path="/blog">
+  <main class="page">
+    <a class="back" href="/blog/" aria-label="Back to blog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+      blog
+    </a>
+
+    <article class="post-body">
+      <header>
+        <div class="meta">{fmt(post.data.date)}</div>
+        <h1>{post.data.title}</h1>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </main>
+</Base>

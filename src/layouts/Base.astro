@@ -1,0 +1,69 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Rays from '../components/Rays.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  desc?: string;
+  path?: string;
+  foot?: boolean;
+}
+
+const {
+  title = 'Boondit',
+  desc = 'Tools for hardware that shouldn\'t still work.',
+  path = Astro.url.pathname,
+  foot = true,
+} = Astro.props;
+
+const nav = [
+  ['blog', '/blog'],
+  ['projects', '/projects'],
+  ['rabbit', '/tools/'],
+  ['github', 'https://github.com/AidanTheBandit'],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={desc} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={desc} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ClientRouter />
+  </head>
+  <body class={path === '/' ? 'home' : 'inner'}>
+    <Rays />
+
+    <div class="sheet">
+      <div class="strip">
+        <a class="mark" href="/">boondit</a>
+        <nav>
+          {nav.map(([label, href]) => (
+            <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>
+          ))}
+        </nav>
+      </div>
+      <slot />
+
+      {foot && (
+        <div class="pfoot">
+          <span class="idx">© 2026</span>
+          <a class="coffee" href="https://buymeacoffee.com/boondit" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/>
+              <path d="M16 9h2.5a2.5 2.5 0 0 1 0 5H16"/>
+              <path d="M6 3.5v2M10 3.5v2M14 3.5v2"/>
+            </svg>
+            buy me a coffee
+          </a>
+        </div>
+      )}
+    </div>
+  </body>
+</html>
