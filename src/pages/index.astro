@@ -5,6 +5,7 @@ import { projects } from '../data/projects';
 ---
 
 <Base>
+  <canvas id="braille-bg" aria-hidden="true"></canvas>
   <main id="home">
     <div class="intro">
       <div class="portrait">
@@ -15,6 +16,8 @@ import { projects } from '../data/projects';
         <p>i make-a the code</p>
       </div>
     </div>
+
+    <div class="braille-rule" aria-hidden="true">⣀⣤⣶⣿⣶⣤⣀⡀⠀⢀⣀⣤⣶⣿⣶⣤⣀⡀⠀⢀⣀⣤⣶⣿⣶⣤⣀⡀⠀⢀⣀⣤⣶⣿⣶⣤⣀⡀⠀⢀⣀⣤⣶⣿⣶⣤⣀</div>
 
     <div class="grid">
       {projects.map((p) => (
@@ -27,4 +30,116 @@ import { projects } from '../data/projects';
       ))}
     </div>
   </main>
+
+  <style>
+    #braille-bg {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #home {
+      position: relative;
+      z-index: 1;
+    }
+    .braille-rule {
+      overflow: hidden;
+      white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.14em;
+      color: rgba(153, 92, 214, 0.42);
+      margin: 0 0 18px;
+      user-select: none;
+      pointer-events: none;
+    }
+    .door {
+      position: relative;
+    }
+    .door::after {
+      content: "⣿";
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      color: rgba(232, 230, 225, 0.22);
+      transition: color 0.18s ease;
+      pointer-events: none;
+    }
+    .door:hover::after {
+      color: #ff0080;
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      const cv = document.getElementById('braille-bg');
+      if (!cv || cv.dataset.ready) return;
+      cv.dataset.ready = '1';
+      const ctx = cv.getContext('2d', { alpha: true });
+      if (!ctx) return;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const MAP = [[0,0,1],[0,1,2],[0,2,4],[1,0,8],[1,1,16],[1,2,32],[0,3,64],[1,3,128]];
+      let cols = 0, rows = 0, cw = 10, ch = 16, raf = 0, last = 0, t0 = performance.now();
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = innerWidth, h = innerHeight;
+        cw = w < 700 ? 11 : 10;
+        ch = w < 700 ? 18 : 16;
+        cols = Math.ceil(w / cw);
+        rows = Math.ceil(h / ch);
+        cv.width = Math.round(w * dpr);
+        cv.height = Math.round(h * dpr);
+        cv.style.width = w + 'px';
+        cv.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function sample(nx, ny, t) {
+        const ty = 1 - ny;
+        const a = Math.hypot(nx, ty), m = Math.hypot(1 - nx, ty);
+        const base = Math.exp(-a * a * 8.5) * 0.95 + Math.exp(-m * m * 8.5) * 0.8;
+        const r1 = Math.pow(Math.abs(Math.sin(Math.atan2(ty, nx) * 2.2 + 0.35 + t * 0.14)), 1.2);
+        const r2 = Math.pow(Math.abs(Math.sin(Math.atan2(ty, 1 - nx) * 2.7 + 0.9 - t * 0.11)), 1.2);
+        const ray = 0.68 + 0.32 * (0.95 * r1 * Math.exp(-a * 0.65) + 0.85 * r2 * Math.exp(-m * 0.65));
+        const fade = 0.14 + 0.86 * Math.pow(ty, 1.8);
+        return Math.min(1, base * ray * fade * (0.88 + 0.12 * Math.sin(t * 0.32)));
+      }
+      function draw(now) {
+        if (now - last < 95) { raf = requestAnimationFrame(draw); return; }
+        last = now;
+        const t = reduced ? 0.6 : (now - t0) * 0.001;
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        ctx.font = (ch - 2) + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
+        ctx.textBaseline = 'top';
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            let bits = 0, peak = 0;
+            for (let k = 0; k < 8; k++) {
+              const sx = (c + (MAP[k][0] + 0.5) / 2) / cols;
+              const sy = (r + (MAP[k][1] + 0.5) / 4) / rows;
+              const v = sample(sx, sy, t);
+              if (v > peak) peak = v;
+              if (v > 0.14) bits |= MAP[k][2];
+            }
+            if (!bits) continue;
+            ctx.fillStyle = peak > 0.54 ? 'rgba(255,0,128,0.44)' : peak > 0.32 ? 'rgba(153,92,214,0.36)' : 'rgba(232,230,225,0.16)';
+            ctx.fillText(String.fromCharCode(0x2800 + bits), c * cw, r * ch);
+          }
+        }
+        if (!reduced) raf = requestAnimationFrame(draw);
+      }
+      resize();
+      draw(performance.now() + 100);
+      if (!reduced) raf = requestAnimationFrame(draw);
+      addEventListener('resize', () => { resize(); draw(performance.now() + 100); });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+        else if (!reduced && !raf) { t0 = performance.now(); raf = requestAnimationFrame(draw); }
+      });
+    })();
+  </script>
 </Base>
