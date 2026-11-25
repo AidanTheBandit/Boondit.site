@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import Rays from '../components/Rays.astro';
+import Icon from '../components/Icon.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -17,11 +18,11 @@ const {
   foot = true,
 } = Astro.props;
 
-const nav = [
-  ['blog', '/blog'],
-  ['projects', '/projects'],
-  ['rabbit', '/tools/'],
-  ['github', 'https://github.com/AidanTheBandit'],
+const nav: [string, string, 'blog' | 'projects' | 'rabbit' | 'github'][] = [
+  ['blog', '/blog', 'blog'],
+  ['projects', '/projects', 'projects'],
+  ['rabbit', '/tools/', 'rabbit'],
+  ['github', 'https://github.com/AidanTheBandit', 'github'],
 ];
 ---
 
@@ -44,6 +45,7 @@ const nav = [
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={new URL('/og.jpg', Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <slot name="head" />
     <ClientRouter />
   </head>
   <body class={path === '/' ? 'home' : 'inner'}>
@@ -51,10 +53,21 @@ const nav = [
 
     <div class="sheet">
       <div class="strip">
-        <a class="mark" href="/">boondit</a>
+        <a class="mark" href="/">
+          <Icon name="brand" size={18} />
+          <span>boondit</span>
+        </a>
         <nav>
-          {nav.map(([label, href]) => (
-            <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>
+          {nav.map(([label, href, icon]) => (
+            <a
+              href={href}
+              aria-current={path === href ? 'page' : undefined}
+              target={href.startsWith('http') ? '_blank' : undefined}
+              rel={href.startsWith('http') ? 'noopener' : undefined}
+            >
+              <Icon name={icon} size={14} />
+              <span>{label}</span>
+            </a>
           ))}
         </nav>
       </div>
@@ -64,11 +77,7 @@ const nav = [
         <div class="pfoot">
           <span class="idx">© 2026</span>
           <a class="coffee" href="https://buymeacoffee.com/boondit" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-              <path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/>
-              <path d="M16 9h2.5a2.5 2.5 0 0 1 0 5H16"/>
-              <path d="M6 3.5v2M10 3.5v2M14 3.5v2"/>
-            </svg>
+            <Icon name="coffee" size={15} />
             buy me a coffee
           </a>
         </div>

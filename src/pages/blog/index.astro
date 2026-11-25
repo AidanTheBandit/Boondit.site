@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('posts')).sort((a, b) => +b.data.date - +a.data.date);
@@ -19,7 +20,7 @@ const fmt = (d: Date) =>
             <h2>{post.data.title}</h2>
             {post.data.desc && <p>{post.data.desc}</p>}
           </div>
-          <span class="arrow">→</span>
+          <span class="arrow"><Icon name="arrow-right" size={16} /></span>
         </a>
       ))}
     </div>

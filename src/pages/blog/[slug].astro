@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -17,7 +18,7 @@ const fmt = (d: Date) =>
 <Base title={`${post.data.title} — Boondit`} desc={post.data.desc ?? ''} path="/blog">
   <main class="page">
     <a class="back" href="/blog/" aria-label="Back to blog">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+      <Icon name="arrow-left" size={16} />
       blog
     </a>
 

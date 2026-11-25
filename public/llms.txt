@@ -1,0 +1,39 @@
+# Boondit (Aidan)
+
+> Tools for hardware that shouldn't still work. i make-a the code.
+
+## Who I am
+
+Boondit, also known as Aidan. Engineering at Rabbit (rabbit OS3 and R1 software) and founder of Avunite (since 2022).
+
+## Site
+
+- Home: https://boondit.com/
+- Projects: https://boondit.com/projects/
+- Blog: https://boondit.com/blog/
+- R1 Tools: https://boondit.com/tools/
+- Creations QR Generator: https://boondit.com/r1-generator/
+
+## Work
+
+- [avunite](https://boondit.com/projects/avunite/) (company, since 2022): The company I founded in 2022. barkle, campra and solace were all built under it. Live: https://avunite.com
+- [campra](https://boondit.com/projects/campra/) (social, since 2025): A school network on AT Protocol. Channels with roles and flairs, events with RSVPs, an application form per channel, a moderation queue, and per-seat billing for the school. Accounts outlive graduation. Live: https://campra.app
+- [barkle](https://boondit.com/projects/barkle/) (social, 2020 -> 2026): A microblogging platform that ran from 2020 to 2026. The V4 rewrite was started and never shipped.
+- [creations store](https://boondit.com/projects/store/) (marketplace, since 2025): A marketplace for R1 apps and agent skills. Agents publish through an MCP server, but nothing goes live until a human approves it from a link that expires in 48 hours. Live: https://creations.boondit.com
+- [rhythm](https://boondit.com/projects/rhythm/) (music, 2026): Upload a song and it generates a playable chart from the audio. Runs on the R1, submits scores, ranks them on a leaderboard. Live: https://rhythm.boondit.com
+- [solace](https://boondit.com/projects/solace/) (agent, unreleased): An iMessage agent that ran tasks for you inside a VM. Built under Avunite and never released: the security model was not good enough to put in front of real phones. Closest relative is rabbit OS3.
+- [gamenight](https://boondit.com/projects/game-night/) (bot, 2026): A Discord bot that runs game nights. Steam accounts linked with OAuth, join-to-create voice channels, scheduled events, and timing analytics.
+- [bignicks](https://boondit.com/projects/firewood/) (website, 2026): A landing page for a local firewood business, with a price list and an order form that goes straight to his inbox. Live: https://bignicksmorningwood.com
+- [rabbit](https://boondit.com/projects/rabbit-eng/) (engineer, since 2026): Engineering at Rabbit: rabbit OS3, the operating system the R1 runs, and R1 software. Before that I built R1 tools on my own. Live: https://www.rabbit.tech
+- [r1 tools](https://boondit.com/projects/rabbit/) (hardware, since 2025): Making things for the R1 since 2025: a JavaScript SDK for plugins with hardware access, a WebRTC walkie talkie, a raycasting engine, an API bridge for remote control, and recovery tooling.
+  - r1-create sdk: https://www.npmjs.com/package/r1-create
+  - r1-anywhere: https://r1a.boondit.site
+  - r1-walky: https://github.com/AidanTheBandit/R1-Walky
+  - rabbit raycast: https://github.com/AidanTheBandit/Rabbit-Raycast
+  - creations qr: https://boondit.com/r1-generator/
+
+## How to reach me
+
+- Website: https://boondit.com/
+- GitHub: https://github.com/AidanTheBandit
+- Buy Me a Coffee: https://buymeacoffee.com/boondit

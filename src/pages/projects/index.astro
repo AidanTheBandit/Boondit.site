@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import { byNewest } from '../../data/projects';
 import { stack } from '../../data/stack';
 ---
@@ -15,7 +16,7 @@ import { stack } from '../../data/stack';
             <h2>{p.name}</h2>
             <p>{p.desc}</p>
           </div>
-          <span class="arrow">→</span>
+          <span class="arrow"><Icon name="arrow-right" size={16} /></span>
         </a>
       ))}
 

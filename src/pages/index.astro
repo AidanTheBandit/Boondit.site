@@ -2,9 +2,23 @@
 import Base from '../layouts/Base.astro';
 import Mark from '../components/Mark.astro';
 import { projects } from '../data/projects';
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Boondit',
+  alternateName: 'Aidan',
+  url: 'https://boondit.com/',
+  description: "Tools for hardware that shouldn't still work.",
+  sameAs: [
+    'https://github.com/AidanTheBandit',
+    'https://buymeacoffee.com/boondit',
+  ],
+};
 ---
 
 <Base>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(personJsonLd)} />
   <canvas id="braille-bg" aria-hidden="true"></canvas>
   <main id="home">
     <div class="intro">
@@ -21,7 +35,7 @@ import { projects } from '../data/projects';
 
     <div class="grid">
       {projects.map((p) => (
-        <a class="door" href={`/projects/${p.id}/`} aria-label={p.name}>
+        <a class="door" href={`/projects/${p.id}/`} aria-label={p.name} title={p.desc}>
           <span class="ic">
             <Mark id={p.mark} vtn={`mark-${p.id}`} />
           </span>

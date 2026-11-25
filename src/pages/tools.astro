@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 
 type Item = { name: string; desc: string; href: string; where: string; local?: boolean };
 
@@ -34,7 +35,7 @@ const sections = [
 <Base title="Rabbit R1 — Boondit" desc="Tools and creations for the Rabbit R1." path="/tools">
   <main class="page">
     <a class="back" href="/" aria-label="Back to work">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+      <Icon name="arrow-left" size={16} />
       back
     </a>
 
@@ -51,7 +52,7 @@ const sections = [
                 <h3>{t.name}</h3>
                 <p>{t.desc}</p>
               </div>
-              <span class="arrow">→</span>
+              <span class="arrow"><Icon name="arrow-right" size={16} /></span>
             </a>
           ))}
         </section>

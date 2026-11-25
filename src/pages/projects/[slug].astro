@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Mark from '../../components/Mark.astro';
+import Icon from '../../components/Icon.astro';
 import { projects } from '../../data/projects';
 
 export function getStaticPaths() {
@@ -17,7 +18,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <Base title={`${project.name} — Boondit`} desc={project.desc} foot={false}>
   <main class="page">
     <a class="back" href="/" aria-label="Back to work">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+      <Icon name="arrow-left" size={16} />
       back
     </a>
 
@@ -32,7 +33,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <div class="plinks">
           {project.links.map(([label, href]) => (
             <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener' : undefined}>
-              <i></i>{label}
+              <Icon name="external" size={14} />{label}
             </a>
           ))}
         </div>
@@ -53,7 +54,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <span class="idx">{pad(index + 1)} / {pad(projects.length)}</span>
       <a class="nextp" href={`/projects/${next.id}/`}>
         next <b>{next.name}</b>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5l7 7-7 7"/></svg>
+        <Icon name="arrow-right" size={16} />
       </a>
     </div>
   </main>
