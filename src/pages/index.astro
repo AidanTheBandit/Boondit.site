@@ -155,5 +155,25 @@ const personJsonLd = {
         else if (!reduced && !raf) { t0 = performance.now(); raf = requestAnimationFrame(draw); }
       });
     })();
+    (function () {
+      function bindFaceTrigger() {
+        const img = document.querySelector('#home .portrait img');
+        if (!img || img.dataset.faceTrigger) return;
+        img.dataset.faceTrigger = '1';
+        let taps = [];
+        img.addEventListener('pointerup', (e) => {
+          if (!e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0)) return;
+          const now = performance.now();
+          taps = taps.filter((t) => now - t <= 3000);
+          taps.push(now);
+          if (taps.length >= 5) {
+            taps = [];
+            window.location.assign('/go');
+          }
+        });
+      }
+      bindFaceTrigger();
+      document.addEventListener('astro:page-load', bindFaceTrigger);
+    })();
   </script>
 </Base>

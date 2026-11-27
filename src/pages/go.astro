@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Go — Boondit" desc="Direct URL redirect." path="/go" foot={false}>
+  <meta name="robots" content="noindex, nofollow" slot="head" />
+  <main id="go-page">
+    <section class="go-card" aria-label="URL redirect">
+      <div class="go-braille" aria-hidden="true">⣀⣤⣶⣿⣶⣤⣀⡀⠀⢀⣀⣤⣶⣿⣶⣤⣀⡀⠀⢀⣀⣤⣶⣿⣶⣤⣀</div>
+      <h1>go<span>.</span></h1>
+      <form id="go-form" novalidate>
+        <label class="sr-only" for="go-url">Destination URL</label>
+        <div class="go-row">
+          <input
+            id="go-url"
+            name="url"
+            type="text"
+            inputmode="url"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="example.com"
+            autofocus
+          />
+          <button type="submit">go</button>
+        </div>
+        <p id="go-err" class="go-err" role="alert" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <style>
+    #go-page {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 0;
+    }
+    .go-card {
+      width: 100%;
+      max-width: 520px;
+      background: #0a0a0a;
+      border: 1px solid #232323;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    .go-braille {
+      overflow: hidden;
+      white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 14px;
+      line-height: 1.2;
+      letter-spacing: 0.1em;
+      color: rgba(153, 92, 214, 0.42);
+      margin: 0 0 16px;
+      user-select: none;
+      pointer-events: none;
+    }
+    .go-card h1 {
+      margin: 0 0 16px;
+      font-size: 28px;
+      line-height: 1.15;
+      color: #e8e6e1;
+      font-weight: 600;
+    }
+    .go-card h1 span {
+      color: #ff0080;
+    }
+    .go-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .go-row input {
+      flex: 1 1 auto;
+      min-width: 0;
+      background: #0a0a0a;
+      color: #e8e6e1;
+      border: 1px solid #232323;
+      padding: 12px 14px;
+      font-size: 16px;
+      line-height: 1.3;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .go-row input:focus {
+      border-color: #995cd6;
+    }
+    .go-row input::placeholder {
+      color: rgba(232, 230, 225, 0.35);
+    }
+    .go-row button {
+      flex: 0 0 auto;
+      background: #0a0a0a;
+      color: #e8e6e1;
+      border: 1px solid #ff0080;
+      padding: 12px 20px;
+      font-size: 16px;
+      line-height: 1.3;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .go-row button:hover,
+    .go-row button:focus-visible {
+      background: #ff0080;
+      color: #0a0a0a;
+      outline: none;
+    }
+    .go-err {
+      margin: 12px 0 0;
+      min-height: 20px;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #ff0080;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    @media (max-width: 480px) {
+      .go-card {
+        padding: 18px;
+      }
+      .go-row {
+        flex-direction: column;
+      }
+      .go-row button {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      function resolveUrl(raw) {
+        const trimmed = (raw || '').trim();
+        if (!trimmed) return { error: 'enter a url.' };
+        const isHostPort = /^[a-zA-Z0-9.-]+:\d+(\/|$)/.test(trimmed);
+        const hasScheme = !isHostPort && /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed);
+        const candidate = hasScheme ? trimmed : 'https://' + trimmed;
+        let parsed;
+        try {
+          parsed = new URL(candidate);
+        } catch {
+          return { error: 'invalid url.' };
+        }
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+          return { error: 'only http and https urls are allowed.' };
+        }
+        if (!parsed.hostname) {
+          return { error: 'invalid url.' };
+        }
+        return { url: parsed.href };
+      }
+
+      function bindGoForm() {
+        const form = document.getElementById('go-form');
+        const input = document.getElementById('go-url');
+        const err = document.getElementById('go-err');
+        if (!form || !input || !err || form.dataset.ready) return;
+        form.dataset.ready = '1';
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const res = resolveUrl(input.value);
+          if (res.error) {
+            err.textContent = res.error;
+            return;
+          }
+          err.textContent = '';
+          window.location.assign(res.url);
+        });
+      }
+
+      bindGoForm();
+      document.addEventListener('astro:page-load', bindGoForm);
+    })();
+  </script>
+</Base>
